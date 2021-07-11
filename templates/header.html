@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>MagicBay</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta author="AurelienP" />
+    <meta language="fr" />
+    <!--<link href="{{ url_for('static', filename='css/clean-blog.min.css')}}" rel="stylesheet">-->
+
+    <link
+      href="{{ url_for('static', filename='css/style.css')}}"
+      rel="stylesheet"
+    />
+    <!--<link href="{{ url_for('static', filename='css/style_modal.css')}}" rel="stylesheet"/>-->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header-style.css')}}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tops-style.css')}}"/>
+
+    {{ turbo() }}
+  </head>
+
+  <!-- NAVBAR A refaire sans bootstrap -->
+  <body>
+    <header>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top align-content-end ">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{{ url_for('home')}}">MagicBay</a>
+
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <span class="navbar-text">
+          Achat Vente DeckBuilder
+          <span id="username">
+            {% if username : %}
+            <span class="navbar-text"> - </span>{{ username.capitalize() }} {%
+            endif %}
+          </span>
+        </span>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            {% if username and username != 'admin': %}
+            <!-- FAIRE UN LINE HEIGH POUR TOUT ALIGNER CORRECTEMENT -->
+            <li class="nav-item dropdown mb-auto">
+                <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                  Mon Compte
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                  <li mt-2><a class="dropdown-item" href="{{ url_for('user_page', username=username) }}">Profil</a></li>
+                  <li mt-2><a class="dropdown-item" href="{{ url_for('message_page', username=username )}}">Messages</a></li>
+                  <li mt-2><a class="dropdown-item" href="{{ url_for('buy_list_page', username=username) }}">Acheter</a></li>
+                  <li mt-2><a class="dropdown-item" href="{{ url_for('sell_page', username=username) }}">Vendre</a></li>
+                  <li mt-2><a class="dropdown-item" href="{{ url_for('deckbuilder_page', username=username) }}">DeckBuilder</a></li>
+                </ul>
+            </li>
+
+            {% endif %} {% if username == "admin" : %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('admin_page')}}">Admin</a>
+            </li>
+            {% endif %} {% if username %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('log_out_page')}}"
+                >Déconnexion</a
+              >
+            </li>
+            {% endif %} {% if not username : %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('register_page')}}"
+                >S'enregister</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('login_page') }}"
+                >Connexion</a
+              >
+            </li>
+            {% endif %}
+          </ul>
+          <form
+            autocomplete="off"
+            class="d-flex"
+            method="post"
+            action="{{ url_for('card_page_research') }} "
+          >
+            <div class="autocomplete">
+              <input
+                class="form-control me-2"
+                name="bar-research"
+                id="research"
+                type="search"
+                placeholder="Rechercher une carte"
+                aria-label="Search"
+              />
+            </div>
+            <button
+              class="btn btn-outline-dark"
+              type="submit"
+              style="color: white"
+            >
+              Rechercher
+            </button>
+          </form>
+        </div>
+      </div>
+    </nav>
+</header>
+
+
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="{{ url_for('static', filename='js/autocompletion.js') }}"></script>
+
+<script>
+autocomplete(document.getElementById("research"), cards);
+
+</script>
+</html>

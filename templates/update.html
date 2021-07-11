@@ -1,0 +1,93 @@
+{% include 'header.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+<h1> Mise à jour de la carte : {{ card.name }} </h1>
+<div class="container jumbotron">
+    
+    <form action="{{ url_for('update_page', id=card[0].id) }}" id="form-update" method='post'>
+        <div class="m-2">
+            <label for="name">Nom</label>
+            <input  class="form-input" type="text" id="name" name="name" value="{{card[0].name}}" placeholder="nom de la carte" required>
+        </div>
+        <div class="m-2">
+            <label for="edition">Edition</label>
+            <input class="form-input" type="text" id="edition" name="edition" value="{{card[1].edition}}" placeholder="exemple: tempest" required>
+        </div>
+        <div class="m-2">
+            <label for="creation">Création</label>
+            <input class="form-input" type="text" id="creation" name="creation" value="{{card[1].creation_date}}" placeholder="exemple: 2010" required>
+        </div>
+        <div class="m-2">
+            <label for="legality">Légalité</label>
+            <select class="form-input" type="text" id="legality" name="legality" value="{{card[1].legality}}" placeholder="{{card[1].legality}}" required>
+                <option value="">--Choississez la légalité--</option>
+                <option value="vintage">Vintage</option>
+                <option value="legacy">Legacy</option>
+                <option value="modern">Modern</option>
+                <option value="standard">Standard</option>
+            </select>
+        </div>
+        <div class="m-2">
+            <label for="rarity">Rareté</label>
+            <select class="form-input" type="text" id="rarity" name="rarity" value="{{card[1].rarity}}" placeholder="{{card[1].rarity}}" required>
+                <option value="">--Choississez la rareté--</option>
+                <option value="mythic">Mythique</option>
+                <option value="rare">Rare</option>
+                <option value="unco">Unco</option>
+                <option value="commun">Commune</option>
+                <option value="token">Token</option>
+            </select>
+        </div>
+        <div class="m-2">
+            <label for="price">Prix</label>
+            <input class="form-input" type="text" id="price" name="price" value="{{card[0].price}}" placeholder="exemple: 1.25" required>
+        </div>
+        <div class="m-2">
+            <label for="search">Recherche</label>
+            <input class="form-input" type="text" id="search" name="search" value="{{card[0].search}}" placeholder="exemple: 1" required>
+        </div>
+        <div class="m-2">
+            <label for="path">Chemin de l'image</label>
+            <input class="form-input" type="file" id="path" name="path" value="{{card[2].path}}" placeholder="{{card[2].path}}" required>
+        </div>
+        <div class="m-2">
+            <label for="type">Type</label>
+            <select class="form-input" type="text" id="type" name="type" value="" placeholder="" required>
+                <option value="">--Choississez le type--</option>
+                <option value="artefact">Artefact</option>
+                <option value="créature">Créature</option>
+                <option value="enchantement">Enchantement</option>
+                <option value="éphémère">Ephémère</option>
+                <option value="terrain">Terrain</option>
+                <option value="planeswalker">Planeswalker</option>
+                <option value="rituel">Rituel</option>
+            </select>
+        </div>
+        <div class="m-2">
+            <label for="ccm">CCM</label>
+            <input type="text" name="ccm" placeholder="CCM: 1R">
+        </div>
+        <div class="m-2">
+            <input type="submit" value="Mise à jour">
+        </div>
+
+    </form>
+</div>
+
+<script type="text/javascript">
+
+const form = document.getElementById('form-update')
+const inputForm = document.querySelectorAll('.form-input');
+form.addEventListener('submit', (e) => {
+    inputForm.forEach ((resultat) => {
+        if (resultat.value == "" || resultat.value == null) {
+            e.preventDefault();
+            resultat.style.background = "red"
+            return false
+        }
+    })
+})
+
+</script>
+
+{% include 'footer.html' %}

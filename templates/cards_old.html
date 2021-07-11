@@ -1,0 +1,102 @@
+
+{% include "header.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+<!-- voir a faire une balise main -->
+<body>
+    <!-- MainPage 
+     faire un carousel de carte avec l'image + les blog de chaque images dedans -->
+    <main class="container"> 
+        <div class="row"> 
+            <div class="col-lg-6 col-md-4 col-sm-2">
+                <h2> Top Recherche de la semaine </h2>
+                <ul> 
+                <div class="row">
+                    {% for card in cards: %}
+                        <div class="col-4">
+                            <h3> {{ card[0].name.capitalize() }}</h1>
+                            <li class="inline" ><a href="{{ url_for('card_page', name = card[0].name) }}">
+                            <img src="{{ card[1].path }}" alt="{{ card[1].alt }}" title="{{ card[1].title }}" style="width:75%"></a>
+                            <h3> recherché {{ card[0].search }} fois </h3>
+                            </li>
+                        </div>
+                    {% endfor %}
+                </div>
+                </ul>
+                <h2> Top des illustration de la semaine </h2>   
+                <p> A FAIRE AVEC RATIO </p>
+            </div>
+            <!--
+            <div class="col-6 jumbotron"> 
+                <h1> GRAPHS </h1>
+                <section>
+                    <h1> Dernier posts </h1>
+                    <ul> 
+                        {% autoescape on %}                   
+                        {% for comment in comments: %}
+                            {% if comment[0].id == comment[0].post_id %}   
+                                <li>
+                                <h2>{{ comment[0].title|safe }} </h2>
+                                <p> POSTE {{ comment[0].content|safe }} </p>
+                                <div class="flex">
+                                    <div class="avatar-comment">
+                                        <img class="" src="{{ comment[2].path }}" alt="{{ comment[2].alt }}" title="{{ comment[2].title }}">
+                                    </div>
+                                    <p><small><strong> {{ comment[1].username }} </strong> - <em>{{ comment[0].date }}</em></small></p>
+                                </div>   
+                                <!--
+                                {% if current_user.id_status == 1: %}
+                                <ul>
+                                    <li class="inline"><a title="Répondre" type="button" class="wrench" data-bs-toggle="modal" data-bs-target="#souscomment_modal" 
+                                        current_username="{{ current_user.username }}" post_id="{{ comment.id }}" post_title="{{ comment.title }}" 
+                                        post_author ="{{ comment.author }}" comment_method="0"> 
+                                        Répondre</a></li>
+                                    {% if current_user.username == comment.author : %}   
+                                        <span class="dot"> . </span>                
+                                        <li class="inline"><a title="Modifier" type="button" class="wrench" data-bs-toggle="modal" data-bs-target="#comment_modal" 
+                                            current_username="{{ current_user.username }}" post_id="{{ comment.id }}" post_title="{{ comment.title }}"
+                                            post_body="{{ comment.body|striptags }}" comment_method="1">
+                                            Modifier</a></li>
+                                            <span class="dot"> . </span>
+                                        <li class="inline"><a title="Supprimer" onclick="return confirm('Voulez-vous supprimer le commentaire suivant: {{ comment.title }} ?')"
+                                            href="{{url_for('comment_page', id=comment.id, author=comment.author, comment_method= 2 )}}">
+                                            Supprimer</a></li>
+                                    {% endif %}
+                                </ul> 
+                            
+                            {% else : %}
+                                {% if username and (current_user.id_status != 1) %}
+                                    <p> Votre status est <strong>{{ current_user.status|safe }}</strong>, vous ne pouvez ni poster ni commenter. </p>
+                                {% else: %}
+                                    <a href="login"> Connectez-vous pour répondre </a>
+                                {% endif %}
+                            {% endif %}  
+                                                       
+                                <ul>                                                
+                                    {% for reply in comments: %}
+                                        {% if reply[0].post_id != reply[0].id and reply[0].post_id == comment[0].id %}
+                                            <li>
+                                            <p> SOUS POSTE {{ reply[0].content }} </p>
+                                            <div class='flex'><div class="avatar-comment"><img class="" src="{{ reply[2].path }}" alt="{{ reply[2].alt }}" title="{{ reply[2].title }}"></div><span><small><strong>
+                                            {{ reply[1].username }}</strong> - <em>{{ reply[0].date }}</em></small> </span></div> 
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% endautoescape %}  
+                    </ul>
+    -->
+
+
+
+    {% include 'footer.html' %}
+</html>
+
+
+
+
+

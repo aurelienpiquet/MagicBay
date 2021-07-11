@@ -1,0 +1,19 @@
+{% block content %}
+<div class="row justify-content-center mb-5">
+    {% for card in tops : %}
+        <div class="col-3">
+            <h5> <strong>{{ card[0].name.capitalize() }}</strong></h5>
+            {% if mode == 1 : %}
+                <h5> Score : {{ card[1] }} <small><em>({{ card[4] }} {{ ' vote' if card[4] < 2 else ' votes' }})</em></small></h5>
+            {% else :%}
+                <h5> Recherché {{ card[0].search }} fois </h5>
+            {% endif %}
+            <a class="mb-3" href="{{ url_for('card_page', name = card[0].name) }}">
+                <div>
+                    <img class="resp" src="{{ card[3].path }}" alt="{{ card[3].alt }}" title="{{ card[3].title }}" style="width:75%">
+                </div>
+            </a>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

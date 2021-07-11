@@ -1,0 +1,14 @@
+<turbo-frame id='turbo-research'>
+<form id="form-add-card" action="{{ url_for('add_to_buy') }}" method='post'  class="row text-center align-items-center">
+    <label class="m-2 col-3 small" for="research">Rechercher une carte</label>
+    <div class="autocomplete col-5" >
+        <input autocomplete="off" class="form-control me-2" name="bar-research" id="input-search-list" type="search" value="" placeholder="Rechercher une carte" aria-label="Search"/>
+    </div>
+    <input class="m-2 col-2" id="quantity" name="quantity" type="number" value="" placeholder="0" min="1" max="4">
+    <input hidden type="text" id="id_deckbuilder" name="id_deckbuilder" type="submit" value="">  
+    <input class="m-2 col-1" id="add-submit" name="add-submit" type="submit" value="+"> 
+</form>  
+</turbo-frame>
+
+
+

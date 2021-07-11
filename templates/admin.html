@@ -1,0 +1,165 @@
+{% include 'header.html' %}
+
+<body>
+    <section>   
+        <h1> Page Admin </h1>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class=flashes>
+                {% for message in messages %}
+                    <li class="li-error">{{ message }}</li>
+                {% endfor %}
+                </ul>
+                {% endif %}
+        {% endwith %}
+    </section>
+
+    <section class="container test-hover">
+        <h1> Carte database </h1>
+        <!-- Pagination Links-->
+        <div class="text-right">
+            <a href="{{ url_for('admin_page', page=cards.prev_num) }}" class="btn btn-outline-dark {% if cards.page == 1 %}disabled{% endif %}">
+                &laquo;</a>
+
+        <!-- Loop through the number of pages to display a link for each-->
+        {% for page_num in cards.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+
+        {% if page_num %}
+        <!-- Check for the active page and set the link to "Active"-->
+            {% if cards.page == page_num %}
+            <a href="{{ url_for('admin_page', page=page_num) }}"
+               class="btn btn-dark">
+                {{ page_num }}
+            </a>
+            {% else %}
+            <a href="{{ url_for('admin_page', page=page_num) }}"
+               class="btn btn-outline-dark">
+                {{ page_num }}
+            </a>
+            {% endif %}
+        {% else %}
+            <span class=ellipsis>…</span>
+        {% endif %}
+    {% endfor %}   
+     <a href="{{ url_for('admin_page', page=cards.next_num) }}"
+       class="btn btn-outline-dark 
+       {% if cards.page == cards.pages %}disabled{% endif %}">
+        &raquo;
+    </a>
+</div>
+<p class="text-right mt-3">
+   Page courante {{ cards.page }} sur {{ cards.pages }}
+</p>
+
+        {% include '_card_page.html' %}
+
+
+    <div class="container">
+        <h2> Ajoûter une nouvelle carte </h2>
+        <a href="{{ url_for('add_page') }}" type="button" class="button button-admin" title="Ajoûter carte"> Ajoûter </a>
+    </div>
+</section>
+<hr>
+<section class="container">
+    <h1> User database </h1>
+    <!--
+    <div class="grouplist">      
+    <ul class="ul-admin">
+        {% for user in users[1:]: %}
+            <li class="li-admin"> Username : {{ user[0].username.upper() }} - Status : <strong>{{ user[1].status.upper() }}</strong> || Modifier accompte status :                  
+                <form class="form-name" name="form-name" method='POST' action="{{ url_for('update_user_page') }}">    
+                <input type="hidden" name="id" value="{{ user[0].id }}">     
+                <select name="select-status" onchange="checkSelection()">                     
+                    <option selected disabled> Choix status </option>
+                    <option value="1">"Actif"</option>
+                    <option value="2">"Inactif"</option>
+                    <option value="3">"En pause"</option>                    
+                </select>
+                <button title="Modifier User Status" class="button-update DisableBtn" type="submit"><img src="static/img/save_img/update2.png"
+                         alt="wrench" class="update"></button>         
+                </form>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+
+    -->
+        <table class="ul-admin">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Nouveau Status</th>
+                    <th>Mise à jour</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users[1:]: %}
+                <tr> 
+                    <form class="form-name" name="form-name" method='POST' action="{{ url_for('update_user_page') }}">
+                        <input type="hidden" name="id" value="{{ user[0].id }}"> 
+                    <td>{{ user[0].id }}</td>
+                    <td>{{ user[0].username }}</td>
+                    <td>{{ user[0].email }}</td>
+                    <td> {{user[1].status.upper() }}</td>  
+                    <td>
+                        <select name="select-status" onchange="checkSelection()">                     
+                            <option selected disabled> Choix status </option>
+                            <option value="1">"Actif"</option>
+                            <option value="2">"Inactif"</option>
+                            <option value="3">"En pause"</option>                    
+                        </select>
+                    </td>
+                    <td>
+                        <button title="Modifier User Status" class="button-update DisableBtn w-25" type="submit"><img src="static/img/save_img/update2.png"
+                                 alt="wrench" class="w-50"></button>              
+                    <td>
+                    </form>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+        </section>
+    </body>
+    
+    {% include 'footer.html' %}
+
+
+<script>
+function checkSelection() {
+    var elements = document.getElementsByClassName("DisableBtn");
+    for (var prop in elements) {
+        element.disabled = false;
+    }
+}
+
+const btnUpdate = document.querySelectorAll('button-update');
+const formUser = document.querySelectorAll('form-name');
+
+btnUpdate.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log('test')
+        $('.form-name').load(document.URL +  ' .form-name');
+    })
+})
+
+formUser.forEach((userform) => {
+    userform.addEventListener('submit', (e) => {
+        e.preventDefault();
+        console.log('Test')
+        userform.style.background= 'red'
+        $('.form-name').load(document.URL +  ' .form-name');
+    })
+})
+
+
+//
+</script>
+
+</body>
+
+

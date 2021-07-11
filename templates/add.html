@@ -1,0 +1,91 @@
+{% include 'header.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+<main>
+<h1> Ajouter une carte </h1>
+
+<div class="container jumbotron">
+    
+  <form action="{{ url_for('add_page') }}" id="form-add" method='post'>
+      <div class="m-2">
+          <label for="name">Nom</label>
+          <input  class="form-input" type="text" id="name" name="name" value="" placeholder="nom de la carte" required>
+      </div>
+      <div class="m-2">
+          <label for="edition">Edition</label>
+          <input class="form-input" type="text" id="edition" name="edition" value="" placeholder="exemple: tempest" required>
+      </div>
+      <div class="m-2">
+          <label for="creation">Création</label>
+          <input class="form-input" type="text" id="creation" name="creation" value="" placeholder="exemple: 2010" required>
+      </div>
+      <div class="m-2">
+          <label for="legality">Légalité</label>
+          <select class="form-input" type="text" id="legality" name="legality" value="" placeholder="" required>
+              <option value="">--Choississez la légalité--</option>
+              <option value="vintage">Vintage</option>
+              <option value="legacy">Legacy</option>
+              <option value="modern">Modern</option>
+              <option value="standard">Standard</option>
+          </select>
+      </div>
+      <div class="m-2">
+          <label for="rarity">Rareté</label>
+          <select class="form-input" type="text" id="rarity" name="rarity" value="" placeholder="" required>
+              <option value="">--Choississez la rareté--</option>
+              <option value="mythic">Mythique</option>
+              <option value="rare">Rare</option>
+              <option value="unco">Unco</option>
+              <option value="commun">Commune</option>
+              <option value="token">Token</option>
+          </select>
+      </div>
+      <div class="m-2">
+          <label for="price">Prix</label>
+          <input class="form-input" type="text" id="price" name="price" value="" placeholder="exemple: 1.25" required>
+      </div>
+      <div class="m-2">
+          <label for="path">Chemin de l'image</label>
+          <input class="form-input" type="file" id="path" name="path" value="" placeholder="" required>
+      </div>
+      <div class="m-2">
+        <label for="type">Type</label>
+        <select class="form-input" type="text" id="type" name="type" value="" placeholder="" required>
+            <option value="">--Choississez le type--</option>
+            <option value="artefact">Artefact</option>
+            <option value="créature">Créature</option>
+            <option value="enchantement">Enchantement</option>
+            <option value="éphémère">Ephémère</option>
+            <option value="terrain">Terrain</option>
+            <option value="planeswalker">Planeswalker</option>
+            <option value="rituel">Rituel</option>
+        </select>
+    </div>
+    <div class="m-2">
+        <label for="ccm">CCM</label>
+        <input type="text" name="ccm" placeholder="CCM: 1R">
+    </div>
+      <div class="m-2">
+          <input type="submit" value="Mise à jour">
+      </div>
+
+  </form>
+</div>
+
+<script type="text/javascript">
+
+const form = document.getElementById('form-add')
+const inputForm = document.querySelectorAll('.form-input');
+form.addEventListener('submit', (e) => {
+  inputForm.forEach ((resultat) => {
+      if (resultat.value == "" || resultat.value == null) {
+          e.preventDefault();
+          resultat.style.background = "red"
+          return false
+      }
+  })
+})
+
+</script>
+
+{% include 'footer.html' %}

@@ -1,0 +1,37 @@
+
+{% block content %}
+    <section class="container">
+        <div class="row">
+            <div class="col-6">
+                
+                <form class="row text-center align-items-center" method="post" action="{{ url_for('create_deckbuilder_list') }}">                   
+                    <label class="m-2 col-3 small" for="create-list">Nouvelle liste</label>
+                    <input class="m-2 col-4" name="new-list" id="create-list" type="text" placeholder="Nom de la liste">
+                    <input hidden type="text" name="id-type" value="{{ id_deckbuilder }}">
+                    <input class="m-2 col-1" id="create-submit" name="add"type="submit" value="+">  
+                </form>
+            </div>
+            <div class="col-6">
+                <h1>Ajoûter des cartes</h1>
+                {% block turbo %}
+                    <turbo-frame id='select-list'>
+                        {% include '_research_select_list.html' %}
+                    </turbo-frame>
+                {% endblock %}
+                <div>
+                    {% if id_deckbuilder == 1 :%}
+                        <turbo-frame id='turbo-research'>
+                            {% include '_research_buy_form.html' %}
+                        </turbo-frame>
+                    {% elif id_deckbuilder == 2 : %}
+                        <turbo-frame id='turbo-research'>
+                            {% include '_research_sell_form.html' %}
+                        </turbo-frame>
+                    {% else : %}
+                        <p> Form deckbuilder </p>
+                    {% endif %}
+                </div>  
+            </div>
+        </div>
+    </section>
+{% endblock %}

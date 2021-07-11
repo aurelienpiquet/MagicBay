@@ -1,0 +1,291 @@
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+
+
+a {
+  text-decoration: none!important;
+}
+
+.w-30 {
+  width: 30%!important;
+}
+
+.w-5 {
+  width: 5%;
+}
+
+.w-40 {
+  width: 40%!important;
+}
+
+div.rating-star {
+  overflow: hidden;
+}
+.star {
+  cursor: pointer;
+  transition: all ease 0.5s;
+  font-size:100%;
+  margin: 3% 0;
+  
+}
+
+.star:hover {
+  font-size: 120%;
+}
+
+.li-horizontal {
+    display: inline;
+}
+
+
+
+.inline {
+  display: inline;
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+}
+
+
+
+
+.displayNone {
+  display: none;
+}
+
+.displayBlock {
+  display: block;
+}
+
+
+#username {
+  color: white;
+  font-size: 140%;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.button-admin {
+  display: inline-block;
+  background-color: #0d6efd;
+  font-size: 150%;
+  color:white;
+  border: 0;
+  border-radius: 4px;
+  text-align: center;
+  padding: 15px 25px;
+  line-height: 1;
+  text-decoration: none;
+  margin: 2% 2%;
+}
+
+.button-admin:hover {
+  background-color:white;
+  border: 2px solid;
+  color: #0d6efd;
+  border-color: #0d6efd;  
+}
+
+.admin-a {
+  text-decoration: none;
+  font-size: 110%;
+  color: black;
+}
+
+.admin-a-del {
+  text-decoration: none;
+  color: red;
+}
+
+.li-error {
+  color:red;
+  font-size:150%;
+}
+
+footer p {
+  margin-bottom: 25%;
+  text-align:center;
+}
+
+input {
+  display: flex;
+  margin: 7% 7%; 
+}
+
+.dot {
+  font-size: 120%;
+  color: #0d6efd;
+  margin-bottom: 10%;
+}
+
+
+/********* PAGE ADMIN ************/
+.ul-admin {
+  text-align: left;
+}
+
+ul .li-admin{
+  display: block;
+}
+
+section .grouplist {
+  height: 30vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+section .grouplist:hover {
+  overflow: auto;
+  scrollbar-color: #0d6efd white;
+}
+
+section.test-hover:hover #pcarte {
+  font-size: 120%;
+  font-weight: bold;
+}
+
+li .update {
+  width: 100%;
+}
+
+li .wrench {
+  width: 2%;
+}
+
+form .button-update {
+  background-color:white;
+  border: none;
+  width: 50px;
+}
+
+.resp {
+  width:100%;
+  height:auto;
+}
+
+/* USER_PAGE */
+
+.nav-user {
+  background-color: #0d6efd;
+  border: solid 1px white;
+}
+
+nav>.user-ul {
+  margin: 0 auto;
+  width: 50%;
+}
+
+nav .user-ul a {
+  color: white;
+  text-decoration: none;
+}
+
+
+input[type="text"].user-form-input {
+  font-style: italic;
+  color: grey;
+  background-color: white;
+}
+
+
+input[type="text"].user-form-input:disabled {
+  background: white;
+  color: black;
+  font-style:normal;
+}
+
+.avatar {
+  width: 200px;
+  height: 200px;
+  border-radius:50%;
+  overflow: hidden;
+  border: 2px solid grey;
+  position:relative;
+  margin: 5% auto;
+}
+
+.avatar>img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.avatar-comment {
+  width: 60px;
+  height: 60px;
+  border-radius:50%;
+  overflow: hidden;
+  border: 2px solid grey;
+  position:relative;
+  margin: 0 3%;
+}
+
+.avatar-comment>img {
+  /*width: 100%;
+  height: auto;
+  position: absolute; 
+  top:50%;
+  left: 50%;
+  transform:translate(-50%, -50%);*/
+  object-fit: contain;
+}
+
+
+.user-main article form {
+  display: flex;
+  align-items: center;
+  width: 90%;
+  margin: 5% auto;
+}
+
+.user-main article form #submit {
+  margin-left: 3%;
+}
+
+.user-main article form label {
+  display: none;
+}
+
+.user-main #checkbox-input {
+  margin: 0 20px;
+}
+
+
+/******* Buy Page *******/
+
+.buy-page-div {
+  transition: all 1s ease;
+}
+
+.buy-image {
+  cursor: pointer;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  margin:  auto;
+}
+
+
+td, th {
+  border: 1px solid #dddddd;
+  padding: 8px;
+  width: 10%;
+  text-align: center!important;
+
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}

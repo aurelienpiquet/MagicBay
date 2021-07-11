@@ -1,0 +1,45 @@
+  {% block content %}
+  {% for id in buy_lists_id : %}
+  <li>
+      <div class="row w-50 justify-content-center align-items-center">
+          <h2 class="col-6 text-center p-2"> {{ id[1].name }} </h2>
+          <div class="col-1 pointer"><img  id="img-{{ id[1].id }}" class="down-arrow wrench w-100" src="/static/img/save_img/down-arrow.png" 
+              alt="wrench" data-bs-toggle="collapse" href="#list-{{ id[1].id }}" aria-expanded="false" aria-controls=""></div> 
+
+          <form class="col-2" action="{{ url_for('delete_list') }}" method='post'>
+            <input type="text" hidden value="{{id[1].id}}" name="delete-id">
+            <input type="submit" value="Delete">
+          </form>
+      </div>
+      <div class="collapse show {{ 'w-50' if  buy_lists[0][1].id_type != 2 else 'w-100' }} justify-content-center align-items-center" id="list-{{ id[1].id }}">
+        <table class=''>
+          <thead>
+              <tr>
+                  <th >Nom de la carte</th>
+                  <th >Nombre d'exemplaire</th>
+              </tr>
+          </thead>
+          <tbody>
+          {% for list in buy_lists : %}
+            {% if list | length > 2 : %}
+                {% if list[2].id_deckbuilder == id[1].id : %} 
+                  <tr>
+                      <td>{{ list[3].name }}</td>
+                      <td>{{ list[2].nb }}</td>
+                      <td> 
+                        <form class="" action="{{ url_for('delete_buy_card_list') }}" method='post'>   
+                          <input class="pointer" name="add-submit-list" type="submit" value="delete">  
+                          <input type="text" hidden name='card-id' value='{{ list[3].id }}'>
+                          <input type="text" hidden name='deck-id' value='{{ list[2].id_deckbuilder }}'>
+                        </form>
+                      </td>
+                  </tr>
+                {% endif %}
+              {% endif %}
+          {% endfor %}
+          </tbody>
+          </table>
+      </div>
+  </li>
+  {% endfor %}
+  {% endblock %}

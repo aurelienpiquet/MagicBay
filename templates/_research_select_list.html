@@ -1,0 +1,20 @@
+{% block content %}
+<div>
+    <label for="#select-list-id"> Sélectionner la liste d'achat </label>
+    <select id="select-list-id">
+        <option value="" placeholder=""> >--Vos listes de d'achat--< </option>
+        {% if buy_lists_id :%}
+            {% for id in buy_lists_id : %}
+                <option id="select-{{ id[1].id }}" value="{{ id[1].id }}"> {{ id[1].name }} </option>
+                {% endfor %}  
+        {% else : %}
+            {% for id in sell_lists_id : %}
+                <option id="select-{{ id[1].id }}" value="{{ id[1].id }}"> {{ id[1].name }} </option>
+                {% endfor %}        
+        {% endif %}    
+    </select>
+</div>
+
+
+{% endblock %}
+

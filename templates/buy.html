@@ -1,0 +1,119 @@
+{% include 'header.html' %}
+
+<body>
+    
+    <h1> Faites votre liste d'achat </h1>
+    <h2>Créer une liste d'achats</h2>
+    {% with id_deckbuilder = 1 %}
+        {% include '_create_list.html' %}
+    {% endwith %}
+    
+    <section id="buy-list" class="container">
+        <div class="row">
+            <h1> Vos listes de d'achat </h1>
+            <ul id="ul-list-update">
+                <turbo-frame id="research-buy-list">
+                    {% include '_research_buy_list.html' %}
+                </turbo-frame>
+            </ul>
+        </div>
+    </section>
+
+    <section class="container">
+        <h1> Résultat des recherches </h1>
+        <turbo-frame id="search-table-list">
+            {% include '_research_table.html' %}
+        </turbo-stream>
+    </section>
+
+<script>
+
+
+
+autocomplete(document.getElementById("input-search-list"), cards);
+
+
+//async function update_list_buy() { 
+//    await $('#ul-list-update').load(document.URL + ' #ul-list-update');
+//    await $('#search-list').load(document.URL + ' #search-list');
+//    await $('#buy-list').load(document.URL + ' #buy-list');
+//    await $('.select-list').load(document.URL + ' .select-list');
+//}
+//
+//async function update_search_list() {
+//    await $('#search-list').load(document.URL + ' #search-list');
+//}
+//
+//async function update_list() { 
+//    await $('#buy-list').load(document.URL + ' #buy-list');
+//    await $('.select-list').load(document.URL + ' .select-list');
+//}
+
+
+
+// Create buy list
+
+//const createSubmit = document.getElementById("create-submit");
+//const createList = document.getElementById("create-list");
+//const updateList = document.querySelector('#update-list');
+
+
+//createSubmit.addEventListener('click', () => {
+//    if (createList.value != "" && createList.value != null) {
+//        $.post( "/create_buy_list", { name : createList.value, id_type : 1}).then(update_list_buy);
+//    }
+//    else {
+//        return false;
+//    }
+//});
+//
+// Add to buy list
+
+//const addSubmit = document.getElementById("add-submit");
+//const quantity = document.getElementById("quantity");
+//const cardName = document.getElementById("search-list");
+//const optionList = document.querySelector('select');
+
+//addSubmit.addEventListener('click', () => {
+//    if (quantity.value > 0 && quantity.value < 5 && quantity != null && cardName.value != null && cardName.value != "" && 
+//    optionList.value != null) {
+//        
+//        $.post( '/add_to_buy_list', { name: cardName.value, quantity: quantity.value, id_type : 1 , id_deckbuilder : optionList.value })//.then(update_list_buy);
+//        //axios
+//    }
+//    else {
+//        return false;
+//    }
+//});
+
+const selectDeckbuilder_2 = document.getElementById('select-list-id');
+const formAdd_2 = document.getElementById('form-add-card');
+const inputIdDeckbuilder_2 = document.getElementById('id_deckbuilder');
+const inputSearched_2 = document.getElementById('input-search-list');
+formAdd_2.addEventListener('submit', () => {
+    inputIdDeckbuilder_2.value = selectDeckbuilder_2.value;
+
+})
+
+// Turn the arrows
+
+const downArrows_2 = document.querySelectorAll('.down-arrow');
+const buyList_2 = document.querySelector('.buy-page-div');
+
+downArrows_2.forEach((arrow) => {
+    arrow.addEventListener('click', () => {
+        if (arrow.style.transform == "rotate(180deg)") {
+            arrow.style.transform = "none";            
+        }    
+        else {
+            arrow.style.transform = "rotate(180deg)";
+        }
+        
+    })
+})
+
+</script>
+
+</body>
+
+{% include 'footer.html' %}

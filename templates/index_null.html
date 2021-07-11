@@ -1,0 +1,240 @@
+
+{% include "header.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+<!-- voir a faire une balise main -->
+<body>
+    <!-- MainPage 
+     faire un carousel de carte avec l'image + les blog de chaque images dedans -->
+    <main class="container"> 
+        <div class="row"> 
+            <div class="col-lg-6 col-md-4 col-sm-2">
+                <h2> Top Recherche de la semaine </h2>
+                <ul> 
+                <div class="row">
+                    {% for card in cards: %}
+                        <div class="col-4">
+                            <li class="inline" ><a href="{{ url_for('card_page', name = card[0].name) }}">
+                            <img src="{{ card[1].path }}" alt="{{ card[1].alt }}" title="{{ card[1].title }}" style="width:75%"></a>
+                            <h3> recherché {{ card.search }} fois </h3>
+                            </li>
+                        </div>
+                    {% endfor %}
+                </div>
+                </ul>
+                <h2> Top des illustration de la semaine </h2>   
+                <!--             
+                <ul>     
+                    
+                <div class="row">          
+                    {% for rating in ratings: %}
+                       <div class="col-4">
+                            <li class="inline"> <a href="{{ url_for('card_page', name = card.name) }}">
+                            <img src="" alt="" style="width:75%;"></a>                                
+                            <h3> {{  elm.rating }} / 5 </h3>
+                            </li>
+                        </div>                    
+                    {% endfor %}
+                </ul>
+               -->
+            </div>
+            <!--
+            <div class="col-6 jumbotron"> 
+                <h1> GRAPHS </h1>
+                <section>
+                    <h1> Dernier posts </h1>
+                    <ul> 
+                        {% autoescape on %}                   
+                        {% for comment in comments[::-1]: %}   
+                        <li>
+                            <h2> {{ comment.title|safe }} </h2>
+                            <p>{{ comment.content|safe }}</p>
+                            <div><img src=""><span><small><strong>
+                                {{ comment.author_relation.email }} {{ comment.author_id }} {{ comment.author|safe }}</strong> - <em>{{ comment.date|safe }}</em></small> </span></div>  
+                            {% if current_user.status == 'actif': %}
+                            <ul>
+                                <li class="inline"><a title="Répondre" type="button" class="wrench" data-bs-toggle="modal" data-bs-target="#souscomment_modal" 
+                                    current_username="{{ current_user.username }}" post_id="{{ comment.id }}" post_title="{{ comment.title }}" 
+                                    post_author ="{{ comment.author }}" comment_method="0"> 
+                                    Répondre</a></li>
+                                {% if current_user.username == comment.author : %}   
+                                    <span class="dot"> . </span>                
+                                    <li class="inline"><a title="Modifier" type="button" class="wrench" data-bs-toggle="modal" data-bs-target="#comment_modal" 
+                                        current_username="{{ current_user.username }}" post_id="{{ comment.id }}" post_title="{{ comment.title }}"
+                                        post_body="{{ comment.body|striptags }}" comment_method="1">
+                                        Modifier</a></li>
+                                        <span class="dot"> . </span>
+                                    <li class="inline"><a title="Supprimer" onclick="return confirm('Voulez-vous supprimer le commentaire suivant: {{ comment.title }} ?')"
+                                        href="{{url_for('comment_page', id=comment.id, author=comment.author, comment_method= 2 )}}">
+                                        Supprimer</a></li>
+                                      
+                                {% endif %}
+                            </ul> 
+                            {% else : %}
+                                {% if username and current_user.status != 'actif' %}
+                                    <p> Votre status est <strong>{{ current_user.status|safe }}</strong>, vous ne pouvez ni poster ni commenter. </p>
+                                {% else: %}
+                                    <a href="login"> Connectez-vous pour répondre </a>
+                                {% endif %}
+                            {% endif %}      
+                            {% if comment.souspost %}                      
+                            <ul>
+                                {% for souspost in comment.souspost %}
+                                <li>
+                                    <p> <strong>{{ souscomment.author|safe }}</strong> à répondu: {{ souscomment.body|safe }}
+                                        <span><small> - <em>{{ souscomment.date|safe }}</em></small></span>
+                                    </p>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                            <hr>
+                        </li>
+                        {% endfor %}       
+                        {% endautoescape %}                         
+                    </ul>
+                </section>
+                <section>
+                    <h1> Rédiger un post </h1>
+                    <!--
+                    <div>
+                    {% if current_user and current_user.status == 'actif': %}
+                    {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+                    </div>
+                    {% else: %}
+                    <a href="login"> Connectez-vous pour répondre </a>
+                    {% endif %}
+                -->
+            </div>
+                </section>
+            </div>
+
+        </div>
+
+    </main>
+
+
+</body>
+ <!-- MODAL COMMENTAIRE -->
+ <!--<div class="modal fade" id="comment_modal" tabindex="-1" aria-labelledby="commentLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <label>Modifier : </label>
+          <h5 class="modal-title" id="commentLabel"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="{{ url_for('comment_page') }}" method="post">
+            <div class="mb-3">
+                <input type="hidden" class="form-control" name="recipient-comment" id="recipient-comment">
+            </div>
+            <div class="modal-input">
+                <label for="messageTitle" class="col-form-label">Modifier Titre:</label>
+                <textarea placeholder="Titre du commentaire" type="text" class="form-control messageTitle" name="messageTitle" id="messageTitle" style="height:27px;"></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="message-text" class="col-form-label">Modifier Texte:</label>
+              <textarea placeholder="Text du commentaire" class="form-control" name="message-text" id="message-text" required></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                <button type="submit" class="btn btn-primary">Modifier</button>
+          </form>
+        </div>        
+        </div>
+      </div>
+    </div>
+  </div>
+  -->
+
+  <!-- MODAL SOUSCOMMENTAIRE -->
+  <!--
+<div class="modal fade" id="souscomment_modal" tabindex="-1" aria-labelledby="souscommentLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="souscommentLabel">Modifier Commentaire</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="{{ url_for('comment_page') }}" method="post">
+            <div class="mb-3">
+                <input type="hidden" class="form-control recipient-souscomment" name="recipient-souscomment" id="recipient-souscomment">
+            </div>
+            <div class="mb-3">
+              <label for="message-text" class="col-form-label">Réponse:</label>
+              <textarea placeholder="Réponse au commentaire" class="form-control" name="message-text" id="message-text" required></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                <button type="submit" class="btn btn-primary">Répondre</button>
+                </form>
+            </div>
+        
+        </div>
+      </div>
+    </div>
+</div>
+
+  
+
+  <script>
+    var commentModal = document.getElementById('comment_modal')
+        commentModal.addEventListener('show.bs.modal', function (event) {
+        // Button that triggered the modal
+        var button = event.relatedTarget
+
+        // Extract info from datas
+        var current_username = button.getAttribute('current_username')
+        var post_id = button.getAttribute('post_id')        
+        var post_title =  button.getAttribute('post_title')
+        var post_body = button.getAttribute('post_body')
+        var comment_method = button.getAttribute('comment_method')
+        //
+        var modalTitle = commentModal.querySelector('.modal-title')
+        var modalBodyInput = commentModal.querySelector('#recipient-comment')
+        var modalMessageBody = commentModal.querySelector('#message-text')
+        var modalMessageTitle = commentModal.querySelector('.messageTitle')
+        
+        modalTitle.textContent = " \t " + post_title
+        modalMessageBody.textContent = post_body
+        modalMessageTitle.textContent = post_title 
+        modalBodyInput.value = [current_username, post_id, comment_method]
+        
+      })
+
+    var souscommentModal = document.getElementById('souscomment_modal')
+        souscommentModal.addEventListener('show.bs.modal', function (event) {
+          // Button that triggered the modal
+          var button = event.relatedTarget
+  
+          // Extract info from datas
+          var current_username = button.getAttribute('current_username')
+          var post_id = button.getAttribute('post_id')          
+          var post_title =  button.getAttribute('post_title')
+          var post_author = button.getAttribute('post_author')
+          var comment_method = button.getAttribute('comment_method')
+          //
+          var sousmodalTitle = souscommentModal.querySelector('.modal-title')
+          var sousmodalBodyInput = souscommentModal.querySelector('#recipient-souscomment')
+          //var sousmodalMessageBody = souscommentModal.querySelector('#message-text')
+                    
+          sousmodalTitle.textContent = "Répondre à " + post_author
+          //sousmodalMessageBody.textContent = "post_body"
+          sousmodalBodyInput.value = [current_username, post_id, comment_method]
+
+          
+        })
+    
+  </script>
+
+-->
+
+
+</html>
+
+
+
+{% include 'footer.html' %}
+

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% block header %}
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MagicBay</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index-style.css') }}">
+{% endblock %}
+
+{% block content %}
+<body class="bg-dark overflow">
+    <header>
+        <section class="w-100 bg-dark">
+            <nav class="flex align-items-center w-100">
+                <div class="flex align-items-center">
+                    <div class="w-10 ms-5 me-5 mt-2">
+                        <a href=""><img class="logo" src="../static/img/logo-rec.png" alt="logo de MagicBay"></a>
+                    </div>
+                    <h1 class="title">MagicBay 
+                    <span><br> Achat - Vente - DeckBuilder </span></h1>
+                </div>
+                <ul class="w-45 flex justify-content-end  align-items-center">
+                    {% if username and username == 'admin': %}
+                        <li class="me-5"><a href="{{ url_for('admin_page', username=username) }}">Page Admin</a></li>
+                        <li><a href="{{ url_for('log_out_page') }}">Se Déconnecter</a></li>
+                    {% elif username : %}
+                        <li class="me-5"><a href="{{ url_for('user_page', username=username) }}">
+                            <div class="avatar">
+                                <img src="{{ avatar }}" alt="logo profil" class="logo">
+                            </div></a></li>
+                        <li><a href="{{ url_for('log_out_page') }}">Se Déconnecter</a></li>
+                    {% else : %}
+                        <li class="me-5"><a href="{{ url_for('register_page') }}"><img src="../static/img/homepage/register.jpg" alt="logo register" class="logo"></a></li>
+                        <li><a href="{{ url_for('login_page') }}">Se Connecter</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </section>
+    </header>
+    <main>
+        <section class="flex justify-content-center w-100  wrap">
+            <div class="m-05">
+                <a href="{{ url_for('cards') }}">
+                <div class="relative show">
+                    <img src="../static/img/homepage/homepage_3.jpg" alt="wallpaper cartes" class="resp skew-5 ">
+                    <h1 class="absolute text-card-down w-100">CARTES</h1>
+                    <div class="absolute bg bg-green w-100 h-100 z-index-100 skew-5 box-shadow-green"></div>
+                </div>
+                </a>
+            </div>
+            
+            <div class="m-05">
+                {% if username : %}
+                    <a href="{{ url_for('buy_list_page', username=username) }}">
+                {% else : %}
+                    <a href="{{ url_for('login_page') }}">
+                {% endif %}
+                <div class="relative show">
+                    <img src="../static/img/homepage/homepage_5.jpg" alt="wallpaper achat" class="resp skew-5 box-shadow-red">
+                    <h1 class="absolute  text-card-down w-100">ACHAT</h1>
+                    <div class="absolute bg bg-red w-100 h-100 z-index-100 skew-5"></div>
+                </div>
+            </a>
+            </div>
+            
+            <div class="m-05 ">
+                {% if username : %}
+                    <a href="{{ url_for('sell_list_page', username=username) }}">
+                {% else : %}
+                    <a href="{{ url_for('login_page') }}">
+                {% endif %}
+                <div class=" relative show">
+                    <img src="../static/img/homepage/homepage_1.jpg" alt="wallpaper vente" class="resp skew-5 box-shadow-black">
+                    <h1 class="absolute  text-card-down w-100">VENTE</h1>
+                    <div class="absolute bg bg-black w-100 h-100 z-index-100 skew-5"></div>
+                </div>
+            </a>
+            </div>
+            
+            <div class="m-05 ">
+                {% if username : %}
+                    <a href="{{ url_for('deckbuilder_page', username=username) }}">
+                {% else : %}
+                    <a href="{{ url_for('login_page') }}">
+                {% endif %}
+                <div class=" relative show">
+                    <img src="../static/img/homepage/homepage_6.jpg" alt="wallpaper deckbuilder" class="resp skew-5 box-shadow-blue">
+                    <h1 class="absolute  text-card-down w-100">DECKBUILDER</h1>
+                    <div class="absolute bg bg-blue w-100 h-100 z-index-100 skew-5"></div>
+                </div>
+            </a>
+            </div>
+
+            <div class="m-05 ">
+                {% if username : %}
+                    <a href="{{ url_for('message_page', username=username) }}">
+                {% else : %}
+                    <a href="{{ url_for('login_page') }}">
+                {% endif %}
+                <div class=" relative show">
+                    <img src="../static/img/homepage/homepage_8.jpg" alt="wallpaper messagerie" class="resp skew-5 box-shadow-white">
+                    <h1 class="absolute  text-card-down w-100">MESSAGERIE</h1>
+                    <div class="absolute bg bg-white w-100 h-100 z-index-100 skew-5"></div>
+                </div>
+            </a>
+            </div>
+        </section>
+    </main>
+
+</body>
+{% endblock %}
+</html>
+
+<!--
+<div class="absolute bg-dark  w-50 h-100"></div>
+<div class="absolute bg-dark  w-50 h-100 position-dark"></div>
+-->

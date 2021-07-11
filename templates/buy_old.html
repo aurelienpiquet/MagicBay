@@ -1,0 +1,198 @@
+{% include 'header.html' %}
+{{ turbo() }}
+<body>
+    <h1> Faites votre liste d'achat </h1>
+
+    <section class="container">
+        <div class="row">
+            <div class="col-6">
+                <h1>Créer une liste d'achats</h1>    
+                <div class="row text-center align-items-center">                    
+                    <label class="m-2 col-3 small" for="create-list">Nouvelle liste</label>
+                    <input class="m-2 col-4" id="create-list" type="text" placeholder="Nom de la liste">
+                    <input class="m-2 col-1" id="create-submit" name="add"type="submit" value="+">  
+                </div>
+            </div>
+            <div class="col-6">
+                <h1>Ajoûter des cartes</h1>
+                {% include '_select_list.html' %}
+                <div class="row text-center align-items-center">
+                    <label class="m-2 col-3 small" for="research">Rechercher une carte</label>
+                    <div class="autocomplete col-5" >
+                        <input autocomplete="off" class="form-control me-2" name="bar-research" id="search-list" type="search" value="" placeholder="Rechercher une carte" aria-label="Search"/>
+                    </div>
+                    <input class="m-2 col-2" id="quantity" name="quantity" type="number" value="" placeholder="0" min="1" max="4">  
+                    <input class="m-2 col-1" id="add-submit" name="add-submit" type="submit" value="+">                     
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="buy-list" class="container">
+        <div class="row">
+            <h1> Vos listes de d'achat </h1>
+            <ul id="ul-list-update">
+                {% for id in buy_lists_id : %}
+                <li>
+                    <div class="row w-50 justify-content-center align-items-center">
+                        <h2 class="col-6 text-center p-2"> {{ id[1].name }} </h2>
+                        <div class="col-1 pointer"><img  id="img-{{ id[1].id }}" class="down-arrow wrench w-100" src="/static/img/save_img/down-arrow.png" 
+                            alt="wrench" data-bs-toggle="collapse" href="#list-{{ id[1].id }}" aria-expanded="false" aria-controls=""></div> 
+                        <a class="col-1 pointer" onclick="return confirm(' Supprimer la liste {{ id[1].name }} ')" href="{{ url_for('delete_list', id=id[1].id)}}">
+                            <img class="delete-bin wrench w-100" src="/static/img/save_img/delete.png" alt="wrench"></a>
+                    </div>
+                    <div class="collapse show" id="list-{{ id[1].id }}">
+                        {% include '_research_list.html' %}
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+
+    <section class="container">
+        <h1> Résultat des recherches </h1>
+        {% if search_list != [] : %}
+        <div class="container-fluid align-items-center">
+            {% include '_research_table.html' %}
+        </div>
+        {% else :%}
+        <p> Aucun utilisateur n'a de carte à vendre que vous recherchez pour le moment. </p>
+        {% endif %}
+    </section>
+
+<!-- Modal  -->
+<div class="modal fade" id="modalMessenger" tabindex="-1" aria-labelledby="modalMessengerTitle" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalMessengerTitle">Envoyer un message</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="container">
+            <textarea style="width:100%" class="modal-body"></textarea>
+        </div>  
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+          <button type="button" id="btn-send-message" class="btn btn-primary" data-bs-dismiss="">Envoyer le message</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+<script>
+autocomplete(document.getElementById("search-list"), cards);
+
+async function update_list_buy() { 
+    await $('#ul-list-update').load(document.URL + ' #ul-list-update');
+    await $('#search-list').load(document.URL + ' #search-list');
+    await $('#buy-list').load(document.URL + ' #buy-list');
+    await $('.select-list').load(document.URL + ' .select-list');
+}
+
+//async function update_search_list() {
+//    await $('#search-list').load(document.URL + ' #search-list');
+//}
+//
+//async function update_list() { 
+//    await $('#buy-list').load(document.URL + ' #buy-list');
+//    await $('.select-list').load(document.URL + ' .select-list');
+//}
+
+
+
+// Create buy list
+
+const createSubmit = document.getElementById("create-submit");
+const createList = document.getElementById("create-list");
+const updateList = document.querySelector('#update-list');
+
+
+createSubmit.addEventListener('click', () => {
+    if (createList.value != "" && createList.value != null) {
+        $.post( "/create_buy_list", { name : createList.value, id_type : 1}).then(update_list_buy);
+    }
+    else {
+        return false;
+    }
+});
+
+// Add to buy list
+
+const addSubmit = document.getElementById("add-submit");
+const quantity = document.getElementById("quantity");
+const cardName = document.getElementById("search-list");
+const optionList = document.querySelector('select');
+
+addSubmit.addEventListener('click', () => {
+    if (quantity.value > 0 && quantity.value < 5 && quantity != null && cardName.value != null && cardName.value != "" && 
+    optionList.value != null) {
+        
+        $.post( '/add_to_buy_list', { name: cardName.value, quantity: quantity.value, id_type : 1 , id_deckbuilder : optionList.value })//.then(update_list_buy);
+        //axios
+    }
+    else {
+        return false;
+    }
+});
+
+// Turn the arrows
+
+const downArrows = document.querySelectorAll('.down-arrow');
+const buyList = document.querySelector('.buy-page-div');
+
+downArrows.forEach((arrow) => {
+    arrow.addEventListener('click', () => {
+        if (arrow.style.transform == "rotate(180deg)") {
+            arrow.style.transform = "none";            
+        }    
+        else {
+            arrow.style.transform = "rotate(180deg)";
+        }
+        
+    })
+})
+
+// Pour Modal Messenger
+
+const btnMessengers = document.querySelectorAll('.btn-messenger');
+const modalMessengerTitle = document.querySelector('#modalMessengerTitle');
+const modalBody = document.querySelector('.modal-body');
+const btnSend = document.getElementById('btn-send-message');
+let receiver = "";
+
+btnMessengers.forEach((btnMessenger) => {
+    btnMessenger.addEventListener('click', () => {
+        //console.log(btnMessenger.getAttribute('name-seller'))
+        modalMessengerTitle.innerText = "Contactez l'utilisateur " + btnMessenger.getAttribute('name-seller');
+        modalBody.placeholder = "Exemple de message : Bonjour, votre carte " + btnMessenger.getAttribute('id-card') + " m'interesse. ";
+        modalBody.value = "";
+        receiver = btnMessenger.getAttribute('name-seller');
+        })
+    })
+         //btn du modal
+
+btnSend.addEventListener('click', () => {
+
+    let content = modalBody.value;
+    if (content != "" && content != null) {
+        $.post('/message', { content : content , receiver : receiver}).then(update_list_buy)
+        $('#modalMessenger').modal('hide');
+    }
+    modalBody.value = "";
+    receiver = "";
+    content = "";
+})
+
+
+
+
+
+
+</script>
+
+</body>
+
+{% include 'footer.html' %}
