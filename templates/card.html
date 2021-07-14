@@ -7,49 +7,61 @@
       <article class="row justify-content-center">
         <h1 id="card-name-title" value="{{card.id}}">{{ card.name }}</h1>
         <h2><em><small></small></em></h2>
-        <div class="border col-3 text-center">
+        <div class="border col-4">
           <div class="image-card w-75 m-auto"><img class="w-100" src="{{media[1].path}}" alt="1{{media[1].alt}}" title={{media[1].title}}/></div>
         </div>
-        <ul class="border col-3 ">
-            <li class="m-2">Rareté : <span class=""><img src="#" alt="{{ info[0][0].rarity.capitalize() }}" title="" class="w-100"></span></li>          
-            <li class="m-2">Edition : <strong>{{ info[0][0].edition.capitalize() }}</strong></li>
-            <li class="m-2"> Coût converti de mana : 
-              {% if card.ccm == none : %}
-                <em>aucun</em>
-              {% else : %}
-                  <span class="d-flex justify-content-center align-content-center flex-wrap">
-                      {% for elm in card.ccm : %}
-                          {% if elm in ['0','1','2','3','4','5','6','7','8','9','X'] : %}
-                              <img class="col-2" src="../static/img/mana/{{elm}}.png" alt="">
-                          {% elif elm in ['R','G','U', 'B', 'W'] : %}
-                              <img class="col-2" src="../static/img/mana/{{elm}}.png" alt="">
-                          {% endif %}
-                      {% endfor %}
-                  </span>
-              {% endif %}
-          </li>
-            <li class="m-2">Type : <strong>{{ card.type.capitalize() }}</strong></li>
+        <ul class="border col-4 ">
+            <li class="m-2 row justify-content-start align-items-center">
+              <h5 class="col-4">Rareté :</h5>  
+              <img class="col-3" src="/static/img/mana/symbol_{{info[0][0].rarity}}.png" alt="{{ info[0][0].rarity.capitalize() }}" title="{{ info[0][0].rarity.capitalize() }}" class="resp"></span></li>          
+            <li class="m-2 row justify-content-start align-items-center">
+              <h5>Edition : <strong class="ms-4">{{ info[0][0].edition.capitalize() }}</strong></h5></li>
+            <li class="m-2 row justify-content-start align-items-center">
+                <h5 class="col-3">CCM :</h5> 
+                {% if card.ccm == none : %}
+                  <em>aucun</em>
+                {% else : %}
+                    <span class="d-flex justify-content-center align-content-center flex-wrap col-6">
+                        {% for elm in card.ccm : %}
+                            {% if elm in ['0','1','2','3','4','5','6','7','8','9','X'] : %}
+                                <img class="col-2" src="../static/img/mana/{{elm}}.png" alt="">
+                            {% elif elm in ['R','G','U', 'B', 'W'] : %}
+                                <img class="col-2" src="../static/img/mana/{{elm}}.png" alt="">
+                            {% endif %}
+                        {% endfor %}
+                    </span>
+                {% endif %}
+            </li>
+            <li  class="m-2 row justify-content-start align-items-center">
+              <h5>Type : <strong>{{ card.type.capitalize() }}</strong></h5></li>
             {% if info[0][0].legality == "standard" : %}
-              <li class="m-2">Légalité : <strong> Standard </strong><br> (Modern - Legacy - Vintage)</li>
+              <li  class="m-2 pe-0 row justify-content-start align-items-center">
+                <h5 class="pe-0">Légalité : <strong> Standard </strong><small>(Modern - Legacy - Vintage)</small></h5></li>
             {% elif info[0][0].legality == "modern" : %}
-              <li class="m-2">Légalité : <strong> Modern </strong><br> (Legacy - Vintage)</li>
+              <li  class="m-2 pe-0 row justify-content-start align-items-center">
+                <h5 class="pe-0">Légalité : <strong> Modern </strong><small>(Legacy - Vintage)</small></h5></li>
             {% elif info[0][0].legality == "legacy" : %}
-              <li class="m-2">Légalité : <strong> Legacy </strong><br> (Vintage)</li>
+              <li  class="m-2 pe-0 row justify-content-start align-items-center">
+                <h5 class="pe-0">Légalité : <strong> Legacy </strong><small>(Vintage)</small></h5></li>
             {% else : %}
-              <li class="m-2">Légalité : <strong> Vintage </strong></li>
+              <li  class="m-2 pe-0 row justify-content-start align-items-center">
+                <h5 class="pe-0">Légalité : <strong> Vintage </strong></h5></li>
             {% endif %}
-            <li class="m-2">Date d'impression: {{ info[0][0].creation_date }}</li>
+            <li  class="m-2 row justify-content-start align-items-center">
+              <h5>Date d'impression: <strong>{{ info[0][0].creation_date }}</strong></h5></li>
 
             {% if rating == 0 :%}
-            <li id="rating" class="m-2">Rating : <strong>Aucune rating sur cette carte</strong></li>
+            <li id="rating"  class="m-2 row justify-content-start align-items-center">
+              <h5>Rating : <strong>Aucune rating sur cette carte</strong></h5></li>
             {% else : %}
-            <li id="rating" class="m-2">Rating : <strong>{{rating}}</strong> {% if count > 1 : %}
+            <li id="rating"  class="m-2 row justify-content-start align-items-center">
+              <h5>Rating : <strong>{{rating}}</strong> {% if count > 1 : %}
                                                                               {{"(" + count|string + " votes)"}}
                                                                               {% else : %}
                                                                               {{"(" + count|string + " vote)"}}
-                                                                              {% endif %}</span></li>
+                                                                              {% endif %}</span></h5></li>
             {% endif %}
-            <li>
+            <li class="m-2 ms-3">
               {% if user_rating == None : %}
               <div class="rating-star">
               <span name="star" class="star" value="1">&#11088</span>
@@ -75,12 +87,10 @@
                 </div>
                 {% endif %}
               </li>
-            <li class="m-2"></li>Popularité : {{card.search}} recherche(s)</li>
-            <li class="m-2">Prix moyen : {{sellers_price}}€</li>
-            <div>
-              <h4>Ajoûter à une de vos recherches</h4> 
-              <button class="btn btn-outline-dark" title="Ajoûter à liste de recherches">+ Recherche</button>
-            </div>
+            <li class="m-2 row justify-content-start align-items-center">
+              <h5>Popularité : <strong>{{card.search}}</strong> {{'recherche' if card.search < 2 else 'recherches'}}</h5></li>
+            <li class="m-2 row justify-content-start align-items-center">
+              <h5>Prix moyen : <strong>{{sellers_price}}€</strong></h5></li>
           </ul>
       {% else : %}
       <h1>Cette carte n'est pas dans notre data base, contactez l'admin</h1>
@@ -89,35 +99,45 @@
   </section>
   <section class="container">
     <article class="row align-items-center jumbotron">
-      <div class="col-6">
+      <div>
         <h1>Règles</h1>
         {% if info != [] : %}
           <ul>
-            {% for rule in info : %}
-              {% if rule[2].id_card == card.id : %}        
-                <li class="m-2"><strong>{{ rule[2].date }}</strong> : {{ rule[2].rule }}</li>
-                  {% if username == 'admin' : %}
-                  <form action="{{url_for('delete_rulling', name=card.name, id=rule[2].id)}}" method="post">
-                    <input onclick="return confirm('Supprimer ce rulling?')" type="submit" value="Supprimer">
-                  </form>
+            {% if info | length() > 1 :%}
+              {% for rule in info[1:] : %}
+                {% if rule[2].id_card == card.id : %}        
+                  <li class="m-2 mb-3 row">
+                    <div  class="col-2">
+                      <h5>{{ rule[2].date }}</h5> 
+                      {% if username == 'admin' : %}
+                      <form class="col-2" action="{{url_for('delete_rulling', name=card.name, id=rule[2].id)}}" method="post">
+                        <input onclick="return confirm('Supprimer ce rulling?')" type="submit" value="Supprimer">
+                      </form>
+                      {% endif %}
+                    </div>
+                    <p class="col-8">{{ rule[2].rule }}</p>
+                    <hr>
+                  </li>
                 {% endif %}
-              {% endif %}
-            {% endfor %}
+              {% endfor %}
+            {% else : %}
+            <li class="m-2 mb-3 row">
+              <h5 class="col-2">{{ info[0][2].date }}</h5> 
+              <p class="col-8">{{ info[0][2].rule }}</p>
+            {% endif %}
           </ul>
         {% endif %}
       </div>
     </article>
     {% if username == 'admin' : %}
-    <form action="{{ url_for('add_rulling', name=card.name) }}" method="post" class="row w-50 justify-content-evenly align-items-center">
-      <label class="col-3 m-1" for="input-rulling">Nouveau rulling</label>
-      <textarea class="col-6" type="text" id="input-rulling" name="input-rulling" placeholder="Ecrivez ici..." rows="5" cols="33"></textarea>
-      <input class="col-2 m-1" type="submit" value="Ajouter">
+    <form action="{{ url_for('add_rulling', name=card.name) }}" method="post" class="m-5 w-50">
+      {{ wtf.quick_form(rulling_form, novalidate=True, button_map={"submit": "dark"}) }}
     </form>
     {% endif %}
   </section>
 
-  {% if comments != [] : %}
     <section class="container">
+    {% if comments != [] : %}
     <article>
       <ul> 
         {% autoescape on %}                   
@@ -134,38 +154,28 @@
                 </div>   
                 {% if current_user.id_status == 1: %}
                 <ul>
-                    <li class="inline"><a title="Répondre" type="button" class="wrench" data-bs-toggle="collapse" href="#collapseForm-{{ comment[0].id }}" 
+                    <li class="inline"><a title="Répondre" type="button" class="" data-bs-toggle="collapse" href="#collapseForm-{{ comment[0].id }}" 
                       role="button" aria-expanded="false" aria-controls="collapseForm">Répondre</a></li>
                     {% if current_user.id == comment[0].id_user : %}   
                         <span class="dot"> . </span>    
 
-                        <li class="inline"><a title="Modifier" type="button" class="wrench" data-bs-toggle="modal" data-bs-target="#comment_modal" 
+                        <li class="inline"><a title="Modifier" type="button" class="" data-bs-toggle="modal" data-bs-target="#comment_modal" 
                           card_id="{{card.id}}" post_id="{{comment[0].id}}" post_title="{{comment[0].title}}"
                           post_body="{{comment[0].content}}" comment_method="1">
                           Modifier</a><span class="dot"> . </span></li>
 
-                          <!-- MODAL COMMENTAIRE -->
+                          <!-- ***************** MODAL UPDATE COMMENTAIRE ******************** -->
                           <div class="modal fade" id="comment_modal" tabindex="-1" aria-labelledby="commentLabel" aria-hidden="true">
                             <div class="modal-dialog">
                               <div class="modal-content">
                                 <div class="modal-header">
-                                  <h5 class="modal-title" id="commentLabel"></h5>
+                                  <h5 class="modal-title" id="commentLabel">Modifier votre post</h5>
                                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                   <form action="{{ url_for('update_comment', comment_id=comment[0].id, card_id=comment[0].id_card, author_id=current_user.id) }}" method="post">
-                                    <div class="modal-input">
-                                        <label for="messageTitle" class="col-form-label">Modifier Titre de truc:</label>
-                                        <textarea placeholder="Titre du commentaire" type="text" class="form-control message-title" name="message-title" id="messageTitle" style="height:27px;"></textarea>
-                                    </div>
-                                    <div class="mb-3">
-                                      <label for="message-text" class="col-form-label">Modifier Texte:</label>
-                                      <textarea placeholder="Text du commentaire" class="form-control" name="message-content" id="message-text" required></textarea>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                                        <button type="submit" class="btn btn-primary">Modifier</button>
-                                    </div>
+                                    {{ wtf.quick_form(post_modify_form, novalidate=True, button_map={"submit": "dark"}) }}
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
                                   </form>
                                 </div>        
                               </div>
@@ -178,9 +188,8 @@
                     {% endif %}
                   </ul>
                     <div class="collapse" id="collapseForm-{{ comment[0].id }}">
-                      <form action="{{url_for('response_comment', card_id=card.id, comment_id=comment[0].id, author_id=current_user.id)}}" method="post" name="form-reply">
-                        <textarea type="text" rows="3" placeholder='Ecrivez la reponse au commentaire' name="collapseForm-textarea" required></textarea>                        
-                        <input type="submit" class="button" value="Répondre">
+                      <form action="{{url_for('add_response', card_id=card.id, comment_id=comment[0].id, author_id=current_user.id)}}" method="post" name="form-reply">
+                        {{ wtf.quick_form(response_form, novalidate=True, button_map={"submit": "dark"}) }}
                       </form>
                     </div>
                 {% else : %}
@@ -189,9 +198,6 @@
                 {% elif username == "no_user": %}
                     <a href="{{ url_for('login_page')}}"> Connectez-vous pour répondre </a>
                 {% endif %}
-
-  
-
             {% endif %}  
                          
             <!-- ###################################### SOUS COMMENTAIRE ############################ -->
@@ -208,35 +214,29 @@
                               <a href="{{ url_for('login_page')}}"> Connectez-vous pour répondre </a>
                             {% elif current_user.id_status == 1: %}
                                 <ul>
-                                  <li class="inline"><a title="Répondre" type="button" class="wrench"  data-bs-toggle="collapse" href="#collapseFormReply-{{ reply[0].id }}" 
+                                  <li class="inline"><a title="Répondre" type="button" class=""  data-bs-toggle="collapse" href="#collapseFormReply-{{ reply[0].id }}" 
                                     role="button" aria-expanded="false" aria-controls="collapseFormReply">Répondre</a></li>
                                   {% if current_user.id == reply[0].id_user : %}   
                                       <span class="dot"> . </span>  
 
-                                      <li class="inline"><a title="Modifier" type="button" class="wrench" data-bs-toggle="modal" data-bs-target="#reply_modal" 
+                                      <li class="inline"><a title="Modifier" type="button" class="" data-bs-toggle="modal" data-bs-target="#reply_modal" 
                                         card_reply_id="{{card.id}}" post_reply_id="{{reply[0].id}}" post_reply_title="{{reply[0].title}}"
                                         post_reply_body="{{reply[0].content}}" reply_method="1">
                                         Modifier</a><span class="dot"> . </span></li>
 
-                                           <!-- MODAL REPLY -->
+                                           <!-- ******************** MODAL RESPONSE ****************** -->
    
                                           <div class="modal fade" id="reply_modal" tabindex="-1" aria-labelledby="replyLabel" aria-hidden="true">
                                            <div class="modal-dialog">
                                              <div class="modal-content">
                                                <div class="modal-header">
-                                                 <label>Modifier : </label>
-                                                 <h5 class="modal-title" id="replyLabel"></h5>
+                                                  <h5 class="modal-title" id="replyLabel">Modifier votre réponse</h5>
                                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                </div>
                                                <div class="modal-body">
-                                                 <form action="{{ url_for('update_comment', comment_id=reply[0].id, card_id=reply[0].id_card, author_id=current_user.id) }}" method="post">
-                                                   <div class="mb-3">
-                                                     <label for="reply-text" class="col-form-label">Modifier Texte: </label>
-                                                     <textarea placeholder="Text du commentaire" class="form-control" name="message-content" id="reply-text" required></textarea>
-                                                   </div>
-                                                   <div class="modal-footer">
+                                                 <form action="{{ url_for('update_response', comment_id=reply[0].id, card_id=reply[0].id_card, author_id=current_user.id) }}" method="post">
+                                                  {{ wtf.quick_form(response_modify_form, novalidate=True, button_map={"submit": "dark"}) }}
                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                                                       <button type="submit" class="btn btn-primary">Modifier</button>
                                                  </form>
                                                </div>        
                                                </div>
@@ -250,9 +250,8 @@
                                   {% endif %} 
                                 </ul>
                                 <div class="collapse" id="collapseFormReply-{{ reply[0].id }}">
-                                  <form action="{{url_for('response_comment', card_id=card.id, comment_id=comment[0].id, author_id=current_user.id)}}" method="post" name="form-reply">
-                                    <textarea type="text" rows="3" placeholder='Ecrivez la reponse au commentaire' name="collapseForm-textarea" required></textarea>                        
-                                    <input type="submit" class="button" value="Répondre">
+                                  <form action="{{url_for('add_response', card_id=card.id, comment_id=comment[0].id, author_id=current_user.id)}}" method="post" name="form-reply">
+                                    {{ wtf.quick_form(response_form, novalidate=True, button_map={"submit": "dark"}) }}
                                   </form>
                                 </div>
 
@@ -261,116 +260,49 @@
                     </li>                          
                   {% endfor %}
                 </ul>
+                <hr>
             </li>
           {% endif %}
         {% endfor %}        
         {% endautoescape %}  
-        
+  
     </ul>
     </article>
     </section>
-    
-
-
 
   {% endif %}
   <section class="container jumbotron">
     <h1>Rédiger un post</h1>
-    <div class="row">
-      <div class="col-4">
-      <form method="post" action="{{ url_for('add_comment', card_id=card.id, author=current_user.username) }}" id="form-comment">
-        <label for="form-title">Titre du nouveau post</label>
-        <input name="comment-title" id="form-title" class="form-control mb-2" type="title" placeholder="Ecrivez le titre de votre nouveau post" value="">
-        <label for="form-textarea">Nouveau commentaire</label>
-        <textarea name="comment-content" id="form-textarea" class="form-control mb-4" rows="3" type="text"  value="" placeholder="Ecrivez votre nouveau commentaire"></textarea>
-        <input id="form-submit "type="submit" class="btn btn-primary">
-      </form>
-    </div>
-  </div>
+    <form method="post" action="{{ url_for('add_comment', card_id=card.id, author=current_user.username) }}">
+      {{ wtf.quick_form(post_form, novalidate=True, button_map={"submit": "dark"}) }}
+    </form>
   </section>
 
 
 <script>
   
-  // Check For Form New Post
-  const formComment = document.getElementById('form-comment');
-  formComment.addEventListener('submit', (e) => {
-    const formTitle = document.getElementById('form-title');
-    const formBody = document.getElementById('form-textarea');
-    const formSubmit = document.getElementById('form-submit');
-    if (formTitle.value == "" || formBody.value == "") {
-      alert('Merci de compléter les champs manquants');
-      e.preventDefault();
-    };
-  });
-
-  var commentModal = document.getElementById('comment_modal')
-  commentModal.addEventListener('show.bs.modal', function (event) {
-  // Button that triggered the modal
-    var button = event.relatedTarget
-
-    // Extract info from form comment
-
-    var post_id = button.getAttribute('post_id')  
-    var card_id = button.getAttribute('card_id')      
-    var post_title =  button.getAttribute('post_title')
-    var post_body = button.getAttribute('post_body')
-    var comment_method = button.getAttribute('comment_method')
-    //
-    var modalTitle = commentModal.querySelector('.modal-title')
-    var modalBodyInput = commentModal.querySelector('#recipient-comment')
-    var modalMessageBody = commentModal.querySelector('#message-text')
-    var modalMessageTitle = commentModal.querySelector('.messageTitle')
-    
-    modalTitle.textContent = " \t " + post_title
-    modalMessageBody.textContent = post_body
-    modalMessageTitle.textContent = post_title 
-    modalBodyInput.value = [comment_method, post_id, card_id]
-    console.log(modalBodyInput.value)
-});
-  
-  // Extract info from form reply MODAL
-  var replyModal = document.getElementById('reply_modal')
-  replyModal.addEventListener('show.bs.modal', function (event) {
-  // Button that triggered the modal
-    var button = event.relatedTarget
-    var post_reply_id = button.getAttribute('post_reply_id');  
-    var card_reply_id = button.getAttribute('card_reply_id');      
-    var post_reply_body = button.getAttribute('post_reply_body');
-    var reply_method = button.getAttribute('reply_method');
-    console.log(post_reply_id, post_reply_id.value);
-    //
-    var modalReplyBodyInput = replyModal.querySelector('#recipient-reply');
-    var modalReplyBody = replyModal.querySelector('#reply-text');
-    //var modalReplyTitle = replyModal.querySelector('.reply-title')
-    
-    //modalTitle.textContent = " \t " + post_title
-    modalReplyBody.textContent = post_reply_body;
-    modalReplyBodyInput.value = [reply_method, post_reply_id, card_reply_id];
-  });
-
     // Script des Stars
     const ratingSpans = document.querySelectorAll('.star');
     const cardId = document.getElementById('card-name-title');
     ratingSpans.forEach((ratingSpan) => {
     ratingSpan.addEventListener('click', () => {
-    ratingValue = ratingSpan.getAttribute('value');
-    cardIdValue = cardId.getAttribute('value');
+      ratingValue = ratingSpan.getAttribute('value');
+      cardIdValue = cardId.getAttribute('value');
     
-    // requete AJAX des Stars
-    $.post( "/rating", { rating: ratingValue, id: cardIdValue });
+      // requete AJAX des Stars
+      $.post( "/card/rating", { rating: ratingValue, id: cardIdValue }).then($('#rating').load(document.URL +  ' #rating'));
 
-    ratingSpans.forEach((ratingSpan) => {
-      if (ratingSpan.getAttribute('value') > ratingValue) {
-        ratingSpan.innerText = "\u2606";
-      }
-      if (ratingSpan.getAttribute('value') == ratingValue) {
-        ratingSpan.style.fontSize = "120%";
-      }
-        ratingSpan.style.transition = "none";
-        ratingSpan.style.pointerEvents = "none";
-    });
-      $('#rating').load(document.URL +  ' #rating');
+      ratingSpans.forEach((ratingSpan) => {
+        if (ratingSpan.getAttribute('value') > ratingValue) {
+          ratingSpan.innerText = "\u2606";
+        }
+        if (ratingSpan.getAttribute('value') == ratingValue) {
+          ratingSpan.style.fontSize = "120%";
+        }
+          ratingSpan.style.transition = "none";
+          ratingSpan.style.pointerEvents = "none";
+      });
+      
     });
   });
 

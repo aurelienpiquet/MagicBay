@@ -1,9 +1,9 @@
 {% include 'header.html' %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-<h1> Mise à jour de la carte : {{ card.name }} </h1>
-<div class="container jumbotron">
-    
+<h1> Mise à jour de la carte : {{ card[0].name }} </h1>
+<!--
+<div class="container jumbotron">    
     <form action="{{ url_for('update_page', id=card[0].id) }}" id="form-update" method='post'>
         <div class="m-2">
             <label for="name">Nom</label>
@@ -73,21 +73,12 @@
 
     </form>
 </div>
+-->
 
-<script type="text/javascript">
-
-const form = document.getElementById('form-update')
-const inputForm = document.querySelectorAll('.form-input');
-form.addEventListener('submit', (e) => {
-    inputForm.forEach ((resultat) => {
-        if (resultat.value == "" || resultat.value == null) {
-            e.preventDefault();
-            resultat.style.background = "red"
-            return false
-        }
-    })
-})
-
-</script>
+<div class="container">
+    <form action="{{url_for('update_page', id=card[0].id) }}" method="post" enctype="multipart/form-data">
+        {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "dark"}) }}
+    </form>
+</div>
 
 {% include 'footer.html' %}

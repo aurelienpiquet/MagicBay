@@ -2,26 +2,9 @@
 {% include "header.html" %}
 
 <main>
-    <nav id="mySidenav" class="sidenav">
-        <span id="btn-nav-close" href="javascript:void(0)" class="closebtn" onclick="closeNav()"><img src="../static/img/save_img/arrows_reverse.png" class="resp"alt=""></span>
-        <a class="mt-5" href="#TopIllus">Illustrations</a>
-        <ul>
-            <a href="#TopIllusLeg">Legacy</a>
-            <a href="#TopIllusModern">Modern</a>
-            <a href="#TopIllusStd">Standard</a>
-        </ul>
-        <a href="#TopSearch">Recherches</a>
-        <ul>
-            <a href="#TopSearchLeg">Legacy</a>
-            <a href="#TopSearchModern">Modern</a>
-            <a href="#TopSearchStd">Standard</a>
-        </ul>
-    </nav>
 
-    <div id="main">
-        <!--<span id="btn-nav" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; open</span>-->
-        <span id="btn-nav-open" onclick="openNav()"> <img src="../static/img/save_img/arrows.png" class="resp" alt=""> </span>
-
+    {% include '_side_nav.html' %}
+    
     <section class="container text-center mb-3">
         <div id="TopIllus">
             <h1> Top des illustrations </h1>
@@ -85,26 +68,7 @@
 </main>         
 {% include 'footer.html' %}
 
-<script>
-/* Set the width of the side navigation to 250px and the left margin of the page content to 250px and add a black background color to body */
-function openNav() {
-    document.getElementById("mySidenav").style.width = "250px";
-    document.getElementById("main").style.marginLeft = "250px";
-    document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
-    document.getElementById("btn-nav-open").style.opacity = "0";
-    document.getElementById("btn-nav-close").style.opacity = "1";
-  }
-  
-  /* Set the width of the side navigation to 0 and the left margin of the page content to 0, and the background color of body to white */
-  function closeNav() {
-    document.getElementById("mySidenav").style.width = "0";
-    document.getElementById("main").style.marginLeft = "0";
-    document.body.style.backgroundColor = "white";
-    document.getElementById("btn-nav-open").style.opacity = "1";
-    document.getElementById("btn-nav-close").style.opacity = "0";
-  } 
 
-</script>
 
 
 

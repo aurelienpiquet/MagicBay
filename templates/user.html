@@ -1,55 +1,60 @@
 {% include 'header.html' %}
+{% block header %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user-style.css') }}">
+{% endblock %}
 {% import "bootstrap/wtf.html" as wtf %}
 
 <body>
     <main class="container user-main">
-        <section class="row">
-            <h1>Profil d'utilisateur: {{ user[0][2].username.capitalize() }}</h1> 
-            <p> rajuter la date de creation du compte</p>
+        <section>
+            <h1 class="text-center"> Votre Profil d'utilisateur: {{ user[0][2].username.capitalize() }}</h1> 
             {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <ul class=flashes>
-                {% for message in messages %}
-                    <li class="li-error">{{ message }}</li>
-                {% endfor %}
-                </ul>
+                {% if messages %}
+                    <ul class=flashes>
+                    {% for message in messages %}
+                        <li class="li-error">{{ message }}</li>
+                    {% endfor %}
+                    </ul>
                 {% endif %}
-            {% endwith %}  
-            <article class="col-5">  
-                <h2>Avatar</h2>               
-                <div class="avatar"><img class="avatar-logo" src="{{ user[0][3].path }}" alt="{{ user[0][3].alt}}" title="{{ user[0][3].title }}"></div>
-                <div id="avatarForm">{{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}) }}</div>
-            </article>
-            <section class="col-7">
-                <h2>Données personnelles</h2>
-                <p><b> prevent le refresh du form </b></p>
-                <ul>   
-                    <form name='user-form' id='user-form' method="post" action="{{ url_for('user_page', username=user[0][2].username) }} ">
-                    <li><label> Nom d'Utilisateur : </label> <strong>{{ user[0][2].username }}</strong> </li>
-                    <li class="flex"><label>Nom :</label><input class="user-form-input" disabled name="name" type="text" value="{{ user[0][2].name }}" placeholder="Nom"></li>
-                    <li class="flex"><label> Prénom : </label><input class="user-form-input" disabled name="lastname" type="text" value="{{ user[0][2].lastname }}" placeholder="Prénom"></li>
-                    <li class="flex"><label> Email </label><input class="user-form-input" disabled name="email" type="text" value="{{ user[0][2].email }}" placeholder='Email'></li>
-                    <li class="flex"><label> Tél : </label><input class="user-form-input" disabled name="phone" type="text" value="{{ user[0][2].phone }}" placeholder="Tél"></li>
-                    <li class="flex"><label> Code Postal : </label><input class="user-form-input" disabled name="zipcode" type="text" value="{{ user[0][2].zipcode }}" placeholder="Zipcode"></li>
+            {% endwith %} 
+        </section> 
+        <section class="mt-5">
+            <h2 class="text-center">Votre Avatar</h2>    
+            <turbo-frame id='avatar-stream'>           
+                <div class="avatar">
+                    <img class="avatar-logo" src="{{ user[0][3].path }}" alt="{{ user[0][3].alt}}" title="{{ user[0][3].title }}">
+                </div>
+            </turbo-frame>
+            <div class="d-flex justify-content-center align-items-center w-100" id="avatarForm">
+                {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "dark"}) }}
+            </div>
+        </section>
+        <section class="container mt-3">
+            <h2 class="text-center">Données personnelles</h2>
+            <ul class="row">   
+                <div class="col-5"></div>
+                <form class="col-6" name='user-form' id='user-form' method="post" action="{{ url_for('user_page', username=user[0][2].username) }} ">
+                    <li class="w-100 d-flex align-items-center m-1"><label> Nom d'Utilisateur : {{ user[0][2].username }}</label></li>
+                    <li class="w-100 d-flex align-items-center m-1"><label>Nom :</label><input class="user-form-input" disabled name="name" type="text" value="{{ user[0][2].name }}" placeholder="Nom"></li>
+                    <li class="w-100 d-flex align-items-center m-1"><label> Prénom : </label><input class="user-form-input" disabled name="lastname" type="text" value="{{ user[0][2].lastname }}" placeholder="Prénom"></li>
+                    <li class="w-100 d-flex align-items-center m-1"><label> Email </label><input class="user-form-input" disabled name="email" type="text" value="{{ user[0][2].email }}" placeholder='Email'></li>
+                    <li class="w-100 d-flex align-items-center m-1"><label> Tél : </label><input class="user-form-input" disabled name="phone" type="text" value="{{ user[0][2].phone }}" placeholder="Tél"></li>
+                    <li class="w-100 d-flex align-items-center m-1"><label> Code Postal : </label><input class="user-form-input" disabled name="zipcode" type="text" value="{{ user[0][2].zipcode }}" placeholder="Zipcode"></li>
                     <div class="flex jumbotron"><label for="checkbox-input"><em>Modifier vos données personnelles</em></label>
                     <input title="Modifier les datas user" type="checkbox" id="checkbox-input" onchange="javascript:ableInput()">
                     <button disabled hidden type="submit" id="form-submit">Mettre à jour</button></div>
-                    </form>
-                </ul>
-                <div>
-
-                </div>
-
-            </section>
+                </form>
+            </ul>
+        </section>
         </section>
         <section>
-            <h1> Mes dernier posts </h1>
+            <h2> Mes dernier posts </h2>
             <ul> 
                 {% autoescape on %}                   
                 {% for post in user: %}   
                     {% if post[0].post_id == post[0].id and post[0].title != none : %}
                         <li>
-                            <h2><a href="{{ url_for('card_page', name=post[1].name)}}"> {{ post[0].title }} </a></h2>
+                            <h3><a href="{{ url_for('card_page', name=post[1].name)}}"> {{ post[0].title }} </a></h3>
                             <p>{{ post[0].content|safe }}</p>
                             <div class='flex'><div class="avatar-comment"><img class="resp" src="{{ post[3].path }}" alt="{{ post[3].alt }}" title="{{ post[3].title }}"></div><span><small><strong>
                                 {{ post[1].username }}</strong> - <em>{{ (post[0].date | string())[:-7] }}</em></small> </span></div>                           
@@ -67,54 +72,35 @@
 
 
 <script>
-var commentModal = document.getElementById('comment_modal')
-commentModal.addEventListener('show.bs.modal', function (event) {
-// Button that triggered the modal
-var button = event.relatedTarget
-
-// Extract info from datas
-var current_username = button.getAttribute('current_username')
-var post_id = button.getAttribute('post_id')        
-var post_title =  button.getAttribute('post_title')
-var post_body = button.getAttribute('post_body')
-var comment_method = button.getAttribute('comment_method')
-//
-var modalTitle = commentModal.querySelector('.modal-title')
-var modalBodyInput = commentModal.querySelector('#recipient-comment')
-var modalMessageBody = commentModal.querySelector('#message-text')
-var modalMessageTitle = commentModal.querySelector('.messageTitle')
-
-modalTitle.textContent = " \t " + post_title
-modalMessageBody.textContent = post_body
-modalMessageTitle.textContent = post_title 
-modalBodyInput.value = [current_username, post_id, comment_method]
-
-})
-
-
-
-const userForm = document.getElementById('user-form');
-userForm.addEventListener('submit', (e) => {
     
-});
-
+// active - desactive le form des datas user
 function ableInput() {
-    var formInput = document.querySelectorAll('form input[type="text"]');
+    const buttonInput = document.getElementById('form-submit');
+    const formInput = document.querySelectorAll('form input[type="text"]');
+
     for (var i = 0; i < formInput.length; i++) {
         formInput[i].disabled = !formInput[i].disabled;
-
     }
-    var buttonInput = document.getElementById('form-submit');
+
+    
     if (buttonInput.hasAttribute('disabled')) {
         buttonInput.disabled =! buttonInput.disabled;
         }
+
     if (buttonInput.hasAttribute('hidden')) {
         buttonInput.removeAttribute('hidden');
     }
+
     else {
         buttonInput.hidden = true;
     };
+    
+buttonInput.addEventListener('click', () => {
+    buttonInput.removeAttribute('hidden');
+})
+
   };
+
 
 const formAvatar = document.getElementById('file');
 const btnAvatar = document.getElementById('submit');

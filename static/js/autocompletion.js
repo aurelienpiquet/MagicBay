@@ -99,7 +99,7 @@ function autocomplete(inp, arr) {
 
 var cards = []
 function loadCards(){
-  $.getJSON('/carte', function(data, status, xhr){
+  $.getJSON('/card/dict', function(data, status, xhr){
   for (var i = 0; i < data.length; i++ ) {
     cards.push(data[i].name);
    }

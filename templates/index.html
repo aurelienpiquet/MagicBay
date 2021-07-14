@@ -81,7 +81,7 @@
             
             <div class="m-05 ">
                 {% if username : %}
-                    <a href="{{ url_for('deckbuilder_page', username=username) }}">
+                    <a href="{{ url_for('deckbuilder_list_page', username=username) }}">
                 {% else : %}
                     <a href="{{ url_for('login_page') }}">
                 {% endif %}

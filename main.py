@@ -43,7 +43,7 @@ from modules.errorHandler import forbidden, page_not_found
 from modules.login import is_admin, is_user, is_logged
 
 #### FORM
-from modules.form import Post, Comments, AddCard, UpdateCard, Register, Avatar
+from modules.form import *
 
 #### BDD
 from modules.database import *
@@ -143,7 +143,7 @@ def update_card_in_db(form):
         info_to_update.rarity = form[8]
 
         db.session.commit() 
-        return f"La mise à jour de {form[1]} a bien été effectutée"
+        return f"La mise à jour de {form[1]} a bien été effectuée"
     except sqlalchemy.exc.StatementError:
         return "Un problème est survenu pendant l'enregistrement de la mise à jour. Vérifiez vos données."
 #
@@ -396,22 +396,72 @@ def home():
         return render_template('index.html', username=username, avatar=avatar)
     return render_template('index.html')
 
+###################### REGISTER - LOGIN ROUTES #######################################
+@app.route('/login', methods=['POST', 'GET'])
+def login_page():
+    username = get_current_user()
+    avatar = get_comment_user_media()
+    if request.method == 'POST':
+        username_form = cleanhtml(request.form['username-email'])
+        email_form = cleanhtml(request.form['username-email'])
+        password_form = cleanhtml(request.form['password'])
+        user = User.query.filter((User.username == username_form) | (User.email == email_form)).first()
+       
+        if not user:
+            flash("Cet Username ou Email n'existe pas.")
+        elif not check_password_hash(user.password, password_form):
+            flash('Mauvais mot de passe.')        
+        else:
+            login_user(user, remember=True)
+            logging.info(f'USER {user.username} CONNECTE')                             
+            return redirect(url_for('home'))#, username = user.username))     
+
+    return render_template("login.html", username=username)
+
+@app.route("/logout")
+def log_out_page():
+    if current_user:
+        logging.warning(f'{current_user} se déconnecte')
+    logout_user()
+    return redirect(url_for('home'))
+
+@app.route('/forgotten_password', methods=['POST', 'GET'])
+def forgotten_password_page():
+    if request.method == 'POST':
+        print('test')
+        return render_template('forgotten_password.html')
+    return render_template('forgotten_password.html')
+
+@app.route('/register', methods=['POST', 'GET'])
+def register_page():    
+    username = get_current_user()
+    message = ""
+    form = Register()
+    if form.validate_on_submit():
+        form_user = [cleanhtml(form.username.data), cleanhtml(form.email.data), cleanhtml(form.password.data)]
+                
+        new_user = create_user(form_user)
+        if new_user : 
+            login_user(new_user),
+            return redirect(url_for('home', logged_in=current_user.is_authenticated))
+        message = f" Ce nouvel account ne peut être créer. <{form_user[0]}> ou <{form_user[1]} existe déjà."
+        flash(message)
+
+    return render_template("register.html", form=form, message=message, username=username)
 
 #
 ########################### CARDS BASED ROUTE ####################
 #
-@app.route('/carte')
+@app.route('/card/dict')
 def card_dict():
     ### accès à protéger par la suite via token
     cards = Card.query.all()
     liste_cards = [card.as_dict() for card in cards]
     return jsonify(liste_cards)
 
-@app.route('/cartes', methods=['POST', 'GET'])
+@app.route('/cards', methods=['POST', 'GET'])
 def cards():
-    #form = Post()
     username = get_current_user()
-    #cards_rating = db.session.query(Rating.rating, Card.id).join(Card, Rating.id_card == Card.id).order_by(Card.id).all()
 
     # Top By Rating
 
@@ -433,24 +483,27 @@ def cards():
     cards_search_legacy = db.session.query(Card, Card.search, Info, Media).join(Info, Info.id_card == Card.id).join(Media, Media.id_card==Card.id).filter(Info.legality !='vintage').order_by(desc(Card.search)).limit(3).all()
     cards_search_modern = db.session.query(Card, Card.search, Info, Media).join(Info, Info.id_card == Card.id).join(Media, Media.id_card==Card.id).filter(Info.legality !='legacy').filter(Info.legality !='vintage').order_by(desc(Card.search)).limit(3).all()
     cards_search_standard = db.session.query(Card, Card.search, Info, Media).join(Info, Info.id_card == Card.id).join(Media, Media.id_card==Card.id).filter(Info.legality != 'modern').filter(Info.legality !='legacy').filter(Info.legality !='vintage').order_by(desc(Card.search)).limit(3).all()
-    print(cards_rating)
 
     return render_template('cards.html', search = cards_search, search_legacy=cards_search_legacy, search_modern=cards_search_modern, 
     search_standard=cards_search_standard, rating=cards_rating, rating_modern=cards_rating_modern, rating_standard=cards_rating_standard, 
     rating_legacy=cards_rating_legacy, username=username)
 
-@app.route('/carte/<name>')
+@app.route('/card/<name>')
 def card_page(name):
-    try :
-        form = Post()
+    card = Card.query.filter_by(name=name).first()
+    rulling_form = RullingCard()
+    post_form = PostCard()
+    post_modify_form = PostModifyCard()
+    response_form = ResponseCard()    
+    response_modify_form = ResponseModifyCard()
+    if card: 
 
         # load des datas de la carte 
-        card = Card.query.filter_by(name=name).first()
 
         card_media = db.session.query(Card, Media).join(Media, Card.id == Media.id_card).filter(Card.name==card.name).first()
 
         card_info = db.session.query(Info, Card, Rulling).join(
-            Card, Info.id_card == Card.id).join(Rulling, Card.id == Rulling.id_card).filter(Card.name == card.name).all()
+            Card, Info.id_card == Card.id).join(Rulling, Card.id == Rulling.id_card).filter(Card.name == card.name).order_by(Rulling.id).all()
 
         card_rating = db.session.query(func.avg(Rating.rating)).filter(Rating.id_card == card.id).first()
 
@@ -490,24 +543,26 @@ def card_page(name):
             comments = []
 
         return render_template('card.html', card=card, sellers_price=sellers_price, comments=comments, username=username, 
-                media=card_media, info = card_info, rating=rating, user_rating=user_rating, count=count)
-    except AttributeError:
-        return redirect(url_for('home'))
+                media=card_media, info = card_info, rating=rating, user_rating=user_rating, count=count,
+                rulling_form=rulling_form, post_form=post_form, response_form=response_form, post_modify_form=post_modify_form, 
+                response_modify_form=response_modify_form)
+    
+    return redirect(url_for('home'))
 
-@app.route('/carte/<name>/add_rulling', methods=['POST'])
+@app.route('/card/<name>/add_rulling', methods=['POST'])
 @is_admin
 def add_rulling(name):
-    if request.method == 'POST':
-        try :
-            card_id = Card.query.filter_by(name=name).first().id
-            rulling_form = cleanhtml(request.form['input-rulling'])
+    rulling_form = RullingCard()
+    card = Card.query.filter_by(name=name).first()
+    if card:
+        if request.method == 'POST' and rulling_form.validate_on_submit():
+            rulling_form = cleanhtml(rulling_form.rulling.data)
             date = datetime.datetime.now()
-            new_rulling = Rulling(rule=rulling_form, date=date, id_card=card_id)
+            new_rulling = Rulling(rule=rulling_form, date=date, id_card=card.id)
             db.session.add(new_rulling)
             db.session.commit()
-            return redirect(url_for('card_page', name=name))
-        except sqlalchemy.exc.SQLAlchemyError:
-            return redirect(url_for('home'))
+    return redirect(url_for('card_page', name=name))
+
 
 @app.route('/card/<name>/delete_rulling/<id>', methods=['POST'])
 @is_admin
@@ -521,7 +576,7 @@ def delete_rulling(name,id):
         except sqlalchemy.exc.SQLAlchemyError:
             return redirect(url_for('home'))
 
-@app.route('/recherche', methods=['POST'])
+@app.route('/card/recherche', methods=['POST'])
 def card_page_research():
     username = get_current_user()
     if request.method == 'POST':
@@ -532,7 +587,7 @@ def card_page_research():
             db.session.commit()
         return redirect(url_for('card_page', name=new_card_name))
 
-@app.route('/rating', methods = ['POST'])
+@app.route('/card/rating', methods = ['POST'])
 def card_rating_page():
     rating = cleanhtml(request.form['rating'])
     card_id = cleanhtml(request.form['id'])
@@ -543,45 +598,55 @@ def card_rating_page():
         db.session.commit()
     return "ok"
 
-@app.route('/add', methods=['GET','POST'])
+@app.route('/admin/add', methods=['GET','POST'])
 @is_admin
 def add_page():
     form = AddCard()
-    if request.method == "POST":
-        add_card = [cleanhtml(request.form[key]) for key in request.form.keys()]
-
-        card_add = [add_card[0],add_card[1] , add_card[2], add_card[3], 
-                                add_card[4], add_card[5], add_card[6], add_card[7], add_card[8]]
-
+    
+    if request.method == 'POST' and form.validate_on_submit(): 
+        add_card = [cleanhtml(form.data[key]) for key in form.data.keys()]
+        card_add = [add_card[0],add_card[1] , add_card[2], add_card[3], add_card[4], add_card[5], add_card[6].filename, add_card[7], add_card[8]]
         new_card = add_card_to_db(card_add)
+        
         if new_card:
             message = f"{card_add[0]} a bien été ajoutée" 
         else:
             message = f"Un problème est survenu pendant l'ajoût de <{card_add[0]}>."
         flash(message)
-        return redirect(url_for('admin_page'))    
+        return redirect(url_for('admin_page')) 
+         
     return render_template('add.html', username=current_user.username, form=form) 
 
-@app.route('/update/<id>', methods=['GET','POST'])
+@app.route('/admin/update/<id>', methods=['GET','POST'])
 @is_admin
 def update_page(id):    
-    form = UpdateCard()    
-    if request.method == "POST":
-        update_card = [cleanhtml(request.form[key]) for key in request.form.keys()]
-        card_updated = [id, update_card[0],update_card[5] , update_card[6], update_card[7], 
-                                update_card[1], update_card[2], update_card[3], update_card[4], update_card[8], update_card[9]]
-        
-        update = update_card_in_db(card_updated)
-
-        flash(update)
-        return redirect(url_for('admin_page'))
-
+       
     card_to_update = db.session.query(Card, Info, Media).join(Info, Card.id == Info.id_card).join(
         Media, Card.id == Media.id_card).filter(Card.id == id).first()
-    return render_template('update.html', card=card_to_update, username=current_user.username, form=form)
+   
+    if card_to_update != None:
+        form = UpdateCard()
+        form.name.render_kw['placeholder'] = card_to_update[0].name
+        form.edition.render_kw['placeholder'] = card_to_update[1].edition
+        form.creation_date.render_kw['placeholder'] = card_to_update[1].creation_date
+        form.price.render_kw['placeholder'] = card_to_update[0].price
+        form.search.render_kw['placeholder'] = card_to_update[0].search
+        form.ccm.render_kw['placeholder'] = card_to_update[0].ccm if card_to_update[0].ccm != None else "Pas de ccm pour cette carte"
+
+        if request.method == 'POST' and form.validate_on_submit():
+            update_card = [cleanhtml(form.data[key]) for key in form.data.keys()]
+            card_update = update_card_in_db([id, update_card[0],update_card[5] , update_card[6], update_card[7].filename, 
+                    update_card[1], update_card[2], update_card[3], update_card[4], update_card[8], update_card[9]])    
+
+            flash(card_update)
+            return redirect(url_for('admin_page'))
+        return render_template('update.html', card=card_to_update, username=current_user.username, form=form)
+
+    flash("Erreur, Id de carte incorrecte")
+    return redirect(url_for('admin_page'))
 #
 
-@app.route('/delete_card', methods=['GET'])
+@app.route('/admin/delete_card', methods=['GET'])
 @is_admin
 def delete_page():    
     if request.method == 'GET':
@@ -611,76 +676,25 @@ def delete_page():
         flash(message)
     return redirect(url_for('admin_page'))
 
-@app.route('/add_comment/<card_id>/<author>', methods=['POST', 'GET'])
-@is_logged
-def add_comment(card_id, author):
+@app.route('/admin/update_user', methods=['POST', 'GET'])
+@is_admin
+def update_user_page():       
+    username = get_current_user()
     if request.method == 'POST':
-        card_name = Card.query.get(card_id)
-        title = cleanhtml(request.form['comment-title'])
-        content = cleanhtml(request.form['comment-content'])
-        comment_form = [cleanhtml(card_id), title, content]
-        if author == current_user.username:
-            new = add_comment_db(comment_form)
-    return redirect(url_for('card_page', name=card_name.name))
-
-@app.route('/update_comment/<card_id>/<comment_id>/<author_id>', methods=['POST'])
-@is_logged
-def update_comment(card_id, comment_id, author_id):
-    if request.method == 'POST':
-        card_name = Card.query.get(card_id)
         try:
-            title = cleanhtml(request.form['message-title'])
-        except werkzeug.exceptions.BadRequestKeyError:
-            title = None
-        content = cleanhtml(request.form['message-content'])
-    update = update_comment_db([card_id, comment_id, author_id, title, content])
-    return redirect(url_for('card_page', name=card_name.name))
+            datas = [cleanhtml(request.form[key]) for key in request.form.keys()]
+            user = User.query.filter_by(id=datas[0]).first()
+            if user and user.id_status != int(datas[1]):
+                user.id_status = datas[1]
+                db.session.commit()
+                flash("Status mise à jour.")
+        except IndexError:
+            flash("Erreur, update de status impossible.")
+    return redirect(url_for('admin_page'))
 
-@app.route('/delete_comment/<comment_id>/<author>/<card_id>')
-@is_logged
-def delete_comment(comment_id, author, card_id):
-    card_name = Card.query.get(cleanhtml(card_id))
-    if author == current_user.username:
-        comment_to_delete = delete_in_db(comment_id)
-    return redirect(url_for('card_page', name=card_name.name))
-
-@app.route('/response_comment/<comment_id>/<author_id>/<card_id>', methods=['POST'])
-@is_logged
-def response_comment(comment_id, author_id, card_id):
-    card_name = Card.query.get(cleanhtml(card_id))
-    if request.method == 'POST':
-        content = cleanhtml(request.form['collapseForm-textarea'])
-        new = add_response_db([comment_id, author_id, card_id, content])
-    return redirect(url_for('card_page', name=card_name.name))
 
 ##################### USER APP ROUTES ########################
-@app.route('/login', methods=['POST', 'GET'])
-def login_page():
-    username = get_current_user()
-    avatar = get_comment_user_media()
-    if request.method == 'POST':
-        username_form = cleanhtml(request.form['username-email'])
-        email_form = cleanhtml(request.form['username-email'])
-        password_form = cleanhtml(request.form['password'])
-        user = User.query.filter((User.username == username_form) | (User.email == email_form)).first()
-       
-        if not user:
-            flash("Cet Username ou Email n'existe pas.")
-        elif not check_password_hash(user.password, password_form):
-            flash('Mauvais mot de passe.')        
-        else:
-            login_user(user, remember=True)
-            logging.info(f'USER {user.username} CONNECTE')                             
-            return redirect(url_for('home'))#, username = user.username))     
 
-    return render_template("login.html", username=username)
-
-@app.route("/logout")
-def log_out_page():
-    if current_user:
-        logging.warning(f'{current_user} se déconnecte')
-    logout_user()
-    return redirect(url_for('home'))
 #
 @app.route('/admin')
 @is_admin
@@ -716,6 +730,7 @@ def user_page(username):
             update_user.phone = cleanhtml(request.form['phone'])    
             update_user.zipcode = cleanhtml(request.form['zipcode'])      
             db.session.commit()
+            return redirect(url_for('user_page', username=username))
         except werkzeug.exceptions.BadRequestKeyError:
             new_avatar = form_avatar.file.data.filename  
             media_update = Media.query.filter(Media.id_user == current_user.id).first()
@@ -731,6 +746,7 @@ def user_page(username):
             else:
                 message="Sélectionner une image en .jpg ou .png"
             flash(message)
+
     return render_template('user.html', user=user, form=form_avatar, username=username)
 
 #################################### SEARCH-BUY PAGE #######################################################
@@ -772,7 +788,7 @@ def buy_list_page(username):
 
     return render_template('buy.html', username=username, buy_lists=buy_lists, buy_lists_id=buy_lists_id, search_list=search_list, seller_list=seller_list)
 
-@app.route('/create_page_list', methods=['POST'])
+@app.route('/user/create_page_list', methods=['POST'])
 @is_user
 def create_deckbuilder_list():
     name = cleanhtml(request.form['new-list'])
@@ -787,7 +803,7 @@ def create_deckbuilder_list():
     if id_type == 3 :
         return redirect(url_for('deckbuilder_list_page', username=current_user.username))
 
-@app.route('/add_to_buy_list', methods = ['POST', 'GET'])
+@app.route('/user/add_to_buy_list', methods = ['POST', 'GET'])
 def add_to_buy():
     if request.method == 'POST':
         id_deckbuilder = cleanhtml(request.form['id_deckbuilder'])
@@ -797,7 +813,7 @@ def add_to_buy():
         return redirect(url_for('buy_list_page', username=current_user.username))
     return redirect(url_for('home'))
 
-@app.route('/delete_page_list', methods=['POST'])
+@app.route('/user/delete_page_list', methods=['POST'])
 @is_user
 def delete_list():   
     id = cleanhtml(request.form['delete-id'])
@@ -818,7 +834,7 @@ def delete_list():
         return redirect(url_for('deckbuilder_list_page', username=current_user.username))
 
 
-@app.route('/delete_buy_card_list', methods=['POST'])
+@app.route('/user/delete_buy_card_list', methods=['POST'])
 @is_user
 def delete_buy_card_list():
     card_id = cleanhtml(request.form['card-id'])
@@ -855,7 +871,7 @@ def sell_list_page(username):
         
     return render_template('sell.html', username=username, sell_lists=sell_lists, sell_lists_id = sell_lists_id)
 
-@app.route('/add_to_sell_list', methods = ['POST', 'GET'])
+@app.route('/user/add_to_sell_list', methods = ['POST', 'GET'])
 @is_user
 def add_to_sell():
     if request.method == 'POST':
@@ -874,7 +890,7 @@ def add_to_sell():
     return redirect(url_for('home'))
 
     
-@app.route('/delete_sell_card_list', methods=['POST'])
+@app.route('/user/delete_sell_card_list', methods=['POST'])
 @is_user
 def delete_sell_card_list():
     card_id = cleanhtml(request.form['card-id'])
@@ -891,7 +907,8 @@ def delete_sell_card_list():
 @app.route('/user/<username>/deckbuilder')
 @is_user
 def deckbuilder_list_page():
-    return redirect(url_for('home'))
+    username = current_user.username
+    return render_template(url_for('deckbuilder.html', username=username))
 
 ############################# MESSAGE ROUTE #############################################
 
@@ -903,7 +920,7 @@ def message_page(username):
     return render_template('messenger.html', username=current_user.username, messages=messages)
      
 
-@app.route('/message/<username>/<receiver>/<card>/<info>', methods=['POST'])
+@app.route('/user/<username>/message/<receiver>/<card>/<info>', methods=['POST'])
 @is_user
 def send_message(username, receiver, card, info):
     if request.method == 'POST': 
@@ -934,8 +951,7 @@ def chat_page(username, receiver, message_id):
             return turbo.stream([
                    turbo.append(
                        render_template('_message.html', message=message, now=datetime.datetime.now()), target='message-chat'),
-                    turbo.update(
-                        render_template('_input_chat.html'), target='input')])
+                   ])
 
     messages = Contact.query.filter(Contact.post_id == message_id).order_by((Contact.date)).all()
     #max_id_messages = db.session.query(func.max(Contact.id)).filter(Contact.post_id == message_id).all()
@@ -948,7 +964,7 @@ def chat_page(username, receiver, message_id):
 
     return render_template('chat.html', username=username, receiver=receiver, messages=messages, now=datetime.datetime.now())
 
-@app.route('/chat_delete/<post_id>')
+@app.route('/user/chat_delete/<int:post_id>')
 @is_user
 def chat_delete_page(post_id):
     message = Message(id = int(post_id))
@@ -957,52 +973,66 @@ def chat_delete_page(post_id):
     else :
         return 'ok'
 
-@app.route('/user/<username>/vendre')
-@is_user
-def sell_page(username):
-    return render_template('sell.html', username=username)
+########################### COMMENT ROUTES #######################################
 
-@app.route('/user/<username>/deckbuilding')
-@is_user
-def deckbuilder_page(username):
-    return render_template('deckbuilder.html', username=username)
+@app.route('/card/add_comment/<int:card_id>/<author>', methods=['POST', 'GET'])
+@is_logged
+def add_comment(card_id, author):
+    post_form = PostCard()
+    card_name = Card.query.get(card_id)
+    if card_name and author == current_user.username:
+        if request.method == 'POST' and post_form.validate_on_submit():   
+            title = cleanhtml(post_form.title.data)
+            content = cleanhtml(post_form.content.data)
+            comment_form = [card_id, title, content]
+            new = add_comment_db(comment_form)
+    return redirect(url_for('card_page', name=card_name.name))
 
-@app.route('/forgotten_password', methods=['POST', 'GET'])
-def forgotten_password_page():
-    return render_template('forgotten_password.html')
+@app.route('/card/update_comment/<int:card_id>/<int:comment_id>/<int:author_id>', methods=['POST'])
+@is_logged
+def update_comment(card_id, comment_id, author_id):
+    card = Card.query.get(card_id)
+    post_modify_form = PostModifyCard()
+    if card:
+        if request.method == 'POST' and post_modify_form.validate_on_submit():
+            title = cleanhtml(post_modify_form.title.data)
+            print(title)
+            content = cleanhtml(post_modify_form.content.data)
+            update = update_comment_db([card_id, comment_id, author_id, title, content])
+    return redirect(url_for('card_page', name=card.name))
 
-@app.route('/register', methods=['POST', 'GET'])
-def register_page():    
-    username = get_current_user()
-    message = ""
-    form = Register()
-    if form.validate_on_submit():
-        form_user = [cleanhtml(form.username.data), cleanhtml(form.email.data), cleanhtml(form.password.data)]
-                
-        new_user = create_user(form_user)
-        if new_user : 
-            login_user(new_user),
-            return redirect(url_for('home', logged_in=current_user.is_authenticated))
-        message = f" Ce nouvel account ne peut être créer. <{form_user[0]}> ou <{form_user[1]} existe déjà."
-        flash(message)
-        #logged_in=current_user.is_authenticated,
-    return render_template("register.html", form=form, message=message, username=username)
+@app.route('/card/delete_comment/<comment_id>/<author>/<card_id>')
+@is_logged
+def delete_comment(comment_id, author, card_id):
+    card_name = Card.query.get(cleanhtml(card_id))
+    if author == current_user.username:
+        comment_to_delete = delete_in_db(comment_id)
+    return redirect(url_for('card_page', name=card_name.name))
 
-@app.route('/update_user', methods=['POST', 'GET'])
-@is_admin
-def update_user_page():       
-    username = get_current_user()
-    if request.method == 'POST':
-        try:
-            datas = [cleanhtml(request.form[key]) for key in request.form.keys()]
-            user = User.query.filter_by(id=datas[0]).first()
-            if user and user.id_status != int(datas[1]):
-                user.id_status = datas[1]
-                db.session.commit()
-                flash("Status mise à jour.")
-        except IndexError:
-            pass
-    return redirect(url_for('admin_page'))
+@app.route('/card/add_response/<int:comment_id>/<int:author_id>/<int:card_id>', methods=['POST'])
+@is_logged
+def add_response(comment_id, author_id, card_id):
+    card_name = Card.query.get(cleanhtml(card_id))
+    response_form = ResponseCard()
+
+    if card_name :
+        if request.method == 'POST' and response_form.validate_on_submit():
+            content = cleanhtml(response_form.content.data)
+            new = add_response_db([comment_id, author_id, card_id, content])
+    return redirect(url_for('card_page', name=card_name.name))
+
+
+@app.route('/card/update_response/<int:card_id>/<int:comment_id>/<int:author_id>', methods=['POST'])
+@is_logged
+def update_response(card_id, comment_id, author_id):
+    card = Card.query.get(card_id)
+    response_modify_form = ResponseModifyCard()
+    if card:
+        if request.method == 'POST' and response_modify_form.validate_on_submit():
+            content = cleanhtml(response_modify_form.content.data)
+            update = update_comment_db([card_id, comment_id, author_id, None, content])
+    return redirect(url_for('card_page', name=card.name))
+    
 
 #
 #

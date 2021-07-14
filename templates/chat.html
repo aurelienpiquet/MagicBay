@@ -2,7 +2,12 @@
 {{ turbo() }}
 
 <body>
-
+    <h1> Echange de messages avec
+         {% if author == current_user.username : %} 
+         {{ receiver }}
+         {% else : %}
+         {{ current_user.username }}
+         {% endif %} </h1>
     <section class="container w-75 mt-5">
         <div class="list-group">
         <turbo-frame id="message-chat">
@@ -20,11 +25,6 @@
         </form>
     </section>
 
-<script>
-    const form = document.getElementById('form');
-    const message = document.getElementById('message-content');
-
-</script>
 </body>
 
 {% include 'footer.html' %}

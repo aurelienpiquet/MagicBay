@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header-style.css')}}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/tops-style.css')}}"/>
 
-    {{ turbo() }}
+   <!-- {{ turbo() }} -->
   </head>
 
   <!-- NAVBAR A refaire sans bootstrap -->
@@ -65,8 +65,8 @@
                   <li mt-2><a class="dropdown-item" href="{{ url_for('user_page', username=username) }}">Profil</a></li>
                   <li mt-2><a class="dropdown-item" href="{{ url_for('message_page', username=username )}}">Messages</a></li>
                   <li mt-2><a class="dropdown-item" href="{{ url_for('buy_list_page', username=username) }}">Acheter</a></li>
-                  <li mt-2><a class="dropdown-item" href="{{ url_for('sell_page', username=username) }}">Vendre</a></li>
-                  <li mt-2><a class="dropdown-item" href="{{ url_for('deckbuilder_page', username=username) }}">DeckBuilder</a></li>
+                  <li mt-2><a class="dropdown-item" href="{{ url_for('sell_list_page', username=username) }}">Vendre</a></li>
+                  <li mt-2><a class="dropdown-item" href="{{ url_for('deckbuilder_list_page', username=username) }}">DeckBuilder</a></li>
                 </ul>
             </li>
 

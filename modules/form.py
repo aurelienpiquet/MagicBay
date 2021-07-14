@@ -5,60 +5,85 @@ from flask_wtf.file import FileField, FileAllowed, FileRequired
 from flask_ckeditor import CKEditor, CKEditorField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import ValidationError
+import re
 
-def FileSizeLimit(max_size_in_mb):
-    max_bytes = max_size_in_mb*1024*1024
-    def file_length_check(form, field):
-        if len(field.data.read()) > max_bytes:
-            raise ValidationError(f"File size must be less than {max_size_in_mb}MB")
+#def FileSizeLimit(max_size_in_mb):
+#    max_bytes = max_size_in_mb*1024*1024
+#    def file_length_check(form, field):
+#        if len(field.data.read()) > max_bytes:
+#            raise ValidationError(f"File size must be less than {max_size_in_mb}MB")
+#    
+#    return file_length_check
+
+#class SignupForm(Form):
+#    age = IntegerField(u'Age')
+#
+#    def validate_age(form, field):
+#        if field.data < 13:
+#            raise ValidationError("We're sorry, you must be 13 or older to register")
+
+class Card():
+    def __init__(self):
+        self.card_name = None
+
+    def getName(self):
+        return self.card_name
     
-    return file_length_check
+    def setName(self, new_name):
+        self.card_name = new_name
+        return self
 
-
-class Post(FlaskForm):
-    title = StringField('Titre', validators=[DataRequired(message='DataRequired'), Length(max=40)])
-    body = TextAreaField('Post',  validators=[DataRequired(message='DataRequired')])
-    submit = SubmitField('Ajoûter Post')
-
-class Comments(FlaskForm):
-    body =  CKEditorField('Commentaire', validators=[DataRequired(message='DataRequired')])
-    submit = SubmitField('Ajoûter Commentaire', validators=[DataRequired(message='DataRequired')])
+########### CARDS FORM ###############""
 
 class AddCard(FlaskForm):
     name = StringField('Nom de la nouvelle carte', validators=[DataRequired(message='DataRequired')], render_kw={"placeholder": "Nom"})
     edition = StringField('Edition de la nouvelle carte', validators=[DataRequired(message='DataRequired')], render_kw={"placeholder": "Edition"})
-    creation_date = DateField('Date de création', format='%Y-%m-%d', validators=[DataRequired(message='DataRequired')], render_kw={"placeholder": "Date"})
-    legality = StringField('Légalité de la nouvelle carte', validators=[DataRequired(message='DataRequired')], render_kw={"placeholder": "Legalité"})
-    rarity = StringField('Rareté de la nouvelle carte', validators=[DataRequired(message='DataRequired')], render_kw={"placeholder": "Rareté"})
-    price = FloatField('Prix de la nouvelle carte en €', validators=[DataRequired(message='Formatage pour le prix: 1.00')], render_kw={"placeholder": "1.00"})
-    file = FileField('Image de la nouvelle carte', validators=[FileRequired(), FileAllowed(['jpg', 'png'], '*.jpg ou *.png')])
-    submit = SubmitField('Ajoûter Carte')
-
-    #def validate_enddate_field(form, field):
-    #if field.data < form.creation_date.data:
-    #    raise ValidationError("End date must not be earlier than start date.")
-
-#class UpdateCard(FlaskForm):
-#    name = StringField('Nom de la nouvelle carte', validators=[DataRequired(message='DataRequired')], render_kw={"placeholder": "Nom"})
-#    edition = StringField('Edition de la nouvelle carte', validators=[DataRequired(message='DataRequired')], render_kw={"placeholder": "Edition"})
-#    creation_date = DateField('Date de création', format='%Y-%m-%d', validators=[DataRequired(message='DataRequired')], render_kw={"placeholder": "Date"})
-#    legality = StringField('Légalité de la nouvelle carte', validators=[DataRequired(message='DataRequired')], render_kw={"placeholder": "Legalité"})
-#    rarity = StringField('Rareté de la nouvelle carte', validators=[DataRequired(message='DataRequired')], render_kw={"placeholder": "Rareté"})
-#    price = FloatField('Mise à jour du prix', validators=[DataRequired(message='Formatage pour le prix: 1.00')], render_kw={"placeholder": "1.00"})
-#    search = IntegerField('Nombre de recherche', validators=[DataRequired(message='Formatage pour le nombre de recherche: 1')], render_kw={"placeholder": "1"})
-#    file = FileField('Mise à jour image', validators=[FileRequired(), FileAllowed(['jpg', 'png'], '*.jpg ou *.png')])
-#    submit = SubmitField('Mise à jour')
+    creation_date = StringField('Date de création', validators=[DataRequired(message='DataRequired')], render_kw={"placeholder": "Année: 2010"})
+    legality = SelectField('Légalité', choices=[('Vintage', 'Vintage'), ('Legacy', 'Legacy'),('Modern', 'Modern'),('Standard', 'Standard')], validators=[DataRequired(message='DataRequired')])
+    rarity = SelectField('Rareté', choices=[('mythique', 'Mythique'), ('rare', 'Rare'),('unco', 'Unco'),('commune', 'Commune'),('token', 'Token')], validators=[DataRequired(message='DataRequired')])
+    price = FloatField('Prix', validators=[DataRequired(message='Formatage pour le prix: 1.00')], render_kw={"placeholder": "1.00"})
+    file = FileField('Image')
+    type = SelectField('Type', choices=[('artefact','Artefact'),('créature','Créature'),('enchantement','Enchantement'),('éphémère','Ephémère'),('terrain','Terrain'),('planeswalker','Planeswalker'),('rituel','Rituel'), ('token','Token')], validators=[DataRequired(message='DataRequired')])
+    ccm = StringField('CCM', validators=[DataRequired(message='DataRequired')], render_kw={"placeholder": "1RR"})
+    submit = SubmitField('Ajouter Carte')
 
 class UpdateCard(FlaskForm):
-    name = StringField('Nom de la nouvelle carte', validators=[DataRequired(message='DataRequired')], render_kw={"placeholder": "Nom"})
-    edition = StringField('Edition de la nouvelle carte', validators=[DataRequired(message='DataRequired')], render_kw={"placeholder": "Edition"})
-    creation_date = DateField('Date de création', format='%Y-%m-%d', validators=[DataRequired(message='DataRequired')], render_kw={"placeholder": "Date"})
-    legality = SelectField('Légalité', choices=['Rareté','rare','unco','commune'], validators=[DataRequired(message='DataRequired')])
-    rarity = SelectField('Rareté', choices=['Rareté','rare','unco','commune'], validators=[DataRequired(message='DataRequired')])
+    name = StringField('Nom de la nouvelle carte', validators=[DataRequired(message='DataRequired')], render_kw={"placeholder":""})
+    edition = StringField('Edition de la nouvelle carte', validators=[DataRequired(message='DataRequired')], render_kw={"placeholder": ""})
+    creation_date = StringField('Date de création', validators=[DataRequired(message='DataRequired')], render_kw={"placeholder": "Année: 2010"})
+    legality = SelectField('Légalité', choices=[('Vintage', 'Vintage'), ('Legacy', 'Legacy'),('Modern', 'Modern'),('Standard', 'Standard')], validators=[DataRequired(message='DataRequired')], render_kw={"placeholder": ""})
+    rarity = SelectField('Rareté', choices=[('mythique', 'Mythique'), ('rare', 'Rare'),('unco', 'Unco'),('commune', 'Commune'),('token', 'Token')], validators=[DataRequired(message='DataRequired')])
     price = FloatField('Mise à jour du prix', validators=[DataRequired(message='Formatage pour le prix: 1.00')], render_kw={"placeholder": "1.00"})
     search = IntegerField('Nombre de recherche', validators=[DataRequired(message='Formatage pour le nombre de recherche: 1')], render_kw={"placeholder": "1"})
-    file = FileField('Mise à jour image', validators=[FileRequired(), FileAllowed(['jpg', 'png'], '*.jpg ou *.png')])
+    file = FileField('Mise à jour image', validators=[FileRequired(message="Image Requise"), FileAllowed(['jpg', 'png'], '*.jpg ou *.png')])
+    type = SelectField('Type', choices=[('artefact','Artefact'),('créature','Créature'),('enchantement','Enchantement'),('éphémère','Ephémère'),('terrain','Terrain'),('planeswalker','planeswalker'),('rituel','Rituel'), ('token','Token')], validators=[DataRequired(message='DataRequired')])
+    ccm = StringField('CCM', validators=[DataRequired(message='DataRequired')], render_kw={"placeholder": "1RR ou XXGBR"})
     submit = SubmitField('Mise à jour')
+
+class RullingCard(FlaskForm):
+    rulling = TextAreaField('Ajouter un rulling', validators=[DataRequired(message='DataRequired')], render_kw={"placeholder":"Ecrivez le nouveau rulling ici..."})
+    submit = SubmitField('Ajouter rulling')
+
+class PostCard(FlaskForm):
+    title = StringField('Titre du post', validators=[DataRequired(message='DataRequired'), Length(max=100)], render_kw={"placeholder": "Rédiger le titre du post ici ..."})
+    content = TextAreaField('Contenu du post',  validators=[DataRequired(message='DataRequired')], render_kw={"placeholder": "Rédiger le contenu du post ici ..."})
+    submit = SubmitField('Ajouter Post')
+
+class ResponseCard(FlaskForm):
+    content =  TextAreaField('',validators=[DataRequired(message='DataRequired')], render_kw={"placeholder": "Rédiger votre réponse ici..."} )
+    submit = SubmitField('Envoyer', validators=[DataRequired(message='DataRequired')])
+
+class PostModifyCard(FlaskForm):
+    title = StringField('Modifier le titre du post', validators=[DataRequired(message='DataRequired'), Length(max=100)], render_kw={"placeholder": "Rédiger le titre du post ici ..."})
+    content = TextAreaField('Modifier le contenu du post',  validators=[DataRequired(message='DataRequired')], render_kw={"placeholder": "Rédiger le contenu du post ici ..."})
+    submit = SubmitField('Modifier le post')
+
+class ResponseModifyCard(FlaskForm):
+    content =  TextAreaField('Modifier le contenu de la réponse',validators=[DataRequired(message='DataRequired')], render_kw={"placeholder": "Rédiger votre réponse ici..."} )
+    submit = SubmitField('Envoyer', validators=[DataRequired(message='DataRequired')])
+
+
+#### USER FORM #######
 
 class Register(FlaskForm):
     username = StringField("Nom d'utilisateur", validators=[DataRequired(message="Nom d'utilisateur requis"), 
@@ -72,3 +97,10 @@ class Register(FlaskForm):
 class Avatar(FlaskForm):
     file = FileField('Nouvel Avatar', validators=[FileRequired(message="Image requise"), FileAllowed(['jpg', 'png'], '*.jpg ou *.png')])
     submit = SubmitField("Modifier Avatar") 
+
+
+
+if __name__ == '__main__':
+
+    form = UpdateCard().setName('test')
+    print(form)
