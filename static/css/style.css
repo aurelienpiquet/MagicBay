@@ -24,6 +24,7 @@ a {
 div.rating-star {
   overflow: hidden;
 }
+
 .star {
   cursor: pointer;
   transition: all ease 0.5s;
@@ -40,8 +41,6 @@ div.rating-star {
     display: inline;
 }
 
-
-
 .inline {
   display: inline;
 }
@@ -50,8 +49,6 @@ div.rating-star {
   display: flex;
   align-items: center;
 }
-
-
 
 
 .displayNone {

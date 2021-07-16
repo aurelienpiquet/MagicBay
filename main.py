@@ -15,7 +15,6 @@ import werkzeug.exceptions
 from turbo_flask import Turbo
 
 
-
 from PIL import Image
 import sys, os, logging, datetime, sqlalchemy.exc, io, base64, pprint, time
 
@@ -191,7 +190,9 @@ def add_card_to_list(datas):
         db.session.commit()
         return True
     except sqlalchemy.exc.StatementError:
-        return "Problème d'enregistrement"
+        return False
+    except AttributeError:
+        return False
 
 def add_card_to_sell_list(datas):
     try:
@@ -337,13 +338,16 @@ class Message():
                               receiver = self.receiver.username, 
                               id_user = self.author.id,
                               id_info = id_info)
-
-        db.session.add(new_message)
-        db.session.commit()
-        if new_message.post_id == None :
-            new_message.post_id = new_message.id
+        try:
+            db.session.add(new_message)
             db.session.commit()
-        self.id = new_message.id
+            if new_message.post_id == None :
+                new_message.post_id = new_message.id
+                db.session.commit()
+            self.id = new_message.id
+            return True
+        except sqlalchemy.exc.StatementError:
+            return False
 
     def deleteMessage(self):
         message_to_delete = Contact.query.get(self.id)
@@ -359,9 +363,6 @@ class Message():
             db.session.delete(message_to_delete)
             db.session.commit()
             return False
-        
-        
-        return True
 
     def __repr__(self):
         return f"Message author : {self.author.username} - Message receiver : {self.receiver.username} - Message content : {self.content}"
@@ -400,7 +401,6 @@ def home():
 @app.route('/login', methods=['POST', 'GET'])
 def login_page():
     username = get_current_user()
-    avatar = get_comment_user_media()
     if request.method == 'POST':
         username_form = cleanhtml(request.form['username-email'])
         email_form = cleanhtml(request.form['username-email'])
@@ -591,33 +591,35 @@ def card_page_research():
 def card_rating_page():
     rating = cleanhtml(request.form['rating'])
     card_id = cleanhtml(request.form['id'])
+    card = Card.query.get(card_id)
+    if card :
+        if not Rating.query.filter(Rating.id_user == current_user.id).filter(Rating.id_card == card_id).first():
+            new_rating = Rating(rating=rating, date=datetime.datetime.now(), id_user=current_user.id, id_card=card_id)
+            db.session.add(new_rating)
+            db.session.commit()
+            flash(f"Votre rating a bien été pris en compte pour la carte {card.name}")
+        else :
+            flash(f"Un problème est survenu pendant l'ajout de votre rating.", "erreur")
+        return redirect(url_for('card_page', name=card.name))
 
-    if not Rating.query.filter(Rating.id_user == current_user.id).filter(Rating.id_card == card_id).first():
-        new_rating = Rating(rating=rating, date=datetime.datetime.now(), id_user=current_user.id, id_card=card_id)
-        db.session.add(new_rating)
-        db.session.commit()
-    return "ok"
-
-@app.route('/admin/add', methods=['GET','POST'])
+@app.route('/admin/card/add', methods=['GET','POST'])
 @is_admin
 def add_page():
-    form = AddCard()
-    
+    form = AddCard()   
     if request.method == 'POST' and form.validate_on_submit(): 
         add_card = [cleanhtml(form.data[key]) for key in form.data.keys()]
-        card_add = [add_card[0],add_card[1] , add_card[2], add_card[3], add_card[4], add_card[5], add_card[6].filename, add_card[7], add_card[8]]
+        card_add = [add_card[0], add_card[1] , add_card[2], add_card[3], add_card[4], add_card[5], add_card[6].filename, add_card[7], add_card[8]]
         new_card = add_card_to_db(card_add)
         
         if new_card:
-            message = f"{card_add[0]} a bien été ajoutée" 
+            flash(f"{card_add[0]} a bien été ajoutée.", "succès") 
         else:
-            message = f"Un problème est survenu pendant l'ajoût de <{card_add[0]}>."
-        flash(message)
+            flash(f"Un problème est survenu pendant l'ajoût de <{card_add[0]}>.", "erreur")
         return redirect(url_for('admin_page')) 
          
     return render_template('add.html', username=current_user.username, form=form) 
 
-@app.route('/admin/update/<id>', methods=['GET','POST'])
+@app.route('/admin/card/update/<id>', methods=['GET','POST'])
 @is_admin
 def update_page(id):    
        
@@ -637,21 +639,23 @@ def update_page(id):
             update_card = [cleanhtml(form.data[key]) for key in form.data.keys()]
             card_update = update_card_in_db([id, update_card[0],update_card[5] , update_card[6], update_card[7].filename, 
                     update_card[1], update_card[2], update_card[3], update_card[4], update_card[8], update_card[9]])    
-
-            flash(card_update)
+            if card_update:
+                flash(f"Mise à jour de la carte {update_card[0]} effectué.", "succès")
+            else :
+                flash(f"Mise à jour de la carte {update_card[0]} impossible.", "erreur")
             return redirect(url_for('admin_page'))
         return render_template('update.html', card=card_to_update, username=current_user.username, form=form)
 
-    flash("Erreur, Id de carte incorrecte")
+    flash("Erreur, Id de carte incorrecte.", "erreur")
     return redirect(url_for('admin_page'))
 #
 
-@app.route('/admin/delete_card', methods=['GET'])
+@app.route('/admin/card/delete/<int:id>', methods=['GET'])
 @is_admin
-def delete_page():    
+def delete_page(id):    
     if request.method == 'GET':
-        logging.warning('DELETE')
-        card_id = int(cleanhtml(request.args.get('id', 0, str))) 
+        #card_id = int(cleanhtml(request.args.get('id', 0, str))) 
+        card_id = id
         try:  
             card_to_delete = Card.query.get(card_id)
 
@@ -670,26 +674,25 @@ def delete_page():
             
             card_name = card_to_delete.name.capitalize()
             db.session.commit()
-            message = f"{card_name} a bien été supprimée de la database."
+            flash(f"{card_name} a bien été supprimée de la database.", "succès")
         except sqlalchemy.exc.StatementError:
-            message = f"{card_name} n'a pas été supprimée de la database."
-        flash(message)
+            flash(f"{card_name} n'a pas été supprimée de la database.", "erreur")
     return redirect(url_for('admin_page'))
 
-@app.route('/admin/update_user', methods=['POST', 'GET'])
+@app.route('/admin/user/update/<int:id>', methods=['POST', 'GET'])
 @is_admin
-def update_user_page():       
+def update_user_page(id):       
     username = get_current_user()
     if request.method == 'POST':
         try:
-            datas = [cleanhtml(request.form[key]) for key in request.form.keys()]
-            user = User.query.filter_by(id=datas[0]).first()
-            if user and user.id_status != int(datas[1]):
-                user.id_status = datas[1]
+            status = [cleanhtml(request.form[key]) for key in request.form.keys()][0]
+            user = User.query.get(id)
+            if user and user.id_status != status:
+                user.id_status = status
                 db.session.commit()
-                flash("Status mise à jour.")
+                flash(f"Status de l'utilisateur {user.username} mise à jour.", "succès")
         except IndexError:
-            flash("Erreur, update de status impossible.")
+            flash(f"Erreur, mise à jour du status de {user.username} impossible.", "erreur")
     return redirect(url_for('admin_page'))
 
 
@@ -701,13 +704,14 @@ def update_user_page():
 def admin_page():
     nb = db.session.query(Card).count()
     limit = 10
+
     page = request.args.get('page', 1, type=int) if request.args.get('page', 1, type=int) <  round(nb/limit) + 1 else round(nb/limit)
     if page == 0 :
         page = 1
     
     cards = db.session.query(Card, Info).join(Info, Info.id_card == Card.id).order_by(Card.name).paginate(page=page, per_page=limit)
-    all_users = db.session.query(User, Status).join(Status, User.id_status == Status.id)
-    return render_template('admin.html', page = page, cards = cards, users = all_users, username=current_user.username)
+    all_users = db.session.query(User, Status).join(Status, User.id_status == Status.id).all()
+    return render_template('admin.html', page = page, cards = cards, users = all_users[1:], username=current_user.username)
 #
 @app.route('/user/<username>', methods=['POST', 'GET'])
 @is_user
@@ -754,6 +758,7 @@ def user_page(username):
 @app.route('/user/<username>/acheter', methods = ['POST', 'GET'])
 @is_user
 def buy_list_page(username):
+    create_list_form = CreateList()
     buy_lists = db.session.query(User, DeckBuilder, DeckBuilder_Card, Card).join(DeckBuilder, User.id == DeckBuilder.id_user).join(
         DeckBuilder_Card, DeckBuilder.id == DeckBuilder_Card.id_deckbuilder).join(
             Card, Card.id == DeckBuilder_Card.id_card).filter(DeckBuilder.id_user == current_user.id).filter(
@@ -762,11 +767,16 @@ def buy_list_page(username):
     cards = [card[3].name for card in buy_lists]
     
     buy_lists_id = db.session.query(User, DeckBuilder).join(DeckBuilder, User.id == DeckBuilder.id_user).filter(
-        User.id == current_user.id).filter(DeckBuilder.id_type == 1).all()
+        User.id == current_user.id).filter(DeckBuilder.id_type == 1).order_by(DeckBuilder.name).all()
 
     if buy_lists == [] : 
         buy_lists = buy_lists_id
-    
+
+    limit = 2
+    page = request.args.get('page', 1, type=int) if request.args.get('page', 1, type=int) <  limit + 1 else limit
+    if page == 0 :
+        page = 1
+
     search_list = db.session.query(User, Card, DeckBuilder_Card, Info).join(
         DeckBuilder, User.id == DeckBuilder.id_user).join(
             DeckBuilder_Card, DeckBuilder.id == DeckBuilder_Card.id_deckbuilder).join(
@@ -786,16 +796,20 @@ def buy_list_page(username):
             turbo.replace(
                 render_template('_research_select_list.html', buy_lists_id = buy_lists_id), target='select-list'),])
 
-    return render_template('buy.html', username=username, buy_lists=buy_lists, buy_lists_id=buy_lists_id, search_list=search_list, seller_list=seller_list)
+    return render_template('buy.html', create_list_form=create_list_form, username=username, buy_lists=buy_lists, buy_lists_id=buy_lists_id, search_list=search_list, seller_list=seller_list)
 
-@app.route('/user/create_page_list', methods=['POST'])
+@app.route('/user/create_page_list/<int:id_type>', methods=['POST'])
 @is_user
-def create_deckbuilder_list():
-    name = cleanhtml(request.form['new-list'])
-    id_type = int(cleanhtml(request.form['id-type']))
+def create_deckbuilder_list(id_type):
+    list_form = CreateList()
+    name = cleanhtml(list_form.new_list.data)
     date = datetime.datetime.now()
     id_user = current_user.id      
     create = create_list([name, date, id_type, id_user])
+    if create:
+        flash(f"Votre liste a bien été ajoutée.", "succès")
+    else:
+        flash(f"Création de cette liste impossible.", "erreur")
     if id_type == 1 :
         return redirect(url_for('buy_list_page', username=current_user.username))
     if id_type == 2 :
@@ -803,15 +817,23 @@ def create_deckbuilder_list():
     if id_type == 3 :
         return redirect(url_for('deckbuilder_list_page', username=current_user.username))
 
+
 @app.route('/user/add_to_buy_list', methods = ['POST', 'GET'])
 def add_to_buy():
     if request.method == 'POST':
-        id_deckbuilder = cleanhtml(request.form['id_deckbuilder'])
+        id_deckbuilder = cleanhtml(request.form['id_input_deckbuilder'])
         card_name = cleanhtml(request.form['bar-research'])
-        nb = cleanhtml(request.form['quantity'])       
-        adds = add_card_to_list([id_deckbuilder, card_name, nb])
-        return redirect(url_for('buy_list_page', username=current_user.username))
-    return redirect(url_for('home'))
+        if id_deckbuilder.isdigit() and card_name:            
+            nb = cleanhtml(request.form['quantity'])       
+            adds = add_card_to_list([id_deckbuilder, card_name, nb])
+            if adds:
+                flash(f"{card_name.capitalize()} a bien été rajoutée.", "succès")
+            else:
+                flash(f"Problème lors de l'enregistrement de {card_name.capitalize()}.", "erreur")
+
+        else :
+            flash(f"Problème lors de l'enregistrement.", "erreur")
+    return redirect(url_for('buy_list_page', username=current_user.username))
 
 @app.route('/user/delete_page_list', methods=['POST'])
 @is_user
@@ -823,9 +845,14 @@ def delete_list():
             db.session.delete(card_to_delete)
         db.session.commit()
     list_to_delete = DeckBuilder.query.filter_by(id=id).first()
-    id_type = list_to_delete.id_type
-    db.session.delete(list_to_delete)
-    db.session.commit()
+    if list_to_delete:
+        id_type = list_to_delete.id_type
+        list_name = list_to_delete.name
+        db.session.delete(list_to_delete)
+        db.session.commit()
+        flash(f"{list_name} a bien été supprimée.", "succès")
+    else:
+        flash(f"Suppression de la liste impossible.", "erreur")
     if id_type == 1 :
         return redirect(url_for('buy_list_page', username=current_user.username))
     if id_type == 2 :
@@ -834,11 +861,9 @@ def delete_list():
         return redirect(url_for('deckbuilder_list_page', username=current_user.username))
 
 
-@app.route('/user/delete_buy_card_list', methods=['POST'])
+@app.route('/user/delete_buy_card_list/<int:card_id>/<int:deckbuilder_id>', methods=['POST'])
 @is_user
-def delete_buy_card_list():
-    card_id = cleanhtml(request.form['card-id'])
-    deckbuilder_id = cleanhtml(request.form['deck-id'])
+def delete_buy_card_list(card_id, deckbuilder_id):
     card_to_delete = DeckBuilder_Card.query.filter(DeckBuilder_Card.id_card == card_id).filter(DeckBuilder_Card.id_deckbuilder == deckbuilder_id).first()
     if card_to_delete:
         db.session.delete(card_to_delete)
@@ -851,6 +876,8 @@ def delete_buy_card_list():
 @app.route('/user/<username>/vendre', methods = ['POST', 'GET'])
 @is_user
 def sell_list_page(username):
+    create_list_form = CreateList()
+    sell_list_form = SellList()
     sell_lists = db.session.query(User, DeckBuilder, DeckBuilder_Card, Card, Info).join(DeckBuilder, User.id == DeckBuilder.id_user).join(
         DeckBuilder_Card, DeckBuilder.id == DeckBuilder_Card.id_deckbuilder).join(
             Card, Card.id == DeckBuilder_Card.id_card).join(Info, Info.id == DeckBuilder_Card.id_info).filter(DeckBuilder.id_user == current_user.id).filter(
@@ -869,46 +896,52 @@ def sell_list_page(username):
             turbo.update(
                 render_template('_research_select_list.html', sell_lists_id = sell_lists_id), target='select-list')])
         
-    return render_template('sell.html', username=username, sell_lists=sell_lists, sell_lists_id = sell_lists_id)
+    return render_template('sell.html', sell_list_form=sell_list_form, create_list_form=create_list_form, username=username, sell_lists=sell_lists, sell_lists_id = sell_lists_id)
 
 @app.route('/user/add_to_sell_list', methods = ['POST', 'GET'])
 @is_user
 def add_to_sell():
-    if request.method == 'POST':
-        id_deckbuilder = cleanhtml(request.form['id_deckbuilder'])
+    sell_form = SellList()
+    if request.method == 'POST' and sell_form.validate_on_submit():
+
+        id_deckbuilder = cleanhtml(request.form['id_input_deckbuilder'])
         card_name = cleanhtml(request.form['bar-research'])
         nb = cleanhtml(request.form['quantity'])    
-        edition = cleanhtml(request.form['edition'])
-        creation = cleanhtml(request.form['creation'])
-        language = cleanhtml(request.form['language'])
-        rarity = cleanhtml(request.form['rarity'])
-        quality = cleanhtml(request.form['quality'])
-        price = cleanhtml(request.form['price'])
+        edition = cleanhtml(sell_form.edition.data)
+        creation = cleanhtml(sell_form.creation_date.data)
+        language = cleanhtml(sell_form.language.data)
+        rarity = cleanhtml(sell_form.rarity.data)
+        quality = cleanhtml(sell_form.quality.data)
+        price = cleanhtml(sell_form.price.data)
+
         sells = add_card_to_sell_list([id_deckbuilder, card_name, nb, edition, creation, language, rarity, quality, price])
         if sells:
-            return redirect(url_for('sell_list_page', username=current_user.username))
-    return redirect(url_for('home'))
-
-    
+            flash(f"{card_name.capitalize()} a bien été rajoutée.", "succès")
+        else:
+            flash(f"Problème lors de l'enregistrement de {card_name.capitalize()}.", "erreur")
+        return redirect(url_for('sell_list_page', username=current_user.username))
+  
 @app.route('/user/delete_sell_card_list', methods=['POST'])
 @is_user
 def delete_sell_card_list():
     card_id = cleanhtml(request.form['card-id'])
     deckbuilder_id = cleanhtml(request.form['deck-id'])
     card_to_delete = DeckBuilder_Card.query.filter(DeckBuilder_Card.id_card == card_id).filter(DeckBuilder_Card.id_deckbuilder == deckbuilder_id).first()
+    card_name = card_to_delete.name
     if card_to_delete:
         db.session.delete(card_to_delete)
         db.session.commit()
-        return redirect(url_for('sell_list_page', username=current_user.username))
-    return redirect(url_for('home', username=current_user.username))
+        flash(f"{card_to_delete.capitalize()} a bien été supprimée.","succès")
+    flash(f"{card_to_delete.capitalize()} n'a pas été supprimée.", "erreur")
+    return redirect(url_for('sell_list_page', username=current_user.username))
+
 
 ############################# DECKBUILDER #########################################
 
-@app.route('/user/<username>/deckbuilder')
+@app.route('/user/deckbuilder')
 @is_user
 def deckbuilder_list_page():
-    username = current_user.username
-    return render_template(url_for('deckbuilder.html', username=username))
+    return render_template('deckbuilder.html')
 
 ############################# MESSAGE ROUTE #############################################
 
@@ -929,18 +962,22 @@ def send_message(username, receiver, card, info):
         card_info = Info.query.filter_by(id=int(info)).first()
         if card_info :
             content = f"L'utilisateur {username} est intéressé par votre carte {card} : Edition : {card_info.edition} -- Qualité : {card_info.quality} -- Langue : {card_info.language} -- Prix : {card_info.price}"
-            new_message = Message(receiver = user_receiver, content = content)
-            new_message.sendMessage(id_info=card_info.id)
-    
+            message = Message(receiver = user_receiver, content = content)
+            new_message = message.sendMessage(id_info=card_info.id)
+            if new_message :
+                flash(f"Votre message a bien été envoyé à l'utilisateur {user_receiver}.", "succès")
+            else:
+                flash("Un problème est survenu pendant l'envoi de votre message.", "erreur")
     return redirect(url_for('buy_list_page', username=current_user.username))
 
 
-@app.route('/user/<username>/message/<receiver>/<message_id>', methods=['POST', 'GET'])
+@app.route('/user/<username>/message/<receiver>/<int:message_id>', methods=['POST', 'GET'])
 @is_user
 def chat_page(username, receiver, message_id):
-    if request.method == 'POST':
-
-        message = request.form['message']
+    chat_form = ChatMessage()
+    if request.method == 'POST' and chat_form.validate_on_submit():
+        #message = request.form['message']
+        message = cleanhtml(chat_form.message.data)
         new_receiver = UserClass()
         new_receiver.getId(receiver)
         new_message = Message(content = message, receiver = new_receiver)
@@ -962,7 +999,7 @@ def chat_page(username, receiver, message_id):
             new_message = Message(message.id) 
             new_message.setNotification()
 
-    return render_template('chat.html', username=username, receiver=receiver, messages=messages, now=datetime.datetime.now())
+    return render_template('chat.html', chat_form=chat_form, username=username, receiver=receiver, messages=messages, now=datetime.datetime.now())
 
 @app.route('/user/chat_delete/<int:post_id>')
 @is_user

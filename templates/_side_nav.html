@@ -1,23 +1,36 @@
+
+
 {% block content %}
 <nav id="mySidenav" class="sidenav">
-    <span id="btn-nav-close" href="javascript:void(0)" class="closebtn" onclick="closeNav()"><img src="../static/img/save_img/arrows_reverse.png" class="resp"alt=""></span>
-    <a class="mt-5" href="#TopIllus">Illustrations</a>
-    <ul>
-        <a href="#TopIllusLeg">Legacy</a>
-        <a href="#TopIllusModern">Modern</a>
-        <a href="#TopIllusStd">Standard</a>
-    </ul>
-    <a href="#TopSearch">Recherches</a>
-    <ul>
-        <a href="#TopSearchLeg">Legacy</a>
-        <a href="#TopSearchModern">Modern</a>
-        <a href="#TopSearchStd">Standard</a>
-    </ul>
+    <span id="btn-nav-close" href="javascript:void(0)" class="closebtn" onclick="closeNav()"><img src="{{url_for('static', filename='img/save_img/arrows_reverse.png')}}" style="" class="w-25" alt=""></span>
+    {% if request.endpoint == "cards" %} 
+        <a class="mt-5" href="#TopIllus">Illustrations</a>
+        <ul>
+            <li><a href="#TopIllusLeg">Legacy</a></li>
+            <li><a href="#TopIllusModern">Modern</a></li>
+            <li><a href="#TopIllusStd">Standard</a></li>
+        </ul>
+        <a href="#TopSearch">Recherches</a>
+        <ul>
+            <li><a href="#TopSearchLeg">Legacy</a></li>
+            <li><a href="#TopSearchModern">Modern</a></li>
+            <li><a href="#TopSearchStd">Standard</a></li>
+        </ul>
+    {% elif request.endpoint == "buy_list_page" %}
+        <h1 class="mt-5 ms-3" style="color:white">Acheter</h1>
+        <ul>
+            <li><a class="mt-5" href="#list-buy">Créer</a></li>
+            <li><a class="mt-5" href="#add-cards">Ajouter</a></li>
+            <li><a class="mt-5" href="#buy-list">Listes</a></li>
+            <li><a class="mt-5" href="#table-list">Recherches</a></li>
+        </ul>
+        
+    {% endif %}
 </nav>
 
 <div id="main">
     <!--<span id="btn-nav" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; open</span>-->
-    <span id="btn-nav-open" onclick="openNav()"> <img src="../static/img/save_img/arrows.png" class="resp" alt=""> </span>
+    <span id="btn-nav-open" onclick="openNav()"><img src="{{url_for('static', filename='img/save_img/arrows.png')}}" class="w-25" alt=""> </span>
 
 
 {% block javascript %}

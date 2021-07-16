@@ -1,0 +1,17 @@
+.ul-flash {
+    opacity: 1;
+    transition: all ease 1s;
+}
+
+.li-flash-erreur {
+    color:rgb(177, 4, 4)!important;
+}
+
+.li-flash-succès {
+    color: rgb(4, 4, 138)!important;
+}
+
+.strong-flash {
+    font-size: 150%;
+}
+

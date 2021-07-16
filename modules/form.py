@@ -4,6 +4,7 @@ from wtforms.validators import *
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 from flask_ckeditor import CKEditor, CKEditorField
 from wtforms.fields.html5 import EmailField
+from wtforms.fields import HiddenField
 from wtforms.validators import ValidationError
 import re
 
@@ -82,6 +83,10 @@ class ResponseModifyCard(FlaskForm):
     content =  TextAreaField('Modifier le contenu de la réponse',validators=[DataRequired(message='DataRequired')], render_kw={"placeholder": "Rédiger votre réponse ici..."} )
     submit = SubmitField('Envoyer', validators=[DataRequired(message='DataRequired')])
 
+class ChatMessage(FlaskForm):
+    message = StringField('', validators=[DataRequired(message='DataRequired')], render_kw={"placeholder":"Ecriver votre message ici..."})
+    submit = SubmitField('Envoyer', validators=[DataRequired(message='')])
+
 
 #### USER FORM #######
 
@@ -98,7 +103,19 @@ class Avatar(FlaskForm):
     file = FileField('Nouvel Avatar', validators=[FileRequired(message="Image requise"), FileAllowed(['jpg', 'png'], '*.jpg ou *.png')])
     submit = SubmitField("Modifier Avatar") 
 
+class SellList(FlaskForm):
+    edition = StringField('Edition', validators=[DataRequired(message='DataRequired')], render_kw={"placeholder": ""})
+    creation_date = StringField("Date d'impression", validators=[DataRequired(message='DataRequired')], render_kw={"placeholder": "Année: 2010"})
+    rarity = SelectField('Rareté', choices=[('mythique', 'Mythique'), ('rare', 'Rare'),('unco', 'Unco'),('commune', 'Commune'),('token', 'Token')], validators=[DataRequired(message='DataRequired')])
+    quality = SelectField('Qualité', choices=[('mint', 'Mint'), ('Nm', 'Near mint'),('exc', 'Excellent'),('good', 'Good'),('poor', 'Poor')], validators=[DataRequired(message='DataRequired')])
+    price = FloatField('Prix', validators=[DataRequired(message='Formatage pour le prix: 1.00')], render_kw={"placeholder": "1.00"})
+    language = SelectField('Language', choices=[('fr', 'fr'), ('eng', 'eng'),('rus', 'rus'),('china', 'china'),('ita', 'ita'),('esp', 'esp')], validators=[DataRequired(message='DataRequired')])
+    submit = SubmitField('Ajouter')
+    
 
+class CreateList(FlaskForm):
+    new_list = StringField('', validators=[DataRequired(message='DataRequired')], render_kw={"placeholder":"Nom de la nouvelle liste.."})
+    submit = SubmitField('Ajouter')
 
 if __name__ == '__main__':
 

@@ -1,24 +1,32 @@
-
+{% import "bootstrap/wtf.html" as wtf %}
 {% block content %}
+
     <section class="container">
-        <div class="row">
-            <div class="col-6">
-                
-                <form class="row text-center align-items-center" method="post" action="{{ url_for('create_deckbuilder_list') }}">                   
-                    <label class="m-2 col-3 small" for="create-list">Nouvelle liste</label>
-                    <input class="m-2 col-4" name="new-list" id="create-list" type="text" placeholder="Nom de la liste">
-                    <input hidden type="text" name="id-type" value="{{ id_deckbuilder }}">
-                    <input class="m-2 col-1" id="create-submit" name="add"type="submit" value="+">  
+
+            <div class="w-50 mt-5 m-auto row">
+                {% if id_deckbuilder == 1 %}
+                    <h2 class='text-center'>Créer une liste d'achats</h2>
+                {% elif id_deckbuilder == 2 %}
+                    <h2 class='text-center'>Créer une liste de vente</h2>
+                {% elif id_deckbuilder == 3 %}
+                    <h2 class='text-center'>Créer un deckbuilder</h2>
+                {% endif %}
+
+                <form class="row align-items-end w-80 justify-content-center form-wtf" method="post" action="{{ url_for('create_deckbuilder_list', id_type=id_deckbuilder) }}">
+                    {{ wtf.quick_form(create_list_form, novalidate=True, button_map={"submit": "dark"}) }}
                 </form>
             </div>
-            <div class="col-6">
-                <h1>Ajoûter des cartes</h1>
-                {% block turbo %}
-                    <turbo-frame id='select-list'>
-                        {% include '_research_select_list.html' %}
-                    </turbo-frame>
-                {% endblock %}
-                <div>
+
+            <div class="w-50 mt-5 m-auto">
+                <h2 id="add-cards" class="text-center">Ajoûter des cartes</h2>
+                <div class="mt-5">
+                    {% block turbo %}
+                        <turbo-frame id='select-list'>
+                            {% include '_research_select_list.html' %}
+                        </turbo-frame>
+                    {% endblock %}
+                </div>
+                <div class="mt-5 mb-5">
                     {% if id_deckbuilder == 1 :%}
                         <turbo-frame id='turbo-research'>
                             {% include '_research_buy_form.html' %}
@@ -27,11 +35,11 @@
                         <turbo-frame id='turbo-research'>
                             {% include '_research_sell_form.html' %}
                         </turbo-frame>
-                    {% else : %}
-                        <p> Form deckbuilder </p>
+                    {% elif id_deckbuilder == 2 : %}
+                        {% include '_research_buy_form.html' %}
                     {% endif %}
                 </div>  
             </div>
-        </div>
+
     </section>
 {% endblock %}

@@ -11,7 +11,7 @@ function openNav() {
   function closeNav() {
     document.getElementById("mySidenav").style.width = "0";
     document.getElementById("main").style.marginLeft = "0";
-    document.body.style.backgroundColor = "white";
+    document.body.style.backgroundColor = "rgb(240,240,240)";
     document.getElementById("btn-nav-open").style.opacity = "1";
     document.getElementById("btn-nav-close").style.opacity = "0";
   } 

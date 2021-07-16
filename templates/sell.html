@@ -1,9 +1,9 @@
 {% include 'header.html' %}
-{{ turbo() }}
 <body>
-    
+<main class="container">
+    {% include '_flash_messages.html' %}
+
     <h1> Faites votre liste de ventes </h1>
-    <h2>Créer une liste de vente</h2>
     {% with id_deckbuilder = 2 %}
         {% include '_create_list.html' %}
     {% endwith %}
@@ -14,12 +14,12 @@
             <ul id="ul-list-update">
                 <turbo-frame id="research-sell-list">
                     {% include '_research_sell_list.html' %}
-                </turbo-stream>
+                </turbo-frame>
             </ul>
         </div>
     </section>
-    
-
+</main>   
+{% include 'footer.html' %}
 <script>
 
 autocomplete(document.getElementById("input-search-list"), cards);
@@ -78,33 +78,11 @@ autocomplete(document.getElementById("input-search-list"), cards);
 //    }
 //});
 
-const selectDeckbuilder = document.getElementById('select-list-id');
-const formAdd = document.getElementById('form-add-card');
-const inputIdDeckbuilder = document.getElementById('id_deckbuilder')
-const inputSearched = document.getElementById('input-search-list')
-formAdd.addEventListener('submit', () => {
-    inputIdDeckbuilder.value = selectDeckbuilder.value;
-})
 
-// Turn the arrows
 
-const downArrows = document.querySelectorAll('.down-arrow');
-const buyList = document.querySelector('.buy-page-div');
 
-downArrows.forEach((arrow) => {
-    arrow.addEventListener('click', () => {
-        if (arrow.style.transform == "rotate(180deg)") {
-            arrow.style.transform = "none";            
-        }    
-        else {
-            arrow.style.transform = "rotate(180deg)";
-        }
-        
-    })
-})
-//
-//</script>
-
+</script>
+<script type="text/javascript" src="{{url_for('static', filename='js/sell_buy_form.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='js/down_arrow.js')}}"></script>
 </body>
 
-{% include 'footer.html' %}

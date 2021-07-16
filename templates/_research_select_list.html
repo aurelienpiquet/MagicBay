@@ -1,8 +1,8 @@
 {% block content %}
-<div>
+<div class="d-flex justify-content-evenly align-content-center">
     <label for="#select-list-id"> Sélectionner la liste d'achat </label>
     <select id="select-list-id">
-        <option value="" placeholder=""> >--Vos listes de d'achat--< </option>
+        <option>>--Selectionner une de vos listes--<</option>
         {% if buy_lists_id :%}
             {% for id in buy_lists_id : %}
                 <option id="select-{{ id[1].id }}" value="{{ id[1].id }}"> {{ id[1].name }} </option>
@@ -17,4 +17,6 @@
 
 
 {% endblock %}
+
+
 

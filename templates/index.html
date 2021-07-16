@@ -1,13 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-{% block header %}
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MagicBay</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/index-style.css') }}">
-{% endblock %}
+{% include '_head.html' %}
 
 {% block content %}
 <body class="bg-dark overflow">
@@ -81,7 +72,7 @@
             
             <div class="m-05 ">
                 {% if username : %}
-                    <a href="{{ url_for('deckbuilder_list_page', username=username) }}">
+                    <a href="{{ url_for('deckbuilder_list_page') }}">
                 {% else : %}
                     <a href="{{ url_for('login_page') }}">
                 {% endif %}

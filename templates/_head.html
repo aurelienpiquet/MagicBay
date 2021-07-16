@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+{% block head %}
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>MagicBay</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta author="AurelienP" />
+    <meta language="fr" />
+
+
+    {% if request.endpoint == 'home' : %}
+        <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/index-style.css') }}">
+    {% elif request.endpoint == "user_page" : %}
+        <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}"/>
+        <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-5.0.2-dist/css/bootstrap.min.css') }}">
+        <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/header-style.css')}}" /> 
+        <link type="text/css" rel="stylesheet" href="{{url_for('static', filename='css/flash_message-style.css')}}">
+        <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/user-style.css') }}">  
+        
+    {% elif request.endpoint == "cards" : %}
+        <link type="text/css" rel="stylesheet" href="{{url_for('static', filename='css/side_nav.css')}}"/>
+        <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}"/>
+        <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-5.0.2-dist/css/bootstrap.min.css') }}">
+        <link type="text/css" rel="stylesheet" href="{{url_for('static', filename='css/flash_message-style.css')}}">
+        <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/header-style.css')}}" /> 
+        
+    {% elif request.endpoint == "chat_page" : %}           
+        <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}"/>
+        <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-5.0.2-dist/css/bootstrap.min.css') }}">
+        <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/header-style.css')}}" /> 
+        <link type="text/css" rel="stylesheet" href="{{url_for('static', filename='css/flash_message-style.css')}}">
+        <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/chat-style.css') }}">
+        {{ turbo() }}
+        
+    {% else %}
+        <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}"/>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/chat-style.css') }}">
+        <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-5.0.2-dist/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/flash_message-style.css')}}">
+        <link type="text/css" rel="stylesheet" href="{{url_for('static', filename='css/side_nav.css')}}"/>
+        <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/header-style.css')}}" /> 
+        
+    {% endif %}
+   
+     {% block content %}{% endblock %}
+{% endblock %}
+</head>

@@ -1,16 +1,21 @@
 {% include 'header.html' %}
-
 <body>
     
-    <h1> Faites votre liste d'achat </h1>
-    <h2>Créer une liste d'achats</h2>
-    {% with id_deckbuilder = 1 %}
-        {% include '_create_list.html' %}
-    {% endwith %}
+<main class="container">
+    {% include '_flash_messages.html' %}
+
+    {% include '_side_nav.html' %}
+
+    <h1 id="list-buy" class="text-center m-3"> Faites votre liste d'achat </h1>
+    <section>
+        {% with id_deckbuilder = 1 %}
+            {% include '_create_list.html' %}
+        {% endwith %}
+    </section> 
     
     <section id="buy-list" class="container">
         <div class="row">
-            <h1> Vos listes de d'achat </h1>
+            <h2> Vos listes de d'achat </h2>
             <ul id="ul-list-update">
                 <turbo-frame id="research-buy-list">
                     {% include '_research_buy_list.html' %}
@@ -20,19 +25,18 @@
     </section>
 
     <section class="container">
-        <h1> Résultat des recherches </h1>
+        <h2> Résultat des recherches </h2>
         <turbo-frame id="search-table-list">
             {% include '_research_table.html' %}
-        </turbo-stream>
+        </turbo-frame>
     </section>
+</main>
 
+{% include 'footer.html' %}
+<script> autocomplete(document.getElementById("input-search-list"), cards);</script>
+<script type="text/javascript" src="{{url_for('static', filename='js/sell_buy_form.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='js/down_arrow.js')}}"></script>
 <script>
-
-
-
-autocomplete(document.getElementById("input-search-list"), cards);
-
-
 //async function update_list_buy() { 
 //    await $('#ul-list-update').load(document.URL + ' #ul-list-update');
 //    await $('#search-list').load(document.URL + ' #search-list');
@@ -85,35 +89,8 @@ autocomplete(document.getElementById("input-search-list"), cards);
 //        return false;
 //    }
 //});
-
-const selectDeckbuilder_2 = document.getElementById('select-list-id');
-const formAdd_2 = document.getElementById('form-add-card');
-const inputIdDeckbuilder_2 = document.getElementById('id_deckbuilder');
-const inputSearched_2 = document.getElementById('input-search-list');
-formAdd_2.addEventListener('submit', () => {
-    inputIdDeckbuilder_2.value = selectDeckbuilder_2.value;
-
-})
-
-// Turn the arrows
-
-const downArrows_2 = document.querySelectorAll('.down-arrow');
-const buyList_2 = document.querySelector('.buy-page-div');
-
-downArrows_2.forEach((arrow) => {
-    arrow.addEventListener('click', () => {
-        if (arrow.style.transform == "rotate(180deg)") {
-            arrow.style.transform = "none";            
-        }    
-        else {
-            arrow.style.transform = "rotate(180deg)";
-        }
-        
-    })
-})
-
 </script>
+
 
 </body>
 
-{% include 'footer.html' %}

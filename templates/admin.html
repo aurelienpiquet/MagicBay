@@ -3,46 +3,14 @@
 <body>
     <section>   
         <h1> Page Admin </h1>
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <ul class=flashes>
-                {% for message in messages %}
-                    <li class="li-error">{{ message }}</li>
-                {% endfor %}
-                </ul>
-                {% endif %}
-        {% endwith %}
+        {% include '_flash_messages.html' %}
     </section>
 
     <section class="container test-hover">
         <h1> Carte database </h1>
-        <!-- Pagination Links-->
-        <div class="text-right">
-            <a href="{{ url_for('admin_page', page=cards.prev_num) }}" class="btn btn-outline-dark {% if cards.page == 1 %}disabled{% endif %}">
-                &laquo;</a>
-
-            <!-- Loop through the number of pages to display a link for each-->
-            {% for page_num in cards.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
-                {% if page_num %}
-                <!-- Check for the active page and set the link to "Active"-->
-                    {% if cards.page == page_num %}
-                    <a href="{{ url_for('admin_page', page=page_num) }}"
-                       class="btn btn-dark">
-                        {{ page_num }}
-                    </a>
-                    {% else %}
-                    <a href="{{ url_for('admin_page', page=page_num) }}"
-                       class="btn btn-outline-dark">
-                        {{ page_num }}
-                    </a>
-                    {% endif %}
-                {% else %}
-                    <span class=ellipsis>…</span>
-                {% endif %}
-            {% endfor %}   
-            <a href="{{ url_for('admin_page', page=cards.next_num) }}" class="btn btn-outline-dark {% if cards.page == cards.pages %}disabled{% endif %}">&raquo;</a>
-        </div>  
-        <p class="text-right mt-3"> Page courante {{ cards.page }} sur {{ cards.pages }}</p>
+        {% with items = cards, path = 'admin_page', page = page_cards %}
+            {% include '_paginate.html' %}
+        {% endwith %}
 
         {% include '_card_page.html' %}
 
@@ -69,10 +37,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for user in users[1:]: %}
+                    {% for user in users: %}
                     <tr> 
-                        <form class="form-name" name="form-name" method='POST' action="{{ url_for('update_user_page') }}">
-                            <input type="hidden" name="id" value="{{ user[0].id }}"> 
+                        <form class="form-name" name="form-name" method='POST' action="{{ url_for('update_user_page', id=user[0].id) }}"> 
                         <td>{{ user[0].id }}</td>
                         <td>{{ user[0].username }}</td>
                         <td>{{ user[0].email }}</td>

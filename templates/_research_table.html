@@ -1,7 +1,8 @@
-{{ turbo() }}
-    
+<!-- il faut un turbo ici? -->
+
 {% block content %}
 {% if search_list != [] : %}
+
 <div class="container-fluid align-items-center">
     <table id="table-list">
         <tr>
@@ -16,9 +17,11 @@
             <th>Date d'impression</th>       
             <th>Contactez</th>         
         </tr>
+
+
     
     {% for seller in seller_list : %}
-        {% for search in search_list  : %}
+        {% for search in search_list.items  : %}
         {% if search[0].id == seller.id : %}
             <tr>
                 <td style="width:15%"> <b>{{  seller.username.title() }}</b> </td>

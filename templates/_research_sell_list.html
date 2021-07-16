@@ -3,7 +3,7 @@
   <li>
       <div class="row w-50 justify-content-center align-items-center">
           <h2 class="col-6 text-center p-2"> {{ id[1].name }} </h2>
-          <div class="col-1 pointer"><img  id="img-{{ id[1].id }}" class="down-arrow wrench w-100" src="/static/img/save_img/down-arrow.png" 
+          <div class="col-1 pointer"><img  id="img-{{ id[1].id }}" class="down-arrow w-100" style="transition:all ease 0.5s" src="/static/img/save_img/down-arrow.png" 
               alt="wrench" data-bs-toggle="collapse" href="#list-{{ id[1].id }}" aria-expanded="false" aria-controls=""></div> 
 
           <form class="col-2" action="{{ url_for('delete_list') }}" method='post'>
@@ -11,7 +11,7 @@
             <input onclick="return confirm('Supprimer cette liste?')" type="submit" value="Delete">
           </form>
       </div>
-      <div class="collapse show {{ 'w-50' if  sell_lists[0][1].id_type != 2 else 'w-100' }} justify-content-center align-items-center" id="list-{{ id[1].id }}">
+      <div class="collapse {{ 'w-50' if  sell_lists[0][1].id_type != 2 else 'w-100' }} justify-content-center align-items-center" id="list-{{ id[1].id }}">
         <table class=''>
           <thead>
               <tr>
