@@ -23,17 +23,18 @@ import re
 #        if field.data < 13:
 #            raise ValidationError("We're sorry, you must be 13 or older to register")
 
-class Card():
-    def __init__(self):
-        self.card_name = None
+#class Card():
+#    def __init__(self):
+#        self.card_name = None
+#
+#    def getName(self):
+#        return self.card_name
+#    
+#    def setName(self, new_name):
+#        self.card_name = new_name
+#        return self
 
-    def getName(self):
-        return self.card_name
-    
-    def setName(self, new_name):
-        self.card_name = new_name
-        return self
-
+#form = [cleanhtml(request.form[key]) for key in request.form.keys()]
 ########### CARDS FORM ###############""
 
 class AddCard(FlaskForm):
@@ -91,13 +92,13 @@ class ChatMessage(FlaskForm):
 #### USER FORM #######
 
 class Register(FlaskForm):
-    username = StringField("Nom d'utilisateur", validators=[DataRequired(message="Nom d'utilisateur requis"), 
+    user = StringField("Nom d'utilisateur", validators=[DataRequired(message="Nom d'utilisateur requis"), 
         Length(max=40)], render_kw={"placeholder": "Nom d'utilisateur"})
     email = EmailField('Email', validators=[DataRequired(message='Email requis'), Email()],
          render_kw={"placeholder": "Email"})
     password = PasswordField('Password', validators=[DataRequired(message='Password requis'), Length(min=4)], 
         render_kw={"placeholder": "Password"}) 
-    submit = SubmitField('Créer utilisateur')
+    submit = SubmitField('Créer nouvel account')
 
 class Avatar(FlaskForm):
     file = FileField('Nouvel Avatar', validators=[FileRequired(message="Image requise"), FileAllowed(['jpg', 'png'], '*.jpg ou *.png')])

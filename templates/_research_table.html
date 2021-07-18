@@ -21,7 +21,7 @@
 
     
     {% for seller in seller_list : %}
-        {% for search in search_list.items  : %}
+        {% for search in search_list  : %}
         {% if search[0].id == seller.id : %}
             <tr>
                 <td style="width:15%"> <b>{{  seller.username.title() }}</b> </td>

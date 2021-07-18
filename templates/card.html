@@ -216,16 +216,18 @@
                                 <ul>
                                   <li class="inline"><a title="Répondre" type="button" class=""  data-bs-toggle="collapse" href="#collapseFormReply-{{ reply[0].id }}" 
                                     role="button" aria-expanded="false" aria-controls="collapseFormReply">Répondre</a></li>
+                                    <span class="dot"> . </span> 
+                                  <!--
                                   {% if current_user.id == reply[0].id_user : %}   
-                                      <span class="dot"> . </span>  
+                                       
 
                                       <li class="inline"><a title="Modifier" type="button" class="" data-bs-toggle="modal" data-bs-target="#reply_modal" 
                                         card_reply_id="{{card.id}}" post_reply_id="{{reply[0].id}}" post_reply_title="{{reply[0].title}}"
                                         post_reply_body="{{reply[0].content}}" reply_method="1">
                                         Modifier</a><span class="dot"> . </span></li>
 
-                                           <!-- ******************** MODAL RESPONSE ****************** -->
-   
+                                           <!-- ******************** MODAL RESPONSE ******************
+                                          {% with reply_id = reply[0].id %}
                                           <div class="modal fade" id="reply_modal" tabindex="-1" aria-labelledby="replyLabel" aria-hidden="true">
                                            <div class="modal-dialog">
                                              <div class="modal-content">
@@ -234,7 +236,7 @@
                                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                </div>
                                                <div class="modal-body">
-                                                 <form action="{{ url_for('update_response', comment_id=reply[0].id, card_id=reply[0].id_card, author_id=current_user.id) }}" method="post">
+                                                 <form action="{{ url_for('update_response', comment_id=reply_id, card_id=reply[0].id_card, author_id=current_user.id) }}" method="post">
                                                   {{ wtf.quick_form(response_modify_form, novalidate=True, button_map={"submit": "dark"}) }}
                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
                                                  </form>
@@ -243,6 +245,7 @@
                                              </div>
                                            </div>
                                           </div>
+                                          {% endwith%} -->
                                       
                                       <li class="inline"><a title="Supprimer" onclick="return confirm('Voulez-vous supprimer la réponse suivante ?')"
                                           href="{{ url_for('delete_comment', comment_id=reply[0].id, author=current_user.username, card_id=card.id ) }}">

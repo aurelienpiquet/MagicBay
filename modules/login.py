@@ -46,3 +46,11 @@ def is_logged(f):
          return abort(403)   
     return decorated_function
 
+def get_current_user():
+    try:
+        username = current_user.username        
+    except AttributeError:
+        username = None
+    return username
+
+
