@@ -1,7 +1,7 @@
   {% block content %}
   {% for id in sell_lists_id : %}
   <li>
-      <div class="row w-50 justify-content-center align-items-center">
+      <div class="row w-50 justify-content-center m-auto align-items-center">
           <h2 class="col-6 text-center p-2"> {{ id[1].name }} </h2>
           <div class="col-1 pointer"><img  id="img-{{ id[1].id }}" class="down-arrow w-100" style="transition:all ease 0.5s" src="/static/img/save_img/down-arrow.png" 
               alt="wrench" data-bs-toggle="collapse" href="#list-{{ id[1].id }}" aria-expanded="false" aria-controls=""></div> 

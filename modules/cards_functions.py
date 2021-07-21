@@ -54,7 +54,7 @@ def add_card_to_sell_list(datas):
         db.session.commit()
         return True
     except sqlalchemy.exc.StatementError:
-        return "Problème d'enregistrement"
+        return False
 
 #def copy_image_to_folder():
 #    #need shuthil and full path shutil.copy(src, dst, *, follow_symlinks=True)

@@ -87,3 +87,4 @@ def delete_card_in_db(id):
         return True
     except sqlalchemy.exc.StatementError:
         return False
+

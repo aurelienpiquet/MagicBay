@@ -32,7 +32,7 @@ class AddCard(FlaskForm):
     price = FloatField('Prix', validators=[DataRequired(message='Formatage pour le prix: 1.00')], render_kw={"placeholder": "1.00"})
     file = FileField('Image')
     type = SelectField('Type', choices=[('artefact','Artefact'),('créature','Créature'),('enchantement','Enchantement'),('éphémère','Ephémère'),('terrain','Terrain'),('planeswalker','Planeswalker'),('rituel','Rituel'), ('token','Token')], validators=[DataRequired(message=message)])
-    ccm = StringField('CCM', validators=[DataRequired(message=message)], render_kw={"placeholder": "1RR"})
+    ccm = StringField('CCM', render_kw={"placeholder": "1RR"})
     submit = SubmitField('Ajouter Carte')
 
 class UpdateCard(FlaskForm):
@@ -45,7 +45,7 @@ class UpdateCard(FlaskForm):
     search = IntegerField('Nombre de recherche', validators=[DataRequired(message='Formatage pour le nombre de recherche: 1')], render_kw={"placeholder": "1"})
     file = FileField('Mise à jour image', validators=[FileRequired(message="Image Requise"), FileAllowed(['jpg', 'png'], '*.jpg ou *.png')])
     type = SelectField('Type', choices=[('artefact','Artefact'),('créature','Créature'),('enchantement','Enchantement'),('éphémère','Ephémère'),('terrain','Terrain'),('planeswalker','planeswalker'),('rituel','Rituel'), ('token','Token')], validators=[DataRequired(message=message)])
-    ccm = StringField('CCM', validators=[DataRequired(message=message)], render_kw={"placeholder": "1RR ou XXGBR"})
+    ccm = StringField('CCM', render_kw={"placeholder": "1RR ou XXGBR"})
     submit = SubmitField('Mise à jour')
 
 class RullingCard(FlaskForm):
@@ -105,7 +105,7 @@ class SellList(FlaskForm):
     quality = SelectField('Qualité', choices=[('mint', 'Mint'), ('Nm', 'Near mint'),('exc', 'Excellent'),('good', 'Good'),('poor', 'Poor')], validators=[DataRequired(message=message)])
     price = FloatField('Prix', validators=[DataRequired(message='Formatage pour le prix: 1.00')], render_kw={"placeholder": "1.00"})
     language = SelectField('Language', choices=[('fr', 'fr'), ('eng', 'eng'),('rus', 'rus'),('china', 'china'),('ita', 'ita'),('esp', 'esp')], validators=[DataRequired(message=message)])
-    submit = SubmitField('Ajouter')
+    submit = SubmitField('Ajouter la carte')
 
 class CreateList(FieldsRequiredForm):
     new_list = StringField('', validators=[validators.Required(message="Nom de la liste requise"), Length(max=15, message="Max 15 caractères")], render_kw={"placeholder":"Nom de la nouvelle liste.."})

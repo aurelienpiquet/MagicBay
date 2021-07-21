@@ -21,6 +21,7 @@
         <span class="ms-auto" id="username"> {{ (username.capitalize() + ' - ') if username }} </span>
   
           <ul class="navbar-nav mb-2 mb-lg-0">
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('cards') }}">Cartes</a></li>
             {% if username and username != 'admin': %}
             <!-- FAIRE UN LINE HEIGH POUR TOUT ALIGNER CORRECTEMENT -->
             <li class="nav-item dropdown mb-auto">
@@ -28,12 +29,12 @@
                   Mon Compte
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                  <li mt-2><a class="dropdown-item" href="{{ url_for('user_page', username=username) }}">Profil</a></li>
-                  <li mt-2><a class="dropdown-item" href="{{ url_for('buy_list_page', username=username) }}">Acheter</a></li>
-                  <li mt-2><a class="dropdown-item" href="{{ url_for('sell_list_page', username=username) }}">Vendre</a></li>
-                  <li mt-2><a class="dropdown-item" href="{{ url_for('deckbuilder_list_page', username=username) }}">DeckBuilder</a></li>
-                  <li mt-2><a class="dropdown-item" href="{{ url_for('message_page', username=username )}}">Messages</a></li>
-                  <li mt-2><a class="dropdown-item" href="{{ url_for('log_out_page', username=username) }}">Déconnexion</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('user_page', username=username) }}">Profil</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('buy_list_page', username=username) }}">Acheter</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('sell_list_page', username=username) }}">Vendre</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('deckbuilder_list_page', username=username) }}">DeckBuilder</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('message_page', username=username )}}">Messages</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('log_out_page', username=username) }}">Déconnexion</a></li>
                 </ul>
             </li>
 
@@ -44,19 +45,19 @@
                   Mon Compte
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                  <li mt-2><a class="dropdown-item" href="{{ url_for('home') }}">Admin Home</a></li>
-                  <li mt-2><a class="dropdown-item" href="{{ url_for('admin_card_list_page') }}">Carte DB</a></li>
-                  <li mt-2><a class="dropdown-item" href="{{ url_for('admin_user_list_page') }}">User DB</a></li>
-                  <li mt-2><a class="dropdown-item" href="{{ url_for('admin_api_list_page') }}">Api Status</a></li>
-                  <li mt-2><a class="dropdown-item" href="{{ url_for('admin_message_page') }}">Messagerie</a></li>
-                  <li mt-2><a class="dropdown-item" href="{{ url_for('log_out_page') }}">Déconnection</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('home') }}">Admin Home</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('admin_card_list_page') }}">Carte DB</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('admin_user_list_page') }}">User DB</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('admin_api_list_page') }}">Api Status</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('admin_message_page') }}">Messagerie</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('log_out_page') }}">Déconnection</a></li>
                 </ul>
               </li>
             {% endif %} 
             {% if not username : %}
             <li class="nav-item">
               <a class="nav-link" href="{{ url_for('register_page')}}"
-                >S'enregister</a
+                >Créer un compte</a
               >
             </li>
             <li class="nav-item">

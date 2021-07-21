@@ -1,17 +1,22 @@
 {% include 'header.html' %}
 <body>
+
 <main class="container">
     {% include 'includes/_flash_messages.html' %}
 
-    <h1> Faites votre liste de ventes </h1>
+    {% include 'includes/_side_nav.html' %}
+
+    <h1 id="list-buy" class="text-center m-3"> Faites votre liste de ventes </h1>
+
     {% with id_deckbuilder = 2 %}
         {% include 'user/deckbuilder/_create_list.html' %}
     {% endwith %}
 
+    <hr>
     <section id="buy-list" class="container">
         <div class="row">
-            <h1> Vos listes de ventes </h1>
-            <ul id="ul-list-update">
+            <h2 class="text-center"> Vos listes de ventes </h2>
+            <ul id="ul-list-update" class="mt-3 text-center">
                 <turbo-frame id="research-sell-list">
                     {% include 'user/deckbuilder/_research_sell_list.html' %}
                 </turbo-frame>

@@ -3,6 +3,8 @@ from modules.imports import *
 ############ CREATION OF PATH ###################
 CUR_dir = os.path.dirname(os.path.abspath(__file__))
 IMG_dir = os.path.join(CUR_dir, 'static\img')
+UPLOAD_dir_card = os.path.join(CUR_dir, 'static\img\cards')
+UPLOAD_dir_avatar = os.path.join(CUR_dir, 'static\img\\avatar')
 MODULE_dir = os.path.join(CUR_dir, 'modules')
 ROUTE_dir = os.path.join(CUR_dir, 'routes')
 
@@ -14,6 +16,10 @@ app = Flask(__name__)
 app.config['SECRET_KEY']  = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///database.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png']
+app.config['MAX_CONTENT_LENGTH'] = 2* 1024 * 1024
+app.config['UPLOAD_CARD_PATH'] = UPLOAD_dir_card
+app.config['UPLOAD_AVATAR_PATH'] = UPLOAD_dir_avatar
 
 #ckeditor = CKEditor(app)
 turbo = Turbo(app)

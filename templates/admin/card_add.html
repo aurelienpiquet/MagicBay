@@ -2,111 +2,41 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 <main>
-<h1> Ajouter une carte </h1>
-<!--
-<div class="container jumbotron">
-    
-  <form action="{{ url_for('add_page') }}" id="form-add" method='post'>
-      <div class="m-2">
-          <label for="name">Nom</label>
-          <input  class="form-input" type="text" id="name" name="name" value="" placeholder="nom de la carte" required>
-      </div>
-      <div class="m-2">
-          <label for="edition">Edition</label>
-          <input class="form-input" type="text" id="edition" name="edition" value="" placeholder="exemple: tempest" required>
-      </div>
-      <div class="m-2">
-          <label for="creation">Création</label>
-          <input class="form-input" type="text" id="creation" name="creation" value="" placeholder="exemple: 2010" required>
-      </div>
-      <div class="m-2">
-          <label for="legality">Légalité</label>
-          <select class="form-input" type="text" id="legality" name="legality" value="" placeholder="" required>
-              <option value="">--Choississez la légalité--</option>
-              <option value="vintage">Vintage</option>
-              <option value="legacy">Legacy</option>
-              <option value="modern">Modern</option>
-              <option value="standard">Standard</option>
-          </select>
-      </div>
-      <div class="m-2">
-          <label for="rarity">Rareté</label>
-          <select class="form-input" type="text" id="rarity" name="rarity" value="" placeholder="" required>
-              <option value="">--Choississez la rareté--</option>
-              <option value="mythic">Mythique</option>
-              <option value="rare">Rare</option>
-              <option value="unco">Unco</option>
-              <option value="commun">Commune</option>
-              <option value="token">Token</option>
-          </select>
-      </div>
-      <div class="m-2">
-          <label for="price">Prix</label>
-          <input class="form-input" type="text" id="price" name="price" value="" placeholder="exemple: 1.25" required>
-      </div>
-      <div class="m-2">
-          <label for="path">Chemin de l'image</label>
-          <input class="form-input" type="file" id="path" name="path" value="" placeholder="" required>
-      </div>
-      <div class="m-2">
-        <label for="type">Type</label>
-        <select class="form-input" type="text" id="type" name="type" value="" placeholder="" required>
-            <option value="">--Choississez le type--</option>
-            <option value="artefact">Artefact</option>
-            <option value="créature">Créature</option>
-            <option value="enchantement">Enchantement</option>
-            <option value="éphémère">Ephémère</option>
-            <option value="terrain">Terrain</option>
-            <option value="planeswalker">Planeswalker</option>
-            <option value="rituel">Rituel</option>
-        </select>
-    </div>
-    <div class="m-2">
-        <label for="ccm">CCM</label>
-        <input type="text" name="ccm" placeholder="CCM: 1R">
-    </div>
-      <div class="m-2">
-          <input type="submit" value="Mise à jour">
-      </div>
-
-  </form>
-</div>
--->
-<section class="container">
+<h1 class="text-center mt-3"> Ajouter une carte </h1>
+<section class="container mt-5">
     <form action="{{ url_for('add_page') }}" method='post' enctype="multipart/form-data" autocomplete="off">      
         {{ form.csrf_token }}
-        <div>
+        <div class="row justify-content-center">
             {{ wtf.form_field(form.name) }}
         </div>
-        <div>
-            <div class="autocomplete w-100">
-                {{ wtf.form_field(form.edition) }}
-            </div>
+        <div class="d-flex row justify-content-center autocomplete">
+            {{ wtf.form_field(form.edition) }}
         </div>
-        <div>
+        <div class="row justify-content-center">
             {{ wtf.form_field(form.creation_date) }}
         </div>
-        <div>
+        <div class="row justify-content-center">
             {{ wtf.form_field(form.legality) }}
         </div>
-        <div>
+        <div class="row justify-content-center">
             {{ wtf.form_field(form.rarity) }}
         </div>
-        <div>
+        <div class="row justify-content-center">
             {{ wtf.form_field(form.price) }}
         </div>
-        <div>
+        <div class="row justify-content-center">
             {{ wtf.form_field(form.file) }}
         </div>
-        <div>
+        <div class="row justify-content-center">
             {{ wtf.form_field(form.type) }}
         </div>
-        <div>
+        <div class="row justify-content-center">
             {{ wtf.form_field(form.ccm) }}
         </div>
-        <div>
-            {{ wtf.form_field(form.submit) }}
+        <div class="text-center w-50 m-auto mt-3">
+            {{ wtf.form_field(form.submit, horizontal_columns=('lg', 2, 10)) }}
         </div>
+    </form>
 </section>
 
 

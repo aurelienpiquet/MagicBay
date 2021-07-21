@@ -80,8 +80,8 @@ def card_page(name):
             else :
                 user_rating = None
         except AttributeError:
-            user_rating = "no_user"
-            username = "no_user"
+            user_rating = None
+            username = None
 
         # check s'il y a des commentaires sur la carte
         try :

@@ -23,136 +23,16 @@
 .border {
     border: 1px solid white;
 }
-.w-10 {
-    width: 10%;
-    margin: 0 auto;
-}
-
-.w-15 {
-    width: 15%;
-}
-
-.w-20 {
-    width: 20%;
-    margin: 0 auto;
-}
-
-.w-25 {
-    width: 25%;
-    margin: 0 auto;
-}
-
-.w-40 {
-    width: 40%;
-    margin:0 auto;
-}
-
-.w-45 {
-    width: 45%;
-    margin:0 auto;
-}
-
-.w-50 {
-    width: 50%;
-    margin: 0 auto;
-}
-
-.w-75 {
-    width: 75%;
-    margin: 0 auto;
-}
-
-.w-80 {
-    width: 80%;
-    margin: 0 auto;
-}
-
-.w-85 {
-    width: 85%;
-    margin: 0 auto;
-}
-
-.w-90 {
-    width: 90%;
-    margin: 0 auto;
-}
-
-.w-95 {
-    width: 95%;
-    margin: 0 auto;
-}
-
-.w-100 {
-    width: 100%;
-    margin:0 auto;
-}
-
-.w-120 {
-    width: 115%;
-}
-
-.h-100 {
-    height:100%;
-}
-
-.m-0 {
-    margin:0;
-}
-
-.m-05 {
-    margin: 0 0.5%;
-}
-
-.m-1 {
-    margin:1%;
-}
-
-.m-2 {
-    margin:2%;
-}
-
-.m-3 {
-    margin:3%;
-}
-
-.m-5 {
-    margin: 5%;
-}
-
-.mt-2 {
-    margin-top: 2%;
-}
-
-.mb-2 {
-    margin-bottom: 2%;
-}
-
-.mb-3 {
-    margin-bottom:3%;
-}
-
-.ms-5 {
-    margin-left: 5%;
-}
-
-.me-5 {
-    margin-right:5%;
-}
 
 .logo {
-    width: 100%;
+    width: 60px;
     height: auto;
-
 }
 
 .resp {
     width: 250px;
     height: 540px;
     object-fit: cover;
-}
-
-.ms-auto {
-    margin-left: auto;
 }
 
 .absolute {
@@ -285,7 +165,7 @@
 }
 
 .show:hover > .text-card-up {
-    opacity:1;
+    opacity: 1;
 }
 
 .text-card-down {
@@ -316,8 +196,8 @@ li:hover {
 }
 
 h1 {
+    width:100%;
     font-size:250%;
-
     color:white;
     font-family: 'trajan-bold';
 }
@@ -335,14 +215,37 @@ body {
 
 /******* HEADER *******/
 
-.img-box {
-   width: 250px; 
-   object-fit: cover;
+header {
+    padding-top: 10px!important;
 }
 
-.title {
+header > section {
+    width: 100%;
+}
+
+header nav {
+    width: 100%;
+}
+
+header section nav > div {
+    width: 50%;
+}
+
+header .div-logo {
+    margin: 2% 5% 0 5%;
+}
+
+.nav-brand {
     font-size: 300%;
     font-family: 'trajan-bold';
+}
+
+header nav ul {
+    width: 45%;
+}
+
+header nav ul > li {
+    margin-right: 5%;
 }
 
 .avatar {
@@ -355,6 +258,239 @@ body {
     margin: 5% auto;
   }
   
-  .avatar>img {
+.avatar>img {
     width:100%;
-  }
+}
+
+.admin-link {
+    display: none;
+}
+
+
+/****** MAIN *******/
+
+body {
+    overflow:hidden;
+}
+
+main > section {
+    width:100%;
+}
+
+main section div {
+    margin: 0 0.5%;
+}
+
+main .filter {
+    width: 100%;;
+    height: 100%;
+}
+
+.phone-screen {
+    display:none;
+}
+
+
+
+
+@media screen and (max-width: 991px) {
+
+    .flex {
+        flex-direction:column;
+    }
+/******* HEADER *******/
+    header {
+        padding-top:0!important;
+    }
+
+    header > section {
+        
+        height:100vh;
+        margin-bottom:0!important;
+        background-image:url('../img/homepage/phone.jpg')!important;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position-x: 50%;
+        padding-top: 10px!important;
+    }
+
+    .nav-brand {
+        position:absolute;
+        color:black;
+        text-align: center;
+        margin:0 auto;
+        font-size: 5em;
+        top:25%;
+        left: 50%;
+        transform:translate(-50%,-50%);
+        z-index: 150;
+        text-shadow: 0 0 10px #fff,
+                     0 0 20px #fff, 
+                     0 0 50px #fff;
+    }
+
+    .logo {
+        width: 150px;
+        position:relative;
+    }
+
+    .avatar {
+        width: 200px;
+        height: 200px;
+        border-radius:50%;
+        overflow: hidden;
+        border: 2px solid grey;
+        position:relative;
+        margin: 5% auto;
+    }
+ 
+    header span {
+        display: none;
+    }
+
+    .link-screen {
+        display: none;
+    }
+
+    .phone-screen {
+        display:block;
+    }
+
+    .admin-link {
+        width: 250px;
+        border: 1px solid black;
+        background-color:rgba(30,30,30,0.3);
+        margin: 9px;
+        border-radius: 15px;
+        padding: 10px!important;
+        font-size: 200%;
+        text-align: center;
+    }
+
+    .connection-link {   
+        margin-top: 20px;     
+        width: 230px;
+        text-align: center;
+        font-size: 100%;    
+        background-color:black;
+    }
+
+    .log-out-link {
+        width: 360px;
+        margin: 30px 9px 9px 9px;
+    }
+
+
+    .admin-link:hover > a {
+        color:black;
+    }
+
+    .admin-link:hover {
+        background-color: rgba(200, 0,0, 0.7);
+        background-image: linear-gradient(315deg, rgba(200, 0, 0, 0.7) 40%, rgba(189, 134, 15, 0.7) 95%); 
+    }
+
+/*********** MAIN *******/
+    .resp {
+        width:50vh;
+        height:auto;
+        object-fit: fill;
+    }
+
+}
+
+@media screen and (min-width: 577px) and (max-width: 768px) {
+
+    .admin-link {
+        width: 250px;
+        border: 1px solid black;
+        background-color:rgba(30,30,30,0.3);
+        margin: 9px;
+        border-radius: 15px;
+        padding: 10px!important;
+        font-size: 200%;
+        text-align: center;
+    }
+
+    .log-out-link {
+        width: 360px;
+        margin: 30px 9px 9px 9px;
+    }
+
+    .connection-link {   
+        margin-top: 20px;     
+        width: 230px;
+        text-align: center;
+        font-size: 100%;    
+        background-color:black;
+    }
+
+}
+
+@media screen and (min-width: 769px) and (max-width: 991px) {
+
+}
+
+@media screen and (min-width: 992px) and (max-width: 1320px) {
+
+    .skew-5 {
+        transform: none;
+    }
+
+/******* HEADER ********/
+
+    header li {
+        font-size : 150%;
+    }
+
+    .nav-brand {
+        font-size: 250%;
+        font-family: 'trajan-bold';
+    }
+
+    .resp {
+        width: 180px;
+        height: 540px;
+        object-fit: cover;
+    }
+
+    .show:hover > .text-card-up {
+        opacity: 1;
+
+    }
+
+    .show:hover > h1 {
+        transform:none;
+        z-index: 150;
+        color:black;
+        text-shadow: 0 0 5px #fff,
+                     0 0 5px #fff, 
+                     0 0 0px #fff;
+    }
+    
+    .text-card-down {
+        color: rgb(240,240,240);
+        text-align: end;
+        font-size: 150%;
+        transition: all ease 0.5s;
+        writing-mode: vertical-rl;
+        text-orientation: upright;
+        background-color:rgba(30,30,30,0.4);
+        left:unset;
+        bottom:unset;
+        left:0;
+        bottom:0;
+        padding-bottom:10px!important;
+        width:fit-content;
+        height:100%;
+    }
+
+    .show:hover > .text-card-down {
+        background-color: rgba(30,30,30,0);
+    }
+
+    
+
+}
+
+

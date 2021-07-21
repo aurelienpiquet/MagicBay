@@ -20,11 +20,12 @@
         <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/user-style.css') }}">  
         
     {% elif request.endpoint == "cards" : %}
-        <link type="text/css" rel="stylesheet" href="{{url_for('static', filename='css/side_nav.css')}}"/>
         <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}"/>
+        <link type="text/css" rel="stylesheet" href="{{url_for('static', filename='css/side_nav.css')}}"/>
         <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-5.0.2-dist/css/bootstrap.min.css') }}">
         <link type="text/css" rel="stylesheet" href="{{url_for('static', filename='css/flash_message-style.css')}}">
         <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/header-style.css')}}" /> 
+        
         
     {% elif request.endpoint == "chat_page" : %}           
         <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}"/>
@@ -35,12 +36,13 @@
         {{ turbo() }}
         
     {% else %}
-        <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}"/>
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}"/>
         <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/chat-style.css') }}">
         <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-5.0.2-dist/css/bootstrap.min.css') }}">
         <link type="text/css" rel="stylesheet" href="{{url_for('static', filename='css/flash_message-style.css')}}">
         <link type="text/css" rel="stylesheet" href="{{url_for('static', filename='css/side_nav.css')}}"/>
         <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/header-style.css')}}" /> 
+        
         
     {% endif %}
    

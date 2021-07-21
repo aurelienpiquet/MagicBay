@@ -12,3 +12,9 @@ def page_not_found(e):
     return render_template('path_error/404.html'), 404
 
 app.register_error_handler(404, page_not_found)
+
+@app.errorhandler(413)
+def request_entity_too_large(e):
+    return render_template('path_error/413.html'), 413
+
+app.register_error_handler(413, forbidden)

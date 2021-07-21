@@ -2,6 +2,7 @@ from modules.imports import *
 from modules.database import *
 from modules.login import *
 from modules.form import *
+from modules.upload import upload_in_db
 from modules.conversion_functions import *
 import requests
 
@@ -78,7 +79,9 @@ def add_page():
         new_card = add_card_to_db(card_add)
         
         if new_card:
-            flash(f"{card_add[0]} a bien été ajoutée.", "succès") 
+            upload_new_card = upload_in_db(add_card[6], app.config['UPLOAD_CARD_PATH'])
+            if upload_new_card:
+                flash(f"{card_add[0]} a bien été ajoutée.", "succès") 
         else:
             flash(f"Un problème est survenu pendant l'ajoût de <{card_add[0]}>.", "erreur")
         return redirect(url_for('admin_card_list_page')) 
@@ -103,10 +106,12 @@ def update_page(id):
 
         if request.method == 'POST' and form.validate_on_submit():
             update_card = [cleanhtml(form.data[key]) for key in form.data.keys()]
-            card_update = update_card_in_db([id, update_card[0],update_card[5] , update_card[6], update_card[7].filename, 
+            card_update = update_in_db([id, update_card[0],update_card[5] , update_card[6], update_card[7].filename, 
                     update_card[1], update_card[2], update_card[3], update_card[4], update_card[8], update_card[9]])    
             if card_update:
-                flash(f"Mise à jour de la carte {update_card[0]} effectué.", "succès")
+                upload_new_card = upload_card_in_db(update_card[7], app.config['UPLOAD_CARD_PATH'])
+                if upload_new_card:
+                    flash(f"Mise à jour de la carte {update_card[0]} effectué.", "succès")
             else :
                 flash(f"Mise à jour de la carte {update_card[0]} impossible.", "erreur")
             return redirect(url_for('admin_card_list_page'))

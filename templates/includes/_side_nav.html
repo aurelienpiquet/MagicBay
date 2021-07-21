@@ -24,6 +24,14 @@
             <li><a class="mt-5" href="#buy-list">Listes</a></li>
             <li><a class="mt-5" href="#table-list">Recherches</a></li>
         </ul>
+    
+    {% elif request.endpoint == "sell_list_page" %}
+        <h1 class="mt-5 ms-3" style="color:white">Vendre</h1>
+        <ul>
+            <li><a class="mt-5" href="#Top">Créer</a></li>
+            <li><a class="mt-5" href="#add-cards">Ajouter</a></li>
+            <li><a class="mt-5" href="#buy-list">Listes</a></li>
+        </ul>
         
     {% endif %}
 </nav>
