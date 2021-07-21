@@ -10,11 +10,13 @@ ROUTE_dir = os.path.join(CUR_dir, 'routes')
 logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
-turbo = Turbo(app)
+
 app.config['SECRET_KEY']  = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///database.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 #ckeditor = CKEditor(app)
+turbo = Turbo(app)
 Bootstrap(app) #wtflask form et import dans html
 
 ############### IMPORT MODULES ############################
@@ -24,7 +26,7 @@ from modules.form import *
 from modules.database import *
 from modules.conversion_functions import check_datas, cleanhtml
 from modules.errorHandler import forbidden, page_not_found
-from modules.login import is_admin, is_user, is_logged, get_current_user
+from modules.login import get_current_user
 from modules.admin_cards import *
 from modules.user_functions import *
 
@@ -37,6 +39,8 @@ from routes.admin_routes import *
 from routes.user_deckbuilder_routes import *
 from routes.user_chat_routes import *
 from routes.user_routes import *
+from routes.user_comment_routes import *
+
 
 ##### Login Manager Flask #########
 login_manager = LoginManager()
@@ -45,7 +49,7 @@ login_manager.init_app(app)
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-    
+
 #### HOME PAGE #####
 @app.route('/')
 def home():

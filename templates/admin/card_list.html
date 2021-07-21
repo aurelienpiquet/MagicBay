@@ -1,0 +1,67 @@
+{% include 'header.html' %}
+
+<body>
+    <section>  
+        {% include 'includes/_flash_messages.html' %} 
+    </section>
+
+    <h1 class="text-center m-3"> Cartes database </h1>
+    
+    <section class="container">
+        <div class="row justify-content-center align-items-baseline text-center">
+            <div class="col-6">
+                {% with items = cards, path = 'admin_card_list_page'%}
+                    {% include 'includes/_paginate.html' %}
+                {% endwith %}
+            </div>
+            <div class="col-6 d-flex align-items-center">
+                <h3> Ajouter une carte </h3>
+                <a href="{{ url_for('add_page') }}" type="button" class="button button-admin w-25" title="Ajoûter Carte"> Ajoûter </a>
+            </div>
+        </div>
+    
+    </section>
+    <section class="container mb-5">
+        {% include 'admin/_card_page.html' %}
+    </section>
+
+    </body>
+    
+    {% include 'footer.html' %}
+
+
+<script>
+function checkSelection() {
+    var elements = document.getElementsByClassName("DisableBtn");
+    for (var prop in elements) {
+        element.disabled = false;
+    }
+}
+
+const btnUpdate = document.querySelectorAll('button-update');
+const formUser = document.querySelectorAll('form-name');
+
+btnUpdate.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log('test')
+        $('.form-name').load(document.URL +  ' .form-name');
+    })
+})
+
+formUser.forEach((userform) => {
+    userform.addEventListener('submit', (e) => {
+        e.preventDefault();
+        console.log('Test')
+        userform.style.background= 'red'
+        $('.form-name').load(document.URL +  ' .form-name');
+    })
+})
+
+
+//
+</script>
+
+</body>
+
+

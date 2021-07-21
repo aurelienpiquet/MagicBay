@@ -3,20 +3,13 @@ from modules.database import *
 from modules.login import *
 from modules.form import *
 from modules.conversion_functions import *
-
+import requests
 
 from __main__ import app
 
 ############################# LOGGED OUT ROUTES #############################################################
 
-@app.route('/card/dict')
-def card_dict():
-    ### accès à protéger par la suite via token
-    cards = Card.query.all()
-    liste_cards = [card.as_dict() for card in cards]
-    return jsonify(liste_cards)
-
-@app.route('/cards', methods=['POST', 'GET'])
+@app.route('/card/cards', methods=['POST', 'GET'])
 def cards():
     username = get_current_user()
 
@@ -40,7 +33,7 @@ def cards():
     cards_search_modern = db.session.query(Card, Card.search, Info, Media).join(Info, Info.id_card == Card.id).join(Media, Media.id_card==Card.id).filter(Info.legality !='legacy').filter(Info.legality !='vintage').order_by(desc(Card.search)).limit(3).all()
     cards_search_standard = db.session.query(Card, Card.search, Info, Media).join(Info, Info.id_card == Card.id).join(Media, Media.id_card==Card.id).filter(Info.legality != 'modern').filter(Info.legality !='legacy').filter(Info.legality !='vintage').order_by(desc(Card.search)).limit(3).all()
 
-    return render_template('cards.html', search = cards_search, search_legacy=cards_search_legacy, search_modern=cards_search_modern, 
+    return render_template('cards/cards.html', search = cards_search, search_legacy=cards_search_legacy, search_modern=cards_search_modern, 
     search_standard=cards_search_standard, rating=cards_rating, rating_modern=cards_rating_modern, rating_standard=cards_rating_standard, 
     rating_legacy=cards_rating_legacy, username=username)
 
@@ -98,7 +91,7 @@ def card_page(name):
         except IndexError:
             comments = []
 
-        return render_template('card.html', card=card, sellers_price=sellers_price, comments=comments, username=username, 
+        return render_template('cards/card.html', card=card, sellers_price=sellers_price, comments=comments, username=username, 
                 media=card_media, info = card_info, rating=rating, user_rating=user_rating, count=count,
                 rulling_form=rulling_form, post_form=post_form, response_form=response_form, post_modify_form=post_modify_form, 
                 response_modify_form=response_modify_form)
@@ -134,3 +127,16 @@ def card_rating_page():
         else :
             flash(f"Un problème est survenu pendant l'ajout de votre rating.", "erreur")
         return redirect(url_for('card_page', name=card.name))
+
+@app.route('/card/dict')
+def card_dict():
+    ### accès à protéger par la suite via token
+    cards = Card.query.all()
+    liste_cards = [card.as_dict() for card in cards]
+    return jsonify(liste_cards)
+
+@app.route('/card/editions')
+@is_logged
+def card_edition_page():
+    r = requests.get(f"https://api.magicthegathering.io/v1/sets").json()['sets']
+    return jsonify(r)

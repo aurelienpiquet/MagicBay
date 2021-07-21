@@ -43,16 +43,16 @@
             <td>{{ card[1].legality.capitalize() }}</td>
             <td>
                 <a title="Lien vers page carte" class="admin-a" href="{{ url_for('card_page', name=card[0].name) }}"
-                target="_blank"><img src="../static/img/link.png" alt="">
+                target="_blank"><img src="{{ url_for('static', filename='img/link.png') }}" alt="">
             </td>
             <td>
                 <a title="MàJ Carte" href="{{ url_for('update_page', id=card[0].id) }}"><img class="wrench w-25" 
-                src="static/img/save_img/update2.png" alt="wrench"></a> 
+                src="{{ url_for('static', filename='img/save_img/update2.png') }}" alt="wrench"></a> 
             </td>
             <td>
                 <a title="Supprimer Carte" href="{{ url_for('delete_page', id=card[0].id) }}" title="delete" class="delete" 
                 onclick="return confirm(' Supprimer la carte n°{{ card[0].id }}, nom {{ card[0].name.capitalize() }}')">
-                <img class="wrench w-25" src="static/img/save_img/delete.png" alt="wrench"></a>
+                <img class="wrench w-25" src="{{ url_for('static', filename='img/save_img/delete.png') }}" alt="wrench"></a>
             </td>
         </tr>
     {% endfor %}

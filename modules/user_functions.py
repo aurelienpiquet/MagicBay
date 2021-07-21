@@ -20,5 +20,5 @@ def get_user_avatar():
         avatar = db.session.query(User, Media).join(Media, User.id == Media.id_user).filter(Media.id_user == current_user.id).first()
         return avatar[1].path
 
-    except sqlalchemy.exc.StatementError:
+    except TypeError:
         return '../static/img/avatar.png'

@@ -30,14 +30,18 @@ def register_page():
     username = get_current_user()
     form = Register()
     if form.validate_on_submit():
-        form_user = [cleanhtml(form.username.data), cleanhtml(form.email.data), cleanhtml(form.password.data)]     
+        form_user = [cleanhtml(form.user.data), cleanhtml(form.email.data), cleanhtml(form.password.data)]     
         new_user = create_user(form_user)
         if new_user : 
-            login_user(new_user),
+            login_user(new_user)
+            user = User.query.filter(User.username==form_user[0]).first()
+            print(user)
+            new_avatar = Media(path="/static/img/avatar.png", alt="avatar", title="avatar", id_user=user.id)
+            db.session.add(new_avatar)
+            db.session.commit()
             return redirect(url_for('home', logged_in=current_user.is_authenticated))
         flash(f" Cet account ne peut être créer. Un planeswalker du nom de : <{form_user[0]}> ou <{form_user[1]}> existe déjà.", "erreur")
-
-    return render_template("register.html", form=form, username=username)
+    return render_template("connection/register.html", form=form, username=username)
 
 @app.route('/login', methods=['POST', 'GET'])
 def login_page():
@@ -57,7 +61,7 @@ def login_page():
             logging.info(f'USER {user.username} CONNECTE')                             
             return redirect(url_for('home'))#, username = user.username))     
 
-    return render_template("login.html", username=username)
+    return render_template("connection/login.html", username=username)
 
 @app.route("/logout")
 def log_out_page():
@@ -68,5 +72,5 @@ def log_out_page():
 
 @app.route('/forgotten_password')
 def forgotten_password_page():
-    return render_template('forgotten_password.html')
+    return render_template('connection/forgotten_password.html')
 

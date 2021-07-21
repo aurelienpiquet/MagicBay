@@ -48,10 +48,15 @@ h1 {
   font-family: 'trajan-bold';
 }
 
+option {
+  font-family: 'trajan';
+}
+
 .autocomplete {
   /*the container must be positioned relative:*/
   position: relative;
   display: inline-block;
+  max-height: 100px;
 
 }
 input {
@@ -92,6 +97,8 @@ input[type=submit]:focus {
   top: 100%;
   left: 0;
   right: 0;
+  max-height: 200px;
+  overflow-y: scroll;
 }
 .autocomplete-items div {
   padding: 10px;

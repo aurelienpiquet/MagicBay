@@ -1,8 +1,8 @@
   {% block content %}
   {% for id in buy_lists_id : %}
   <li>
-      <div class="row w-50 justify-content-center align-items-center">
-          <h2 class="col-6 text-center p-2"> {{ id[1].name }} </h2>
+      <div class="row w-50 justify-content-center m-auto align-items-center">
+          <h3 class="col-8 text-center p-2"> {{ id[1].name }} </h3>
           <div class="col-1 pointer"><img  id="img-{{ id[1].id }}" class="down-arrow w-100" style="transition:all ease 0.5s" src="/static/img/save_img/down-arrow.png" 
               alt="wrench" data-bs-toggle="collapse" href="#list-{{ id[1].id }}" aria-expanded="false" aria-controls=""></div> 
 
@@ -11,8 +11,8 @@
             <input type="submit" class="btn btn-dark" value="Supprimer" onclick="return confirm('Supprimer la liste : {{id[1].name}} ?')">
           </form>
       </div>
-      <div class="list-collapse collapse {{ 'w-50' if  buy_lists[0][1].id_type != 2 else 'w-100' }} justify-content-center align-items-center" id="list-{{ id[1].id }}">
-        <table class=''>
+      <div class="list-collapse collapse w-50 justify-content-center align-items-center" id="list-{{ id[1].id }}">
+        <table>
           <thead>
               <tr>
                   <th >Nom de la carte</th>
@@ -28,7 +28,7 @@
                       <td>{{ list[2].nb }}</td>
                       <td> 
                         <form class="" action="{{ url_for('delete_buy_card_list', card_id=list[3].id, deckbuilder_id=list[2].id_deckbuilder) }}" method='post'>   
-                          <input class="" name="add-submit-list" type="submit" value="delete">  
+                          <input name="add-submit-list" type="submit" value="supprimer">  
                         </form>
                       </td>
                   </tr>

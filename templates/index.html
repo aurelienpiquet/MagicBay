@@ -1,4 +1,4 @@
-{% include '_head.html' %}
+{% include 'includes/_head.html' %}
 
 {% block content %}
 <body class="bg-dark overflow">
@@ -13,8 +13,8 @@
                     <span><br> Achat - Vente - DeckBuilder </span></h1>
                 </div>
                 <ul class="w-45 flex justify-content-end  align-items-center">
-                    {% if username and username == 'admin': %}
-                        <li class="me-5"><a href="{{ url_for('admin_page', username=username) }}">Page Admin</a></li>
+                    {% if username == 'admin': %}
+                        <li class="me-5"><a href="{{ url_for('home') }}">Admin Home</a></li>
                         <li><a href="{{ url_for('log_out_page') }}">Se Déconnecter</a></li>
                     {% elif username : %}
                         <li class="me-5"><a href="{{ url_for('user_page', username=username) }}">
@@ -23,7 +23,7 @@
                             </div></a></li>
                         <li><a href="{{ url_for('log_out_page') }}">Se Déconnecter</a></li>
                     {% else : %}
-                        <li class="me-5"><a href="{{ url_for('register_page') }}"><img src="../static/img/homepage/register.jpg" alt="logo register" class="logo"></a></li>
+                        <li class="me-5"><a href="{{ url_for('register_page') }}"><img src="{{url_for('static', filename='img/homepage/register.jpg')}}" alt="logo register" class="logo"></a></li>
                         <li><a href="{{ url_for('login_page') }}">Se Connecter</a></li>
                     {% endif %}
                 </ul>
@@ -35,7 +35,7 @@
             <div class="m-05">
                 <a href="{{ url_for('cards') }}">
                 <div class="relative show">
-                    <img src="../static/img/homepage/homepage_3.jpg" alt="wallpaper cartes" class="resp skew-5 ">
+                    <img src="{{ url_for('static', filename='img/homepage/homepage_3.jpg') }}" alt="wallpaper cartes" class="resp skew-5 ">
                     <h1 class="absolute text-card-down w-100">CARTES</h1>
                     <div class="absolute bg bg-green w-100 h-100 z-index-100 skew-5 box-shadow-green"></div>
                 </div>
@@ -44,13 +44,13 @@
             
             <div class="m-05">
                 {% if username : %}
-                    <a href="{{ url_for('buy_list_page', username=username) }}">
+                    <a href="{{ url_for('admin_card_list_page') if username=='admin' else url_for('buy_list_page', username=username) }}">
                 {% else : %}
                     <a href="{{ url_for('login_page') }}">
                 {% endif %}
                 <div class="relative show">
-                    <img src="../static/img/homepage/homepage_5.jpg" alt="wallpaper achat" class="resp skew-5 box-shadow-red">
-                    <h1 class="absolute  text-card-down w-100">ACHAT</h1>
+                    <img src="{{ url_for('static', filename='img/homepage/homepage_5.jpg') }}" alt="wallpaper achat" class="resp skew-5 box-shadow-red">
+                    <h1 class="absolute text-card-down w-100">{{"CARTES DB" if username=="admin" else "ACHAT"}}</h1>
                     <div class="absolute bg bg-red w-100 h-100 z-index-100 skew-5"></div>
                 </div>
             </a>
@@ -58,13 +58,13 @@
             
             <div class="m-05 ">
                 {% if username : %}
-                    <a href="{{ url_for('sell_list_page', username=username) }}">
+                <a href="{{ url_for('admin_user_list_page') if username=='admin' else url_for('sell_list_page', username=username) }}">
                 {% else : %}
                     <a href="{{ url_for('login_page') }}">
                 {% endif %}
                 <div class=" relative show">
-                    <img src="../static/img/homepage/homepage_1.jpg" alt="wallpaper vente" class="resp skew-5 box-shadow-black">
-                    <h1 class="absolute  text-card-down w-100">VENTE</h1>
+                    <img src="{{ url_for('static', filename='img/homepage/homepage_1.jpg') }}" alt="wallpaper vente" class="resp skew-5 box-shadow-black">
+                    <h1 class="absolute  text-card-down w-100">{{"USERS DB" if username=="admin" else "VENTE"}}</h1>
                     <div class="absolute bg bg-black w-100 h-100 z-index-100 skew-5"></div>
                 </div>
             </a>
@@ -72,13 +72,13 @@
             
             <div class="m-05 ">
                 {% if username : %}
-                    <a href="{{ url_for('deckbuilder_list_page') }}">
+                <a href="{{ url_for('admin_api_list_page') if username=='admin' else url_for('deckbuilder_list_page', username=username) }}">
                 {% else : %}
                     <a href="{{ url_for('login_page') }}">
                 {% endif %}
                 <div class=" relative show">
-                    <img src="../static/img/homepage/homepage_6.jpg" alt="wallpaper deckbuilder" class="resp skew-5 box-shadow-blue">
-                    <h1 class="absolute  text-card-down w-100">DECKBUILDER</h1>
+                    <img src="{{ url_for('static', filename='img/homepage/homepage_6.jpg') }}" alt="wallpaper deckbuilder" class="resp skew-5 box-shadow-blue">
+                    <h1 class="absolute  text-card-down w-100">{{'APIs list' if username=="admin" else "DECKBUILDER"}}</h1>
                     <div class="absolute bg bg-blue w-100 h-100 z-index-100 skew-5"></div>
                 </div>
             </a>
@@ -86,13 +86,13 @@
 
             <div class="m-05 ">
                 {% if username : %}
-                    <a href="{{ url_for('message_page', username=username) }}">
+                    <a href="{{ url_for('admin_message_page') if username=='admin' else url_for('message_page', username=username) }}">
                 {% else : %}
                     <a href="{{ url_for('login_page') }}">
                 {% endif %}
                 <div class=" relative show">
-                    <img src="../static/img/homepage/homepage_8.jpg" alt="wallpaper messagerie" class="resp skew-5 box-shadow-white">
-                    <h1 class="absolute  text-card-down w-100">MESSAGERIE</h1>
+                    <img src="{{ url_for('static', filename='img/homepage/homepage_8.jpg') }}" alt="wallpaper messagerie" class="resp skew-5 box-shadow-white">
+                    <h1 class="absolute text-card-down w-100">MESSAGERIE</h1>
                     <div class="absolute bg bg-white w-100 h-100 z-index-100 skew-5"></div>
                 </div>
             </a>

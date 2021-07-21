@@ -1,45 +1,37 @@
 {% include 'header.html' %}
 
 <body>
-    <section>   
-        <h1> Page Admin </h1>
-        {% include '_flash_messages.html' %}
+    <section>  
+        {% include 'includes/_flash_messages.html' %} 
     </section>
 
-    <section class="container test-hover">
-        <h1> Carte database </h1>
-        {% with items = cards, path = 'admin_page', page = page_cards %}
-            {% include '_paginate.html' %}
-        {% endwith %}
+    <h1 class="text-center m-3"> Users Database </h1>
 
-        {% include '_card_page.html' %}
-
-    </section>
-    <hr>
-    <section>
-        <div class="container">
-            <h1> Ajoûter une carte </h2>
-            <a href="{{ url_for('add_page') }}" type="button" class="button button-admin" title="Ajoûter carte"> Ajoûter </a>
+    <section class="container mb-5">
+        <div class="row justify-content-center align-items-baseline text-center">
+            <div class="col-6">
+                {% with items = users, path = 'admin_user_list_page' %}
+                    {% include 'includes/_paginate.html' %}
+                {% endwith %}
+            </div>
+            <div class="col-6"></div>
         </div>
-    </section>
-    <hr>
-    <section class="container">
-        <h1> Liste des utilisateurs </h1>
-            <table class="ul-admin">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Username</th>
-                        <th>Email</th>
-                        <th>Status</th>
-                        <th>Nouveau Status</th>
-                        <th>Mise à jour</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for user in users: %}
-                    <tr> 
-                        <form class="form-name" name="form-name" method='POST' action="{{ url_for('update_user_page', id=user[0].id) }}"> 
+
+        <table class="ul-admin">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Nouveau Status</th>
+                    <th>Mise à jour</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users.items: %}
+                <tr> 
+                    <form class="form-name" name="form-name" method='POST' action="{{ url_for('update_user_page', id=user[0].id) }}"> 
                         <td>{{ user[0].id }}</td>
                         <td>{{ user[0].username }}</td>
                         <td>{{ user[0].email }}</td>
@@ -53,18 +45,16 @@
                             </select>
                         </td>
                         <td>
-                            <button title="Modifier User Status" class="button-update DisableBtn w-25" type="submit"><img src="static/img/save_img/update2.png"
+                            <button title="Modifier User Status" class="button-update DisableBtn w-25" type="submit"><img src="{{url_for('static', filename='img/save_img/update2.png')}}"
                                      alt="wrench" class="w-50"></button>              
-                        <td>
-                        </form>
-                    </tr>
-                    {% endfor %}
-                </tbody>
+                        </td>
+                    </form>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
 
-            </table>
-        </section>
-    </body>
-    
     {% include 'footer.html' %}
 
 

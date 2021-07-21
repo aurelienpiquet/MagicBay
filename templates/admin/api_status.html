@@ -1,0 +1,30 @@
+{% include 'header.html' %}
+
+<body>
+    <section class="m-5">
+        {% include 'includes/_flash_messages.html' %} 
+        <h1 class="text-center">API STATUS</h1>
+    </section>
+    <section class="container d-flex justify-content-center mb-5">
+        <table class="w-75">
+            <thead>
+                <tr>
+                    <th scope="col">Info</th>
+                    <th scope="col">Lien</th>
+                    <th scope="col">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for api in apis %}
+                <tr>
+                    <td>{{api[0]}}</td>
+                    <td>{{api[1]}}</td>
+                    <td>{{'🟢' if api[2] == 200 else '🔴'}} ({{ api[2] }})</td> 
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</body>
+
+{% include 'footer.html'%}

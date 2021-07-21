@@ -1,6 +1,6 @@
 
 
-  {% include '_head.html' %}
+  {% include 'includes/_head.html' %}
   <!-- NAVBAR A refaire sans bootstrap -->
   <body>
     <header>
@@ -9,15 +9,8 @@
         <a class="logo-header me-2" href="{{ url_for('home')}}">
           <img class="resp" src="{{url_for('static', filename='img/logo-rec.png')}}" alt="logo de MagicBay" title="MagicBay"></a>
 
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <h4 class="w-25 nav-title">MagicBay 
@@ -25,10 +18,8 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
          
-
-            <span class="ms-auto" id="username"> {{ (username.capitalize() + ' - ') if username }} </span>
-
-          
+        <span class="ms-auto" id="username"> {{ (username.capitalize() + ' - ') if username }} </span>
+  
           <ul class="navbar-nav mb-2 mb-lg-0">
             {% if username and username != 'admin': %}
             <!-- FAIRE UN LINE HEIGH POUR TOUT ALIGNER CORRECTEMENT -->
@@ -48,12 +39,19 @@
 
             {% endif %} 
             {% if username == "admin" : %}
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('admin_page')}}">Page Admin</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('log_out_page')}}">Déconnexion</a>
-            </li>
+              <li class="nav-item dropdown mb-auto">
+                <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                  Mon Compte
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                  <li mt-2><a class="dropdown-item" href="{{ url_for('home') }}">Admin Home</a></li>
+                  <li mt-2><a class="dropdown-item" href="{{ url_for('admin_card_list_page') }}">Carte DB</a></li>
+                  <li mt-2><a class="dropdown-item" href="{{ url_for('admin_user_list_page') }}">User DB</a></li>
+                  <li mt-2><a class="dropdown-item" href="{{ url_for('admin_api_list_page') }}">Api Status</a></li>
+                  <li mt-2><a class="dropdown-item" href="{{ url_for('admin_message_page') }}">Messagerie</a></li>
+                  <li mt-2><a class="dropdown-item" href="{{ url_for('log_out_page') }}">Déconnection</a></li>
+                </ul>
+              </li>
             {% endif %} 
             {% if not username : %}
             <li class="nav-item">

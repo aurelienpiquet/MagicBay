@@ -1,0 +1,18 @@
+{% include 'header.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+<body>
+    <main>
+        {% include 'includes/_flash_messages.html' %}
+        <h1>Créer un nouvel utilisateur</h1>
+        
+        
+        <div class="container jumbotron">
+            {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+        </div>
+
+    </main>
+</body>
+
+
+{% include 'footer.html' %}

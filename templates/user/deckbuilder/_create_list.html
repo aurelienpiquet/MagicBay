@@ -12,7 +12,8 @@
                     <h2 class='text-center'>Créer un deckbuilder</h2>
                 {% endif %}
 
-                <form class="row align-items-end w-80 justify-content-center form-wtf" method="post" action="{{ url_for('create_deckbuilder_list', id_type=id_deckbuilder) }}">
+                <form class="row align-items-end w-80 justify-content-center form-wtf" role="form" method="post" novalidate="True" action="{{ url_for('create_deckbuilder_list', id_type=id_deckbuilder) }}">
+                    <input type="text" name="id_deckbuilder" hidden value="{{id_deckbuilder}}">
                     {{ wtf.quick_form(create_list_form, novalidate=True, button_map={"submit": "dark"}) }}
                 </form>
             </div>
@@ -22,21 +23,21 @@
                 <div class="mt-5">
                     {% block turbo %}
                         <turbo-frame id='select-list'>
-                            {% include '_research_select_list.html' %}
+                            {% include 'user/deckbuilder/_research_select_list.html' %}
                         </turbo-frame>
                     {% endblock %}
                 </div>
                 <div class="mt-5 mb-5">
                     {% if id_deckbuilder == 1 :%}
                         <turbo-frame id='turbo-research'>
-                            {% include '_research_buy_form.html' %}
+                            {% include 'user/deckbuilder/_research_buy_form.html' %}
                         </turbo-frame>
                     {% elif id_deckbuilder == 2 : %}
                         <turbo-frame id='turbo-research'>
-                            {% include '_research_sell_form.html' %}
+                            {% include 'user/deckbuilder/_research_sell_form.html' %}
                         </turbo-frame>
                     {% elif id_deckbuilder == 2 : %}
-                        {% include '_research_buy_form.html' %}
+                        {% include 'user/deckbuilder/_research_buy_form.html' %}
                     {% endif %}
                 </div>  
             </div>

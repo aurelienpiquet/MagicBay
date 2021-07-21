@@ -1,4 +1,5 @@
 import logging, re, regex
+#import sanitize
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -43,10 +44,13 @@ def cleanhtml(raw_html):
     Returns:
         str : return a string without html balises and hexa digits
     """
+    regex = r"(DATABASE)*(SELECT)*(INSERT)*"
+
     cleanr = re.compile('<.*?>')
+    cleanSQL = re.compile(regex)
     if type(raw_html) == str :
         cleantext = re.sub(cleanr, '', raw_html)
-        #clean = "".join([elm for elm in cleantext if elm not in regex])
+        cleantext = re.sub(cleanSQL, '', cleantext)
         return cleantext
     else :
         logging.warning(f'Cant clean {type(raw_html)}.')        
@@ -55,11 +59,10 @@ def cleanhtml(raw_html):
 if __name__ == "__main__":
 
     a = '<>/<<<>>~###^^&&&test'
-    b = "-<A.T.A>-BlackDrago"
+    b = "-<test><test><<><o"
     c = "test test creation"
-    d = "'DROP DATABASE creation;'"
+    d = "SELECTbetbtbte <<DATABASEfvf f !! fd f<creation<<<;'"
     print(cleanhtml(a))
     print(cleanhtml(b))
+    print(cleanhtml(c))
     print(cleanhtml(d))
-
-    #print(cleanhtml.__doc__)

@@ -3,6 +3,7 @@ from modules.database import *
 from modules.login import *
 from modules.form import *
 from modules.conversion_functions import *
+import requests
 
 from modules.admin_cards import add_card_to_db, update_card_in_db, delete_card_in_db
 
@@ -10,17 +11,34 @@ from __main__ import app
 
 @app.route('/admin')
 @is_admin
-def admin_page():
-    nb = db.session.query(Card).count()
+def admin_page(): 
+    return render_template('admin/admin.html', username=current_user.username)
+
+@app.route('/admin/cards')
+@is_admin
+def admin_card_list_page():
+    nb_cards = db.session.query(Card).count()
     limit = 10
 
-    page = request.args.get('page', 1, type=int) if request.args.get('page', 1, type=int) <  round(nb/limit) + 1 else round(nb/limit)
+    page = request.args.get('page', 1, type=int) if request.args.get('page', 1, type=int) <  round(nb_cards/limit) + 1 else round(nb_cards/limit)
     if page == 0 :
         page = 1
     
     cards = db.session.query(Card, Info).join(Info, Info.id_card == Card.id).order_by(Card.name).paginate(page=page, per_page=limit)
-    all_users = db.session.query(User, Status).join(Status, User.id_status == Status.id).all()
-    return render_template('admin.html', page = page, cards = cards, users = all_users[1:], username=current_user.username)
+    return render_template('admin/card_list.html', page = page, cards = cards, username=current_user.username)
+
+@app.route('/admin/users')
+@is_admin
+def admin_user_list_page():
+    nb_users = db.session.query(User).count()
+    limit = 10
+
+    page = request.args.get('page', 1, type=int) if request.args.get('page', 1, type=int) <  round(nb_users/limit) + 1 else round(nb_users/limit)
+    if page == 0 :
+        page = 1
+    
+    all_users = db.session.query(User, Status).join(Status, User.id_status == Status.id).filter(User.id != 1).paginate(page=page, per_page=limit)
+    return render_template('admin/user_list.html', page=page, users = all_users, username=current_user.username)
 
 
 @app.route('/admin/card/<name>/add_rulling', methods=['POST'])
@@ -63,9 +81,9 @@ def add_page():
             flash(f"{card_add[0]} a bien été ajoutée.", "succès") 
         else:
             flash(f"Un problème est survenu pendant l'ajoût de <{card_add[0]}>.", "erreur")
-        return redirect(url_for('admin_page')) 
+        return redirect(url_for('admin_card_list_page')) 
          
-    return render_template('add.html', username=current_user.username, form=form) 
+    return render_template('admin/card_add.html', username=current_user.username, form=form) 
 
 @app.route('/admin/card/update/<id>', methods=['GET','POST'])
 @is_admin
@@ -91,11 +109,11 @@ def update_page(id):
                 flash(f"Mise à jour de la carte {update_card[0]} effectué.", "succès")
             else :
                 flash(f"Mise à jour de la carte {update_card[0]} impossible.", "erreur")
-            return redirect(url_for('admin_page'))
-        return render_template('update.html', card=card_to_update, username=current_user.username, form=form)
+            return redirect(url_for('admin_card_list_page'))
+        return render_template('admin/card_update.html', card=card_to_update, username=current_user.username, form=form)
 
     flash("Erreur, Id de carte incorrecte.", "erreur")
-    return redirect(url_for('admin_page'))
+    return redirect(url_for('admin_card_list_page'))
 
 @app.route('/admin/card/delete/<int:id>', methods=['GET'])
 @is_admin
@@ -109,7 +127,7 @@ def delete_page(id):
                 flash(f"{card_name} a bien été supprimée de la database.", "succès")
             else:
                 flash(f"{card_name} n'a pas été supprimée de la database.", "erreur")
-    return redirect(url_for('admin_page'))
+    return redirect(url_for('admin_card_list_page'))
 
 
 @app.route('/admin/user/update/<int:id>', methods=['POST', 'GET'])
@@ -129,4 +147,20 @@ def update_user_page(id):
                 flash(f"Erreur, mise à jour du status de {user.username} impossible.", "erreur")
         else:
             flash('Utilisateur inconnu.', 'erreur')
-    return redirect(url_for('admin_page'))
+    return redirect(url_for('admin_user_list_page'))
+
+@app.route('/admin/api_list')
+@is_admin
+def admin_api_list_page():
+    dict_api = {'EDITION' : "https://api.magicthegathering.io/v1/sets",
+                 'CARD' : "https://api.magicthegathering.io/v1/cards",
+                 'TYPE' : "https://api.magicthegathering.io/v1/types"}
+
+    apis = [(key, dict_api[key],requests.get(dict_api[key]).status_code) for key in dict_api.keys()]
+    
+    return render_template('admin/api_status.html', apis=apis, username=current_user.username)
+
+@app.route('/admin/message')
+@is_admin
+def admin_message_page():
+    return render_template('chat/messenger.html', username=current_user.username)

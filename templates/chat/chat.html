@@ -8,14 +8,14 @@
         <div class="list-group">
         <turbo-frame id="message-chat">
             {% for message in messages : %}
-            {% include '_message.html' %}
+            {% include 'chat/_message.html' %}
             {% endfor %}
         </turbo-frame>
     </section>
 
     <section class="container mt-5 mb-5">
         {% set new_receiver = receiver if receiver != current_user.username else messages[0].author %}
-        {% include '_input_chat.html' %}
+        {% include 'chat/_input_chat.html' %}
     </section>
 
 </body>

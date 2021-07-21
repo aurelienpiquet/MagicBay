@@ -1,11 +1,11 @@
 {% include 'header.html' %}
 <body>
 <main class="container">
-    {% include '_flash_messages.html' %}
+    {% include 'includes/_flash_messages.html' %}
 
     <h1> Faites votre liste de ventes </h1>
     {% with id_deckbuilder = 2 %}
-        {% include '_create_list.html' %}
+        {% include 'user/deckbuilder/_create_list.html' %}
     {% endwith %}
 
     <section id="buy-list" class="container">
@@ -13,7 +13,7 @@
             <h1> Vos listes de ventes </h1>
             <ul id="ul-list-update">
                 <turbo-frame id="research-sell-list">
-                    {% include '_research_sell_list.html' %}
+                    {% include 'user/deckbuilder/_research_sell_list.html' %}
                 </turbo-frame>
             </ul>
         </div>
@@ -22,7 +22,7 @@
 {% include 'footer.html' %}
 <script>
 
-autocomplete(document.getElementById("input-search-list"), cards);
+autocomplete_card(document.getElementById("input-search-list"), cards);
 
 
 //async function update_list_buy() { 

@@ -1,4 +1,4 @@
-function autocomplete(inp, arr) {
+function autocomplete_edition(inp, arr) {
 
     /*the autocomplete function takes two arguments,
     the text field element and an array of possible autocompleted values:*/
@@ -95,18 +95,19 @@ function autocomplete(inp, arr) {
     document.addEventListener("click", function (e) {
         closeAllLists(e.target);
     });
-  }
+}
 
-var cards = []
-function loadCards(){
-  $.getJSON('/card/dict', function(data, status, xhr){
+let editions = []
+function loadEditions(){
+  $.getJSON('/card/editions', function(data, status, xhr){
   for (var i = 0; i < data.length; i++ ) {
-    cards.push(data[i].name);
+    editions.push(data[i].name);
    }
    });
 }  
-loadCards()
 
+loadEditions()
+console.log(editions)
 
 /*
     $(document).ready(function () {

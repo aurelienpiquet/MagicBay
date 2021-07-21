@@ -2,38 +2,43 @@
 <body>
     
 <main class="container">
-    {% include '_flash_messages.html' %}
+    {% include 'includes/_flash_messages.html' %}
 
-    {% include '_side_nav.html' %}
+    {% include 'includes/_side_nav.html' %}
 
     <h1 id="list-buy" class="text-center m-3"> Faites votre liste d'achat </h1>
+    
     <section>
         {% with id_deckbuilder = 1 %}
-            {% include '_create_list.html' %}
+            {% include 'user/deckbuilder/_create_list.html' %}
         {% endwith %}
     </section> 
+
+    <hr>
     
     <section id="buy-list" class="container">
         <div class="row">
-            <h2> Vos listes de d'achat </h2>
-            <ul id="ul-list-update">
+            <h2 class="text-center"> Vos listes de d'achat </h2>
+            <ul id="ul-list-update" class="text-center mt-3">
                 <turbo-frame id="research-buy-list">
-                    {% include '_research_buy_list.html' %}
+                    {% include 'user/deckbuilder/_research_buy_list.html' %}
                 </turbo-frame>
             </ul>
         </div>
     </section>
 
+    <hr>
+
     <section class="container">
-        <h2> Résultat des recherches </h2>
+        <h2 class="text-center"> Résultat des recherches </h2>
         <turbo-frame id="search-table-list">
-            {% include '_research_table.html' %}
+            {% include 'user/deckbuilder/_research_table.html' %}
         </turbo-frame>
     </section>
 </main>
 
 {% include 'footer.html' %}
-<script> autocomplete(document.getElementById("input-search-list"), cards);</script>
+<script> autocomplete_card(document.getElementById("input-search-list"), cards);</script>
 <script type="text/javascript" src="{{url_for('static', filename='js/sell_buy_form.js')}}"></script>
 <script type="text/javascript" src="{{url_for('static', filename='js/down_arrow.js')}}"></script>
 <script>
