@@ -30,38 +30,42 @@ def register_page():
     username = get_current_user()
     form = Register()
     if form.validate_on_submit():
-        form_user = [cleanhtml(form.user.data), cleanhtml(form.email.data), cleanhtml(form.password.data)]     
+        form_user = [cleanhtml(form.user.data), cleanhtml(form.email.data), cleanhtml(form.password.data)]  
+        user_in_db = User.query.filter((User.username == form_user[0]) | (User.email == form_user[1])).first()
+        if user_in_db :
+            flash(f" Cet account ne peut être créer. Un planeswalker du nom de : <{form_user[0]}> ou <{form_user[1]}> existe déjà.", "erreur")
+            return redirect(url_for('register_page'))
         new_user = create_user(form_user)
         if new_user : 
             login_user(new_user)
             user = User.query.filter(User.username==form_user[0]).first()
-            print(user)
             new_avatar = Media(path="/static/img/avatar.png", alt="avatar", title="avatar", id_user=user.id)
             db.session.add(new_avatar)
             db.session.commit()
-            return redirect(url_for('home', logged_in=current_user.is_authenticated))
-        flash(f" Cet account ne peut être créer. Un planeswalker du nom de : <{form_user[0]}> ou <{form_user[1]}> existe déjà.", "erreur")
+            flash(f"Bienvenu {form_user[0]}","succes")
+            return redirect(url_for('home', logged_in=current_user.is_authenticated))      
     return render_template("connection/register.html", form=form, username=username)
 
 @app.route('/login', methods=['POST', 'GET'])
 def login_page():
     username = get_current_user()
-    if request.method == 'POST':
-        username_form = cleanhtml(request.form['username-email'])
-        email_form = cleanhtml(request.form['username-email'])
-        password_form = cleanhtml(request.form['password'])
-        user = User.query.filter((User.username == username_form) | (User.email == email_form)).first()
+    form = Login()
+    if request.method == 'POST' and form.validate_on_submit():
+        username_form = cleanhtml(form.user.data)
+        password_form = cleanhtml(form.password.data)
+
+        user = User.query.filter((User.username == username_form) | (User.email == username_form)).first()
        
         if not user:
-            flash("Cet Username ou Email n'existe pas.")
+            flash("Cet Utilisateur ou Email n'existe pas.", "erreur")
         elif not check_password_hash(user.password, password_form):
-            flash('Mauvais mot de passe.')        
+            flash("Ce mot de passe ne correspond pas à cet Utilisteur ou Email.", "erreur")        
         else:
             login_user(user, remember=True)
             logging.info(f'USER {user.username} CONNECTE')                             
-            return redirect(url_for('home'))#, username = user.username))     
+            return redirect(url_for('home'))    
 
-    return render_template("connection/login.html", username=username)
+    return render_template("connection/login.html", form=form, username=username)
 
 @app.route("/logout")
 def log_out_page():

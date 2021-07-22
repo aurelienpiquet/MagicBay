@@ -105,11 +105,6 @@ div.rating-star {
   font-size:150%;
 }
 
-footer p {
-  margin-bottom: 25%;
-  text-align:center;
-}
-
 input {
   display: flex;
   margin: 7% 7%; 
@@ -293,3 +288,13 @@ tr:nth-child(even) {
   width:310px;
 }
 
+/**FOOTER **/
+
+footer p {
+  text-align:center;
+}
+
+footer {
+  margin-bottom: auto;
+  height: 30px;
+}

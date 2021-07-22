@@ -82,9 +82,14 @@ class Register(FlaskForm):
         Length(max=30, message="Le nom d'utilisateur ne peut pas depasser 30 caractères.")], render_kw={"placeholder": "Nom d'utilisateur"})
     email = EmailField('Email', validators=[DataRequired(message='Email requis'), Email(message="Adresse email incorrecte")],
          render_kw={"placeholder": "Email"})
-    password = PasswordField('Password', validators=[DataRequired(message='Password requis'), Length(min=4)], 
-        render_kw={"placeholder": "Password"}) 
+    password = PasswordField('Mot de passe', validators=[DataRequired(message='Mot de passe requis'), Length(min=4)], 
+        render_kw={"placeholder": "Mot de passe"}) 
     submit = SubmitField('Créer nouvel account')
+
+class Login(FlaskForm):
+    user = StringField("Nom d'utilisateur ou Email", validators=[DataRequired(message="Un nom d'utilisateur ou un email requis")], render_kw={"placeholder": "Nom d'utilisateur ou Email"})
+    password = PasswordField('Mot de passe', validators=[DataRequired(message='Mot de passe requis')], render_kw={"placeholder": "Mot de passe"}) 
+    submit = SubmitField('Se connecter')
 
 class Avatar(FlaskForm):
     file = FileField('Nouvel Avatar', validators=[FileRequired(message="Image requise"), FileAllowed(['jpg', 'png'], '*.jpg ou *.png')])

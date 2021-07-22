@@ -1,31 +1,32 @@
 {% include 'header.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
 
-<body>
-    <main>
-        <div class="container">
-            <h1> Connexion </h1>        
-            {% with messages = get_flashed_messages() %}
-            {% if messages %}
-              {% for message in messages %}
-               <p>{{ message }}</p>
-              {% endfor %}
-            {% endif %}
-            {% endwith %}
-            <form action="{{ url_for('login_page') }}" method="post">
-                <input type="text" name="username-email" placeholder="Nom d'Utilisateur ou Email" required="required">
-                <input type="password" name="password" placeholder="Password" required="required">
-                <button type="submit" class="button-admin"> Connexion </button>
-            </form>
-            <div>
-                <a href="{{ url_for('forgotten_password_page') }}" type="button"> Mot de passe oublié? </a> 
-            </div> 
-        </div>
+    <main class="m-5">
+    {% include 'includes/_flash_messages.html' %}
+
+    <h1 class="text-center mt-3"> Connexion </h1>
+    <section class="container mt-5"> 
+        <form action="{{ url_for('login_page') }}" method='post'>      
+            {{ form.csrf_token }}
+            <div class="row justify-content-center mt-3">
+                {{ wtf.form_field(form.user) }}
+            </div>
+            <div class="row justify-content-center mt-3 mb-3">
+                {{ wtf.form_field(form.password) }}
+            </div>
+            <div class="text-center w-50 m-auto mt-5">
+                {{ form.submit(class="btn btn-lg") }}
+            </div>
+        </form>
+    </section>
+    <section>
+        <div class="text-center w-auto m-auto mt-3">
+            <a href="{{ url_for('forgotten_password_page') }}" type="button"> Mot de passe oublié? </a> 
+        </div> 
+    </section>
     </main>
+<div class="fixed-bottom m-3">
+    {% include 'footer.html' %}
+</div>
 
 
-</body>
-
-
-
-
-{% include 'footer.html' %}

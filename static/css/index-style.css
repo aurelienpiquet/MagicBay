@@ -359,7 +359,7 @@ main .filter {
     .admin-link {
         width: 250px;
         border: 1px solid black;
-        background-color:rgba(30,30,30,0.3);
+        background-color:rgba(30,30,30,0.7);
         margin: 9px;
         border-radius: 15px;
         padding: 10px!important;
@@ -404,7 +404,7 @@ main .filter {
     .admin-link {
         width: 250px;
         border: 1px solid black;
-        background-color:rgba(30,30,30,0.3);
+        background-color:rgba(30,30,30,0.7);
         margin: 9px;
         border-radius: 15px;
         padding: 10px!important;
@@ -475,7 +475,7 @@ main .filter {
         transition: all ease 0.5s;
         writing-mode: vertical-rl;
         text-orientation: upright;
-        background-color:rgba(30,30,30,0.4);
+        background-color:rgba(30,30,30,0.7);
         left:unset;
         bottom:unset;
         left:0;

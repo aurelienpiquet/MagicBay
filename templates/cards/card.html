@@ -2,6 +2,7 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 <body>
+  {% include 'includes/_flash_messages.html' %}
   <section class="container mt-3">
       {% if card.name != 'empty name' : %}
       <article class="row justify-content-center">
