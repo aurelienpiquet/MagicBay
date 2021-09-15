@@ -8,7 +8,7 @@ from modules.conversion_functions import *
 from __main__ import app
 
 ####################### FUNCTION DECKBUILDER ########################
-def create_list(datas):
+def create_list(datas: list) ->  bool:
     #[name, date, id_type, id_user]
     try:
         new_deckbuilder = DeckBuilder(name=datas[0], date=datas[1], id_type=datas[2], id_user=datas[3])
@@ -18,7 +18,7 @@ def create_list(datas):
     except sqlalchemy.exc.StatementError:
         return False
 
-def add_card_to_list(datas):
+def add_card_to_list(datas: list) -> bool:
     #datas = [id_deckbuilder, card_name, nb]
     try :
         card = Card.query.filter_by(name=datas[1]).first()
@@ -42,7 +42,7 @@ def add_card_to_list(datas):
     except AttributeError:
         return False
 
-def add_card_to_sell_list(datas):
+def add_card_to_sell_list(datas: list) -> bool:
     try:
         card = Card.query.filter_by(name=datas[1]).first()
         card_id = card.id
@@ -56,7 +56,3 @@ def add_card_to_sell_list(datas):
     except sqlalchemy.exc.StatementError:
         return False
 
-#def copy_image_to_folder():
-#    #need shuthil and full path shutil.copy(src, dst, *, follow_symlinks=True)
-#    pass
-#

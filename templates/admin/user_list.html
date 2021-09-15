@@ -9,14 +9,14 @@
 
     <section class="container mb-5">
         <div class="row justify-content-center align-items-baseline text-center">
-            <div class="col-6">
+            <div class="col-12 col-lg-6 m-auto">
                 {% with items = users, path = 'admin_user_list_page' %}
                     {% include 'includes/_paginate.html' %}
                 {% endwith %}
             </div>
             <div class="col-6"></div>
         </div>
-
+        <div class="table-responsive">
         <table class="ul-admin">
             <thead>
                 <tr>
@@ -45,17 +45,20 @@
                             </select>
                         </td>
                         <td>
-                            <button title="Modifier User Status" class="button-update DisableBtn w-25" type="submit"><img src="{{url_for('static', filename='img/save_img/update2.png')}}"
-                                     alt="wrench" class="w-50"></button>              
+                            <button title="Modifier User Status" class="button-update DisableBtn" type="submit"><img src="{{url_for('static', filename='img/save_img/update2.png')}}"
+                                     alt="wrench" class="w-100"></button>              
                         </td>
                     </form>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+    </div>
     </section>
 
+<div class="mt-3 mb-3">
     {% include 'footer.html' %}
+</div>
 
 
 <script>

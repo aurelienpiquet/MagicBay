@@ -6,7 +6,15 @@ from modules.conversion_functions import *
 
 from __main__ import app
 
-def create_user(form):
+def create_user(form: list) -> bool:
+    """Create a user in database
+
+    Args:
+        form (list): the inscription form
+
+    Returns:
+        bool: return True if creation is a success, False if not
+    """
     password_hash = generate_password_hash(password=form[2], method='pbkdf2:sha256', salt_length=8)
     try:
         new_user = User(
@@ -57,14 +65,13 @@ def login_page():
         user = User.query.filter((User.username == username_form) | (User.email == username_form)).first()
        
         if not user:
-            flash("Cet Utilisateur ou Email n'existe pas.", "erreur")
+            flash("Ces idenfiants et/ou mot de passe ne sont pas reconnus.", "erreur")
         elif not check_password_hash(user.password, password_form):
-            flash("Ce mot de passe ne correspond pas à cet Utilisteur ou Email.", "erreur")        
+            flash("Ces identifiants et/ou mot de passe ne sont pas reconnus", "erreur")        
         else:
             login_user(user, remember=True)
             logging.info(f'USER {user.username} CONNECTE')                             
             return redirect(url_for('home'))    
-
     return render_template("connection/login.html", form=form, username=username)
 
 @app.route("/logout")

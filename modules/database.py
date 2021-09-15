@@ -10,13 +10,6 @@ CUR_dir = os.path.dirname(os.path.abspath(__file__))
 
 db=SQLAlchemy(app)
 
-# prevoir de faire les tests sur les ID
-# rajouter dans Cards, user_id + nb_cards pour la vente
-# one to many Cards --> posts 
-# one to many users --> posts
-# Rajouter la date pour les posts. pour trier
-# <script>alert('hello')</script>
-
 class Card(db.Model):
     __tablename__ = 'card'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -25,9 +18,6 @@ class Card(db.Model):
     price = db.Column(db.Float, nullable=False)
     type = db.Column(db.String, nullable=False)
     ccm = db.Column(db.String, nullable=True)
-    
-    #deckbuilders = relationship('DeckBuilder', secondary='deckbuilder_card')
-    #ratings = relationship('Rating', secondary='card_rating')
 
     def as_dict(self):
         return {'name' : self.name}
@@ -136,9 +126,7 @@ class User(UserMixin, db.Model):
     lastname = db.Column(db.String(255), nullable=True)
     phone = db.Column(db.String(255), nullable=True)
     zipcode = db.Column(db.Integer, nullable=True)
-    id_status = db.Column(db.Integer, ForeignKey('status.id'), nullable=True)
-
-    
+    id_status = db.Column(db.Integer, ForeignKey('status.id'), nullable=True) 
 
 if not os.path.exists(os.path.join(CUR_dir, "database.db")):
     db.create_all() 

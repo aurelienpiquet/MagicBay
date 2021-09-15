@@ -1,63 +1,63 @@
 
 {% block content %}
 <div class="table-responsive">
-<table class="">
-    <thead>
-        <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Nom</th>
-            <th scope="col">Type</th>
-            <th scope="col">Edition</th>
-            <th scope="col">CCM</th>
-            <th scope="col">Recherche</th>
-            <th scope="col">Légalité</th>
-            <th scope="col">Lien vers carte </th>                    
-            <th scope="col">Mise à jour</th>
-            <th scope="col">Supprimer</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for card in cards.items : %}
-        <tr>
-            <td scope="row">{{ card[0].id }}</td>
-            <td>{{ card[0].name.capitalize() }}</td>
-            <td>{{ card[0].type.capitalize() }}</td>
-            <td>{{ card[1].edition.capitalize() }}</td>
+    <table class="">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Type</th>
+                <th scope="col">Edition</th>
+                <th scope="col">CCM</th>
+                <th scope="col">Recherche</th>
+                <th scope="col">Légalité</th>
+                <th scope="col">Lien vers carte </th>                    
+                <th scope="col">Mise à jour</th>
+                <th scope="col">Supprimer</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for card in cards.items : %}
+            <tr>
+                <td scope="row">{{ card[0].id }}</td>
+                <td>{{ card[0].name.capitalize() }}</td>
+                <td>{{ card[0].type.capitalize() }}</td>
+                <td>{{ card[1].edition.capitalize() }}</td>
 
-            {% if card[0].ccm == none %}
-                <td></td>
-            {% else :%}
+                {% if card[0].ccm == none %}
+                    <td></td>
+                {% else :%}
+                    <td>
+                        <div class="d-flex justify-content-center align-content-center">
+                            {% for elm in card[0].ccm : %}
+                                {% if elm in ['0','1','2','3','4','5','6','7','8','9','X'] : %}
+                                    <img class="mana-symbol" src="../static/img/mana/{{elm}}.png" alt="">
+                                {% elif elm in ['R','G','U', 'B', 'W'] : %}
+                                    <img class="mana-symbol" src="../static/img/mana/{{elm}}.png" alt="">
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </td>
+                {% endif %}
+
+                <td>{{ card[0].search }} fois</td>
+                <td>{{ card[1].legality.capitalize() }}</td>
                 <td>
-                    <div class="d-flex justify-content-center align-content-center flex-wrap">
-                        {% for elm in card[0].ccm : %}
-                            {% if elm in ['0','1','2','3','4','5','6','7','8','9','X'] : %}
-                                <img class="col-2" src="../static/img/mana/{{elm}}.png" alt="">
-                            {% elif elm in ['R','G','U', 'B', 'W'] : %}
-                                <img class="col-2" src="../static/img/mana/{{elm}}.png" alt="">
-                            {% endif %}
-                        {% endfor %}
-                    </div>
+                    <a title="Lien vers page carte" href="{{ url_for('card_page', name=card[0].name) }}"
+                    target="_blank"><img src="{{ url_for('static', filename='img/save_img/link.png') }}" alt="image de lien">
                 </td>
-            {% endif %}
-
-            <td>{{ card[0].search }} fois</td>
-            <td>{{ card[1].legality.capitalize() }}</td>
-            <td>
-                <a title="Lien vers page carte" class="admin-a" href="{{ url_for('card_page', name=card[0].name) }}"
-                target="_blank"><img src="{{ url_for('static', filename='img/link.png') }}" alt="">
-            </td>
-            <td>
-                <a title="MàJ Carte" href="{{ url_for('update_page', id=card[0].id) }}"><img class="wrench w-25" 
-                src="{{ url_for('static', filename='img/save_img/update2.png') }}" alt="wrench"></a> 
-            </td>
-            <td>
-                <a title="Supprimer Carte" href="{{ url_for('delete_page', id=card[0].id) }}" title="delete" class="delete" 
-                onclick="return confirm(' Supprimer la carte n°{{ card[0].id }}, nom {{ card[0].name.capitalize() }}')">
-                <img class="wrench w-25" src="{{ url_for('static', filename='img/save_img/delete.png') }}" alt="wrench"></a>
-            </td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
+                <td>
+                    <a title="MàJ Carte" href="{{ url_for('update_page', id=card[0].id) }}"><img 
+                    src="{{ url_for('static', filename='img/save_img/update2.png') }}" alt=""></a> 
+                </td>
+                <td>
+                    <a title="Supprimer Carte" href="{{ url_for('delete_page', id=card[0].id) }}" title="delete" class="delete" 
+                    onclick="return confirm(' Supprimer la carte n°{{ card[0].id }}, nom {{ card[0].name.capitalize() }}')">
+                    <img class="" src="{{ url_for('static', filename='img/save_img/delete.png') }}" alt="image de lien"></a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}

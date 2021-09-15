@@ -10,7 +10,7 @@ from __main__ import app
 from __main__ import turbo
 
 
-@app.route('/user/<username>/message')
+@app.route('/user/<string:username>/message')
 @is_logged
 def message_page(username):
 
@@ -18,7 +18,7 @@ def message_page(username):
     return render_template('chat/messenger.html', username=current_user.username, messages=messages)
      
 
-@app.route('/user/<username>/message/<receiver>/<card>/<info>', methods=['POST'])
+@app.route('/user/<string:username>/message/<string:receiver>/<string:card>/<string:info>', methods=['POST'])
 @is_logged
 def send_message(username, receiver, card, info):
     if request.method == 'POST': 
@@ -30,13 +30,13 @@ def send_message(username, receiver, card, info):
             message = Message(receiver = user_receiver, content = content)
             new_message = message.sendMessage(id_info=card_info.id)
             if new_message :
-                flash(f"Votre message a bien été envoyé à l'utilisateur {user_receiver}.", "succès")
+                flash(f"Votre message a bien été envoyé à l'utilisateur {user_receiver.username}.", "succès")
             else:
                 flash("Un problème est survenu pendant l'envoi de votre message.", "erreur")
     return redirect(url_for('buy_list_page', username=current_user.username))
 
 
-@app.route('/user/<username>/message/<receiver>/<int:message_id>', methods=['POST', 'GET'])
+@app.route('/user/<string:username>/message/<string:receiver>/<int:message_id>', methods=['POST', 'GET'])
 @is_logged
 def chat_page(username, receiver, message_id):
     chat_form = ChatMessage()

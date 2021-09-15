@@ -57,7 +57,7 @@ def buy_list_page(username):
 @is_logged
 def create_deckbuilder_list(id_type):
     create_list_form = CreateList()
-    if request=="POST" and create_list_form.validate_on_submit():
+    if create_list_form.validate_on_submit():
         name = cleanhtml(create_list_form.new_list.data)
         date = datetime.datetime.now()
         id_user = current_user.id      
@@ -189,19 +189,20 @@ def add_to_sell():
         flash("Enregistrement impossible. Merci de bien compléter tout les champs.", "erreur")
     return redirect(url_for('sell_list_page', username=current_user.username))
   
-@app.route('/user/delete_sell_card_list', methods=['POST'])
+@app.route('/user/delete_sell_card_list/<card>', methods=['GET','POST'])
 @is_logged
-def delete_sell_card_list():
+def delete_sell_card_list(card):
     if request.method == 'POST':
         card_id = cleanhtml(request.form['card-id'])
         deckbuilder_id = cleanhtml(request.form['deck-id'])
+        
         card_to_delete = DeckBuilder_Card.query.filter(DeckBuilder_Card.id_card == card_id).filter(DeckBuilder_Card.id_deckbuilder == deckbuilder_id).first()
-        card_name = card_to_delete.name
         if card_to_delete:
             db.session.delete(card_to_delete)
             db.session.commit()
-            flash(f"{card_to_delete.capitalize()} a bien été supprimée.","succès")
-        flash(f"{card_to_delete.capitalize()} n'a pas été supprimée.", "erreur")
+            flash(f"La carte {card} a bien été supprimée.","succès")
+        else:
+            flash(f"La carte {card} n'a pas été supprimée.", "erreur")
     return redirect(url_for('sell_list_page', username=current_user.username))
 
 

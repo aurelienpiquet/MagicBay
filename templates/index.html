@@ -18,7 +18,8 @@
                         <li class="phone-screen admin-link"><a href="{{url_for('admin_user_list_page')}}">Users DB</a></li>
                         <li class="phone-screen admin-link"><a href="{{url_for('admin_api_list_page')}}">APIs list</a></li>
                         <li class="phone-screen admin-link"><a href="">Messagerie</a></li>
-                        <li class="link-screen"><a href="{{ url_for('admin_card_list_page', username='admin') }}">Admin Home</a></li>
+                        <!--<li class="link-screen"><a href="{{ url_for('admin_card_list_page') }}">Admin Home</a></li>-->
+                        <li class="link-screen"><a href="{{ url_for('user_page', username=current_user.username) }}">Admin Profil</a></li>
                         <li class="phone-screen admin-link connection-link"><a href="{{ url_for('log_out_page') }}">Se Déconnecter</a></li>
                         <li class="link-screen"><a href="{{ url_for('log_out_page') }}">Se Déconnecter</a></li>
                     {% elif username : %}
@@ -46,9 +47,9 @@
             <div>
                 <a href="{{ url_for('cards') }}">
                 <div class="relative show">
-                    <img src="{{ url_for('static', filename='img/homepage/homepage_3.jpg') }}" alt="wallpaper cartes" class="resp skew-5 ">
+                    <img src="{{ url_for('static', filename='img/homepage/homepage_3.jpg') }}" alt="wallpaper cartes" class="resp skew-5 box-shadow-green">
                     <h1 class="absolute text-card-down  ">CARTES</h1>
-                    <div class="filter absolute bg bg-green z-index-100 skew-5 box-shadow-green"></div>
+                    <div class="filter absolute bg bg-green z-index-100 skew-5"></div>
                 </div>
                 </a>
             </div>

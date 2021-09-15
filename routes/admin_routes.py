@@ -2,9 +2,10 @@ from modules.imports import *
 from modules.database import *
 from modules.login import *
 from modules.form import *
-from modules.upload import upload_in_db
+from modules.upload import upload_img
 from modules.conversion_functions import *
 import requests
+
 
 from modules.admin_cards import add_card_to_db, update_card_in_db, delete_card_in_db
 
@@ -42,7 +43,7 @@ def admin_user_list_page():
     return render_template('admin/user_list.html', page=page, users = all_users, username=current_user.username)
 
 
-@app.route('/admin/card/<name>/add_rulling', methods=['POST'])
+@app.route('/admin/card/<string:name>/add_rulling', methods=['POST'])
 @is_admin
 def add_rulling(name):
     rulling_form = RullingCard()
@@ -57,9 +58,9 @@ def add_rulling(name):
     return redirect(url_for('card_page', name=name))
 
 
-@app.route('/admin/card/<name>/delete_rulling/<id>', methods=['POST'])
+@app.route('/admin/card/<string:name>/delete_rulling/<int:id>', methods=['POST'])
 @is_admin
-def delete_rulling(name,id):
+def delete_rulling(name: str,id: int):
     if request.method == 'POST':
         try :
            rulling_to_delete = Rulling.query.filter_by(id=id).first()
@@ -75,20 +76,19 @@ def add_page():
     form = AddCard()   
     if request.method == 'POST' and form.validate_on_submit(): 
         add_card = [cleanhtml(form.data[key]) for key in form.data.keys()]
-        card_add = [add_card[0], add_card[1] , add_card[2], add_card[3], add_card[4], add_card[5], add_card[6].filename, add_card[7], add_card[8]]
-        new_card = add_card_to_db(card_add)
+        new_card = add_card_to_db(add_card, add_card[6].filename)
         
         if new_card:
-            upload_new_card = upload_in_db(add_card[6], app.config['UPLOAD_CARD_PATH'])
+            upload_new_card = upload_img(add_card[6], app.config['UPLOAD_CARD_PATH'])
             if upload_new_card:
-                flash(f"{card_add[0]} a bien été ajoutée.", "succès") 
+                flash(f"{add_card[0]} a bien été ajoutée.", "succès") 
         else:
-            flash(f"Un problème est survenu pendant l'ajoût de <{card_add[0]}>.", "erreur")
+            flash(f"Un problème est survenu pendant l'ajoût de <{add_card[0]}>.", "erreur")
         return redirect(url_for('admin_card_list_page')) 
-         
+
     return render_template('admin/card_add.html', username=current_user.username, form=form) 
 
-@app.route('/admin/card/update/<id>', methods=['GET','POST'])
+@app.route('/admin/card/update/<int:id>', methods=['GET','POST'])
 @is_admin
 def update_page(id):    
        
@@ -106,10 +106,10 @@ def update_page(id):
 
         if request.method == 'POST' and form.validate_on_submit():
             update_card = [cleanhtml(form.data[key]) for key in form.data.keys()]
-            card_update = update_in_db([id, update_card[0],update_card[5] , update_card[6], update_card[7].filename, 
+            card_update = update_card_in_db([id, update_card[0],update_card[5] , update_card[6], update_card[7].filename, 
                     update_card[1], update_card[2], update_card[3], update_card[4], update_card[8], update_card[9]])    
             if card_update:
-                upload_new_card = upload_card_in_db(update_card[7], app.config['UPLOAD_CARD_PATH'])
+                upload_new_card = upload_img(update_card[7], app.config['UPLOAD_CARD_PATH'])
                 if upload_new_card:
                     flash(f"Mise à jour de la carte {update_card[0]} effectué.", "succès")
             else :

@@ -5,7 +5,7 @@ from modules.form import *
 from modules.conversion_functions import *
 
 
-def add_comment_db(form):
+def add_comment_db(form: list) -> bool:
     new_comment = Comment(title = form[1],
                          content = form[2],
                          date = datetime.datetime.now(),
@@ -22,7 +22,7 @@ def add_comment_db(form):
     except sqlalchemy.exc.SQLAlchemyError:
         return False
 
-def add_response_db(form):
+def add_response_db(form: list) -> bool:
     try:
         new_comment = Comment(title = None,
                              content = form[3],
@@ -36,7 +36,7 @@ def add_response_db(form):
     except sqlalchemy.exc.SQLAlchemyError:
         return False
 
-def update_comment_db(form):
+def update_comment_db(form : list) -> bool:
     #([card_id, comment_id, author, title, content])
     print(form)
     comment_to_update = Comment.query.filter_by(id=form[1]).first()         
@@ -51,7 +51,7 @@ def update_comment_db(form):
     except sqlalchemy.exc.SQLAlchemyError:
         return False
 
-def delete_comment_in_db(id):
+def delete_comment_in_db(id: int) -> bool:
     try:
         card_to_delete = Comment.query.get(id)
         sousposts = Comment.query.filter_by(post_id=id)

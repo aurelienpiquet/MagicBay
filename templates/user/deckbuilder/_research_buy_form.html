@@ -1,5 +1,5 @@
 
-<form id="form-add-card" action="{{ url_for('add_to_buy') }}" method='post'  class="row text-center align-items-center">
+<form id="form-add-card" action="{{ url_for('add_to_buy') }}" method='post' autocomplete="off" class="row text-center align-items-center">
     <label class="m-2 col-2" for="research">Rechercher</label>
     <div class="autocomplete col-5" >
         <input autocomplete="off" class="form-control me-2" name="bar-research" id="input-search-list" type="search" value="" required placeholder="Rechercher une carte..." aria-label="Search"/>

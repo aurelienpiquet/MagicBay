@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
 {% block head %}
     <meta charset="utf-8" />
@@ -7,11 +7,12 @@
     <title>MagicBay</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta author="AurelienP" />
-    <meta language="fr" />
-
+    <meta description="MagicBay, site de mise en contact de vendeur et acheteur de cartes Magic l'assemblée (Magic The Gathering, MTG). "/>
+    <meta name="keywords" content="Magic l'assemblée, MTG, achat, vente, MagicBay, MagicTheGathering">
 
     {% if request.endpoint == 'home' : %}
         <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/index-style.css') }}">
+        
     {% elif request.endpoint == "user_page" : %}
         <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}"/>
         <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-5.0.2-dist/css/bootstrap.min.css') }}">
@@ -26,7 +27,6 @@
         <link type="text/css" rel="stylesheet" href="{{url_for('static', filename='css/flash_message-style.css')}}">
         <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/header-style.css')}}" /> 
         
-        
     {% elif request.endpoint == "chat_page" : %}           
         <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}"/>
         <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-5.0.2-dist/css/bootstrap.min.css') }}">
@@ -36,16 +36,13 @@
         {{ turbo() }}
         
     {% else %}
-    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}"/>
+        <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}"/>
         <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/chat-style.css') }}">
         <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-5.0.2-dist/css/bootstrap.min.css') }}">
         <link type="text/css" rel="stylesheet" href="{{url_for('static', filename='css/flash_message-style.css')}}">
         <link type="text/css" rel="stylesheet" href="{{url_for('static', filename='css/side_nav.css')}}"/>
         <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/header-style.css')}}" /> 
-        
-        
     {% endif %}
    
-     {% block content %}{% endblock %}
 {% endblock %}
 </head>

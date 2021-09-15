@@ -10,7 +10,7 @@ from modules.comments import *
 from __main__ import app
 from __main__ import turbo
 
-@app.route('/user/card/add_comment/<int:card_id>/<author>', methods=['POST', 'GET'])
+@app.route('/user/card/add_comment/<int:card_id>/<string:author>', methods=['POST', 'GET'])
 @is_logged
 def add_comment(card_id, author):
     post_form = PostCard()
@@ -36,7 +36,7 @@ def update_comment(card_id, comment_id, author_id):
             update = update_comment_db([card_id, comment_id, author_id, title, content])
     return redirect(url_for('card_page', name=card.name))
 
-@app.route('/user/card/delete_comment/<comment_id>/<author>/<card_id>')
+@app.route('/user/card/delete_comment/<int:comment_id>/<string:author>/<int:card_id>')
 @is_logged
 def delete_comment(comment_id, author, card_id):
     card_name = Card.query.get(cleanhtml(card_id))

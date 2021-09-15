@@ -1,4 +1,3 @@
-from flask.app import Flask
 from flask_wtf import FlaskForm
 from wtforms import *
 from flask_wtf.file import FileField, FileAllowed, FileRequired
@@ -6,9 +5,6 @@ from flask_ckeditor import CKEditor, CKEditorField
 from wtforms.fields.html5 import EmailField
 from wtforms.fields import HiddenField
 from wtforms.validators import DataRequired, Email, Length
-import re
-
-
 
 message = 'DataRequired'
 
@@ -25,13 +21,18 @@ class FieldsRequiredForm(FlaskForm):
 
 class AddCard(FlaskForm):
     name = StringField('Nom de la nouvelle carte', validators=[DataRequired(message=message)], render_kw={"placeholder": "Nom"})
-    edition = StringField('Edition de la nouvelle carte', id="edition", validators=[DataRequired(message=message)], render_kw={"placeholder": "Edition", "aria-label":"search", "type":"search"})
+    edition = StringField('Edition de la nouvelle carte', id="edition", validators=[DataRequired(message=message)], 
+        render_kw={"placeholder": "Edition", "aria-label":"search", "type":"search"})
     creation_date = StringField('Date de création', validators=[DataRequired(message=message)], render_kw={"placeholder": "Année: 2010"})
-    legality = SelectField('Légalité', choices=[('Vintage', 'Vintage'), ('Legacy', 'Legacy'),('Modern', 'Modern'),('Standard', 'Standard')], validators=[DataRequired(message=message)])
-    rarity = SelectField('Rareté', choices=[('mythique', 'Mythique'), ('rare', 'Rare'),('unco', 'Unco'),('commune', 'Commune'),('token', 'Token')], validators=[DataRequired(message=message)])
+    legality = SelectField('Légalité', choices=[('vintage', 'Vintage'), ('legacy', 'Legacy'),('modern', 'Modern'),('standard', 'Standard')], 
+        validators=[DataRequired(message=message)])
+    rarity = SelectField('Rareté', choices=[('mythique', 'Mythique'), ('rare', 'Rare'),('unco', 'Unco'),('commune', 'Commune'),
+        ('token', 'Token')], validators=[DataRequired(message=message)])
     price = FloatField('Prix', validators=[DataRequired(message='Formatage pour le prix: 1.00')], render_kw={"placeholder": "1.00"})
-    file = FileField('Image')
-    type = SelectField('Type', choices=[('artefact','Artefact'),('créature','Créature'),('enchantement','Enchantement'),('éphémère','Ephémère'),('terrain','Terrain'),('planeswalker','Planeswalker'),('rituel','Rituel'), ('token','Token')], validators=[DataRequired(message=message)])
+    file = FileField('Image', validators=[DataRequired(message)])
+    type = SelectField('Type', choices=[('artefact','Artefact'),('créature','Créature'),('enchantement','Enchantement'),
+        ('éphémère','Ephémère'),('terrain','Terrain'),('planeswalker','Planeswalker'),('rituel','Rituel'), ('token','Token')],
+         validators=[DataRequired(message=message)])
     ccm = StringField('CCM', render_kw={"placeholder": "1RR"})
     submit = SubmitField('Ajouter Carte')
 
@@ -39,7 +40,7 @@ class UpdateCard(FlaskForm):
     name = StringField('Nom de la nouvelle carte', validators=[DataRequired(message=message)], render_kw={"placeholder":""})
     edition = StringField('Edition de la nouvelle carte', id="edition", validators=[DataRequired(message=message)], render_kw={"placeholder": "Edition", "aria-label":"search", "type":"search"})
     creation_date = StringField('Date de création', validators=[DataRequired(message=message)], render_kw={"placeholder": "Année: 2010"})
-    legality = SelectField('Légalité', choices=[('Vintage', 'Vintage'), ('Legacy', 'Legacy'),('Modern', 'Modern'),('Standard', 'Standard')], validators=[DataRequired(message=message)], render_kw={"placeholder": ""})
+    legality = SelectField('Légalité', choices=[('vintage', 'Vintage'), ('legacy', 'Legacy'),('modern', 'Modern'),('standard', 'Standard')], validators=[DataRequired(message=message)], render_kw={"placeholder": ""})
     rarity = SelectField('Rareté', choices=[('mythique', 'Mythique'), ('rare', 'Rare'),('unco', 'Unco'),('commune', 'Commune'),('token', 'Token')], validators=[DataRequired(message=message)])
     price = FloatField('Mise à jour du prix', validators=[DataRequired(message='Formatage pour le prix: 1.00')], render_kw={"placeholder": "1.00"})
     search = IntegerField('Nombre de recherche', validators=[DataRequired(message='Formatage pour le nombre de recherche: 1')], render_kw={"placeholder": "1"})
@@ -73,7 +74,6 @@ class ResponseModifyCard(FlaskForm):
 class ChatMessage(FlaskForm):
     message = StringField('', validators=[DataRequired(message=message)], render_kw={"placeholder":"Ecriver votre message ici..."})
     submit = SubmitField('Envoyer', validators=[DataRequired(message='')])
-
 
 #### USER FORM #######
 
@@ -113,7 +113,7 @@ class SellList(FlaskForm):
     submit = SubmitField('Ajouter la carte')
 
 class CreateList(FieldsRequiredForm):
-    new_list = StringField('', validators=[validators.Required(message="Nom de la liste requise"), Length(max=15, message="Max 15 caractères")], render_kw={"placeholder":"Nom de la nouvelle liste.."})
+    new_list = StringField('', validators=[validators.Required(message="Nom de la liste requise")], render_kw={"placeholder":"Nom de la nouvelle liste.."})
     submit = SubmitField('Ajouter')
 
 if __name__ == '__main__':

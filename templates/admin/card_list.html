@@ -1,6 +1,5 @@
-{% include 'header.html' %}
-
 <body>
+    {% include 'header.html' %}
     <section>  
         {% include 'includes/_flash_messages.html' %} 
     </section>
@@ -9,59 +8,25 @@
     
     <section class="container">
         <div class="row justify-content-center align-items-baseline text-center">
-            <div class="col-6">
+            <div class="col-12 col-lg-6 m-auto">
                 {% with items = cards, path = 'admin_card_list_page'%}
                     {% include 'includes/_paginate.html' %}
                 {% endwith %}
             </div>
             <div class="col-6 d-flex align-items-center">
-                <h3> Ajouter une carte </h3>
-                <a href="{{ url_for('add_page') }}" type="button" class="button button-admin w-25" title="Ajoûter Carte"> Ajoûter </a>
+                <h3 class="d-none d-lg-block"> Ajouter une carte </h3>
+                <a href="{{ url_for('add_page') }}" type="button" class="button button-admin w-auto m-auto" title="Ajouter Carte"> Ajouter </a>
             </div>
         </div>
-    
     </section>
+    
     <section class="container mb-5">
         {% include 'admin/_card_page.html' %}
     </section>
 
-    </body>
-    
-    {% include 'footer.html' %}
-
-
-<script>
-function checkSelection() {
-    var elements = document.getElementsByClassName("DisableBtn");
-    for (var prop in elements) {
-        element.disabled = false;
-    }
-}
-
-const btnUpdate = document.querySelectorAll('button-update');
-const formUser = document.querySelectorAll('form-name');
-
-btnUpdate.forEach((btn) => {
-    btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        console.log('test')
-        $('.form-name').load(document.URL +  ' .form-name');
-    })
-})
-
-formUser.forEach((userform) => {
-    userform.addEventListener('submit', (e) => {
-        e.preventDefault();
-        console.log('Test')
-        userform.style.background= 'red'
-        $('.form-name').load(document.URL +  ' .form-name');
-    })
-})
-
-
-//
-</script>
-
+    <div class="mt-3 mb-3">
+        {% include 'footer.html' %}
+    </div>
 </body>
 
 

@@ -1,7 +1,7 @@
 {% block content %}
 <div class="row justify-content-center mb-5">
     {% for card in tops : %}
-        <div class="col-3">
+        <div class="col-10 col-md-8 col-lg-3 mb-3 mb-lg-0">
             <h5> <strong>{{ card[0].name.capitalize() }}</strong></h5>
             {% if mode == 1 : %}
                 <h5> Score : {{ card[1] }} <small><em>({{ card[4] }} {{ ' vote' if card[4] < 2 else ' votes' }})</em></small></h5>

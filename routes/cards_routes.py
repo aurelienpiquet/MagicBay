@@ -25,7 +25,7 @@ def cards():
 #
     cards_rating_standard = db.session.query(Card, func.avg(Rating.rating), Info, Media, func.count(Rating.rating)).join(Card, Card.id == Rating.id_card).join(
         Info, Info.id_card == Card.id).join(Media, Media.id_card==Card.id).filter(Info.legality != 'modern').filter(Info.legality !='legacy').filter(Info.legality !='vintage').group_by(Rating.id_card).order_by(desc(func.avg(Rating.rating))).limit(3).all()
-    
+
     # Top By Search 
 
     cards_search = db.session.query(Card, Card.search, Info, Media).join(Info, Info.id_card == Card.id).join(Media, Media.id_card==Card.id).order_by(desc(Card.search)).limit(3).all()
@@ -37,7 +37,7 @@ def cards():
     search_standard=cards_search_standard, rating=cards_rating, rating_modern=cards_rating_modern, rating_standard=cards_rating_standard, 
     rating_legacy=cards_rating_legacy, username=username)
 
-@app.route('/card/<name>')
+@app.route('/card/<string:name>')
 def card_page(name):
     card = Card.query.filter_by(name=name).first()
     rulling_form = RullingCard()

@@ -3,12 +3,12 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 <body>
-    <h1> Messagerie {{ current_user.username }} - {{ receiver if current_user.username != receiver else messages[0].author }}</h1>
+    <h1 class="text-center mt-3"> Messagerie {{ current_user.username }} - {{ receiver if current_user.username != receiver else messages[0].author }}</h1>
     <section class="container w-75 mt-5 chat-box">
         <div class="list-group">
         <turbo-frame id="message-chat">
             {% for message in messages : %}
-            {% include 'chat/_message.html' %}
+                {% include 'chat/_message.html' %}
             {% endfor %}
         </turbo-frame>
     </section>

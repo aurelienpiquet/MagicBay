@@ -15,7 +15,12 @@ def get_comment_user_media():
     except sqlalchemy.exc.StatementError:
         return False
 
-def get_user_avatar():
+def get_user_avatar() -> str:
+    """Get the user's avatar using current_user.id
+
+    Returns:
+        str: The avatar path or a generic path for avatar.png
+    """
     try: 
         avatar = db.session.query(User, Media).join(Media, User.id == Media.id_user).filter(Media.id_user == current_user.id).first()
         return avatar[1].path

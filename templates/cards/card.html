@@ -3,14 +3,15 @@
 
 <body>
   {% include 'includes/_flash_messages.html' %}
+
   <section class="container mt-3">
       {% if card.name != 'empty name' : %}
       <article class="row justify-content-center">
         <h1 class="text-center" id="card-name-title" value="{{card.id}}">{{ card.name }}</h1>
-        <div class="border col-4">
+        <div class="col-md-4 me-5 me-md-0">
           <div class="image-card m-auto"><img class="w-100" src="{{media[1].path}}" alt="1{{media[1].alt}}" title={{media[1].title}}/></div>
         </div>
-        <ul class="border col-4 ">
+        <ul class="col-lg-4 col-10">
             <li class="m-2 row justify-content-start align-items-center">
               <h5 class="col-4">Rareté :</h5>  
               <img class="col-3" src="/static/img/mana/symbol_{{info[0][0].rarity}}.png" alt="{{ info[0][0].rarity.capitalize() }}" title="{{ info[0][0].rarity.capitalize() }}" class="resp"></span></li>          
@@ -62,7 +63,7 @@
                                                                               {% endif %}</span></h5></li>
             {% endif %}
             <li class="m-2 ms-3">
-              {% if user_rating == None : %}
+              {% if username and user_rating == None : %}
               <div class="rating-star">
               <span name="star" class="star" value="1">&#11088</span>
               <span name="star" class="star" value="2">&#11088</span>
@@ -71,8 +72,8 @@
               <span name="star" class="star" value="5">&#11088</span>     
               </div>
 
-              {% elif user_rating == "no_user" : %}
-              <a href="{{ url_for('login_page') }}">Connectez vous pour ajouter votre score!!! </a>
+              {% elif not username : %}
+              <a href="{{ url_for('login_page') }}">Connectez vous pour ajouter votre score. </a>
               {% else : %}
               <div class="rating-star">
                   {% for i in range(1, 6) : %}
@@ -109,38 +110,42 @@
               {% for rule in info[1:] : %}
                 {% if rule[2].id_card == card.id : %}        
                   <li class="m-2 mb-3 row">
-                    <div  class="col-2">
-                      <h5>{{ rule[2].date }}</h5> 
+                    <div class="col-12 col-md-2">
+                      <h5>{{ rule[2].date.strftime('%d-%m-%y') }}</h5>
                       {% if username == 'admin' : %}
-                      <form class="col-2" action="{{url_for('delete_rulling', name=card.name, id=rule[2].id)}}" method="post">
+                      <form class="col-12 col-md-2" action="{{url_for('delete_rulling', name=card.name, id=rule[2].id)}}" method="post">
                         <input onclick="return confirm('Supprimer ce rulling?')" type="submit" value="Supprimer">
                       </form>
                       {% endif %}
                     </div>
-                    <p class="col-8">{{ rule[2].rule }}</p>
+                    <p class="col-12 col-md-8">{{ rule[2].rule }}</p>
                     <hr>
                   </li>
                 {% endif %}
               {% endfor %}
             {% else : %}
             <li class="m-2 mb-3 row">
-              <h5 class="col-2">{{ info[0][2].date }}</h5> 
-              <p class="col-8">{{ info[0][2].rule }}</p>
+              <h5 class="col-12 col-md-2">{{ info[0][2].date.strftime('%d-%m-%y') }}</h5> 
+              <p class="col-12 col-md-8">{{ info[0][2].rule }}</p>
             {% endif %}
           </ul>
         {% endif %}
       </div>
     </article>
     {% if username == 'admin' : %}
-    <form action="{{ url_for('add_rulling', name=card.name) }}" method="post" class="m-5 w-50">
-      {{ wtf.quick_form(rulling_form, novalidate=True, button_map={"submit": "dark"}) }}
-    </form>
+    <div class="ms-md-5 ps-md-5">
+      <form action="{{ url_for('add_rulling', name=card.name) }}" method="post" class="w-100 ps-md-5 ms-5 m-auto">
+        {{ wtf.quick_form(rulling_form, novalidate=True, button_map={"submit": "dark"}) }}
+      </form>
+    </div>
     {% endif %}
   </section>
 
     <section class="container">
-      <hr>
       <h2 class="text-center"> Les posts </h2>
+    {% if comments == [] %}
+      <p class="text-center">Aucun post sur cette carte pour le moment.</p>
+    {% endif %}
     {% if comments != [] : %}
     <article>
       <ul> 
@@ -154,8 +159,8 @@
                     <div class="avatar-comment">
                         <img class="resp" src="{{ comment[2].path }}" alt="{{ comment[2].alt }}" title="{{ comment[2].title }}">
                     </div>
-                    <p><small><strong> {{ comment[1].username }} </strong> - <em>{{ (comment[0].date | string())[:-7] }}</em></small></p>
-                   
+                    <!--<p><small><strong> {{ comment[1].username }} </strong> - <em>{{ (comment[0].date | string())[:-7] }}</em></small></p>-->
+                    <p><small><strong> {{ comment[1].username }} </strong> - <em>{{ (comment[0].date.strftime('%d-%m-%y %H:%M:%S') ) }}</em></small></p>
                 {% if current_user.id_status == 1: %}
                 <ul class="m-3">
                     <li class="inline"><a title="Répondre" type="button" class="" data-bs-toggle="collapse" href="#collapseForm-{{ comment[0].id }}" 
@@ -211,8 +216,8 @@
                       {% if reply[0].post_id != reply[0].id and reply[0].post_id == comment[0].id %}
                         <li class="m-5 w-lg-50 w-m-100">
                             <p> {{ reply[0].content }} </p>
-                            <div class='d-flex align-items-baseline justify-content-center'><div class="avatar-comment"><img class="resp" src="{{ reply[2].path }}" alt="{{ reply[2].alt }}" title="{{ reply[2].title }}"></div><span><small><strong>
-                                {{ reply[1].username }}</strong> - <em>{{ (reply[0].date | string())[:-7] }}</em></small> </span> 
+                            <div class='d-flex align-items-baseline justify-content-start'><div class="avatar-comment"><img class="resp" src="{{ reply[2].path }}" alt="{{ reply[2].alt }}" title="{{ reply[2].title }}"></div><span><small><strong>
+                                {{ reply[1].username }}</strong> - <em>{{ (reply[0].date.strftime('%d-%m-%y %H:%M:%S')) }}</em></small> </span> 
                             {% if current_user.id and (current_user.id_status != 1) %}
                               <p>  {{username}} Votre status est <strong>{{ current_user.status|safe }}</strong>, vous ne pouvez ni poster ni commenter. </p>
                             {% elif not username : %}
@@ -221,19 +226,24 @@
                                 <ul>
                                   <li class="inline"><a title="Répondre" type="button" class=""  data-bs-toggle="collapse" href="#collapseFormReply-{{ reply[0].id }}" 
                                     role="button" aria-expanded="false" aria-controls="collapseFormReply">Répondre</a></li>
-                                    <span class="dot"> . </span> 
-                                    <div class="collapse" id="collapseFormReply-{{ reply[0].id }}">
-                                      <form action="{{url_for('add_response', card_id=card.id, comment_id=comment[0].id, author_id=current_user.id)}}" method="post" name="form-reply">
-                                        {{ wtf.quick_form(response_form, novalidate=True, button_map={"submit": "dark"}) }}
-                                      </form>
-                                    </div>
+                                  {% if current_user.id == reply[0].id_user %} 
+                                  <span class="dot"> . </span>  
                                   <li class="inline"><a title="Supprimer" onclick="return confirm('Voulez-vous supprimer la réponse suivante ?')"
                                           href="{{ url_for('delete_comment', comment_id=reply[0].id, author=current_user.username, card_id=card.id ) }}">
                                           Supprimer</a></li>
+                                  {% endif %}                                  
                                 </ul>
+                                <div class="collapse w-75" id="collapseFormReply-{{ reply[0].id }}">
+                                  <form class="" action="{{url_for('add_response', card_id=card.id, comment_id=comment[0].id, author_id=current_user.id)}}" method="post" name="form-reply">
+                                    {{ wtf.quick_form(response_form, novalidate=True, button_map={"submit": "dark"}) }}
+                                  </form>
+                                </div>
                             {% endif %} 
+    
                           {% endif %}
-                    </li>                          
+                    </li>
+                           
+               
                   {% endfor %}
                 </ul>
             
@@ -247,7 +257,7 @@
   </section>
 
   {% endif %}
-  <section class="container">
+  <section class="container mb-4">
     <h2 class="text-center">Rédiger un post</h2>
     {% if username : %}
     <form action="{{ url_for('add_comment', card_id=card.id, author=current_user.username)}}" method='post' enctype="multipart/form-data" autocomplete="off">      
@@ -281,7 +291,7 @@
       ratingValue = ratingSpan.getAttribute('value');
       cardIdValue = cardId.getAttribute('value');
     
-      // requete AJAX des Stars
+      // Post AJAX des Stars
       $.post( "/card/rating", { rating: ratingValue, id: cardIdValue }).then($('#rating').load(document.URL +  ' #rating'));
 
       ratingSpans.forEach((ratingSpan) => {
@@ -293,8 +303,7 @@
         }
           ratingSpan.style.transition = "none";
           ratingSpan.style.pointerEvents = "none";
-      });
-      
+      });      
     });
   });
 

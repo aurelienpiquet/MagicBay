@@ -2,7 +2,6 @@
 {% include "header.html" %}
 
 <main>
-
     {% include 'includes/_side_nav.html' %}
     
     <section class="container text-center mb-3">
@@ -21,10 +20,10 @@
         </div>
 
         <div id="TopIllusModern">
-        <h1> Top des illustrations Modern </h1>
-        {% with tops = rating_modern, mode = 1 %}
-            {% include 'cards/_top.html' %}
-        {% endwith %}
+            <h1> Top des illustrations Modern </h1>
+            {% with tops = rating_modern, mode = 1 %}
+                {% include 'cards/_top.html' %}
+            {% endwith %}
         </div>
 
         <div id="TopIllusStd">

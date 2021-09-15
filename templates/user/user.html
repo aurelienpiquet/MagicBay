@@ -8,7 +8,7 @@
             <h1 class="text-center mt-5"> Mon Profil</h1> 
         </section> 
     <div class="row mt-3 container justify-content-center">
-        <section class="col-5">
+        <section class="col-10 col-lg-5">
             <h2 class="text-center">Mon Avatar</h2>    
             <turbo-frame id='avatar-stream'>           
                 <div class="avatar">
@@ -20,9 +20,11 @@
                     {{ wtf.quick_form(form_avatar, novalidate=True, button_map={"submit": "dark"}) }}
                 </form>
             </div>
+            
         </section>
-        <section class="col-5">
-            <h2 class="text-center">Mes données personnelles</h2>
+        <hr class="d-lg-none d-block">
+        <section class="col-12 col-lg-5">
+            <h2 class="text-center w-100">Mes données personnelles</h2>
             <ul class="row w-100 m-auto mt-3">   
                 <li class="col-11 offset-1 mt-3"> Nom d'Utilisateur : <strong>{{ user[0].username }}</strong></label></li>
                 <li class="col-11 offset-1 mt-3"> Nom : <strong>{{ user[0].name }}</strong></li>

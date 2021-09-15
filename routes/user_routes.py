@@ -7,7 +7,7 @@ from modules.conversion_functions import *
 from modules.cards_functions import *
 from modules.classes import *
 from modules.comments import *
-from modules.upload import upload_in_db
+from modules.upload import upload_img
 
 from __main__ import app
 from __main__ import turbo
@@ -37,7 +37,7 @@ def user_update_avatar_page(username):
         new_avatar = form_avatar.file.data.filename  
         media_update = Media.query.filter(Media.id_user == current_user.id).first()
         if new_avatar and media_update:   
-            avatar_upload = upload_in_db(form_avatar.file.data, app.config['UPLOAD_AVATAR_PATH'], str(current_user.username) + "_") 
+            avatar_upload = upload_img(form_avatar.file.data, app.config['UPLOAD_AVATAR_PATH'], str(current_user.username) + "_") 
             if avatar_upload:
                 media_update.path = f"/static/img/avatar/{username}_" + new_avatar
                 media_update.alt = new_avatar
