@@ -1,0 +1,117 @@
+{% include 'includes/_head.html' %}
+
+{% block content %}
+<body class="bg-dark">
+    <header>
+        <section class="bg-dark">
+            <nav class="flex align-items-center">
+                <div class="flex align-items-center">
+                    <div class="div-logo">
+                        <a href="{{ url_for('home') }}"><img class="logo" src="{{url_for('static', filename='img/logo-rec.png')}}" alt="logo de MagicBay"></a>
+                    </div>
+                    <h1 class="nav-brand">MagicBay 
+                    <span><br> Achat - Vente - DeckBuilder </span></h1>
+                </div>
+                <ul class="flex justify-content-end align-items-center">
+                    {% if username == 'admin': %}
+                        <li class="phone-screen admin-link"><a href="{{url_for('admin_card_list_page')}}">Cartes DB</a></li>
+                        <li class="phone-screen admin-link"><a href="{{url_for('admin_user_list_page')}}">Users DB</a></li>
+                        <li class="phone-screen admin-link"><a href="{{url_for('admin_api_list_page')}}">APIs list</a></li>
+                        <li class="phone-screen admin-link"><a href="">Messagerie</a></li>
+                        <!--<li class="link-screen"><a href="{{ url_for('admin_card_list_page') }}">Admin Home</a></li>-->
+                        <li class="link-screen"><a href="{{ url_for('user_page', username=current_user.username) }}">Admin Profil</a></li>
+                        <li class="phone-screen admin-link connection-link"><a href="{{ url_for('log_out_page') }}">Se Déconnecter</a></li>
+                        <li class="link-screen"><a href="{{ url_for('log_out_page') }}">Se Déconnecter</a></li>
+                    {% elif username : %}
+                        <li><a href="{{ url_for('user_page', username=username) }}">
+                            <div class="avatar">
+                                <img src="{{ avatar }}" alt="logo profil">
+                            </div></a></li>
+                        <li class="phone-screen admin-link log-out-link"><a href="{{url_for('cards')}}">Cartes</a></li>    
+                        <li class="phone-screen admin-link connection-link"><a href="{{ url_for('log_out_page') }}">Se Déconnecter</a></li>
+                        <li class="link-screen"><a href="{{ url_for('log_out_page') }}">Se Déconnecter</a></li>
+                    {% else : %}
+                        <li class="link-screen"><a href="{{ url_for('register_page') }}"><img src="{{url_for('static', filename='img/homepage/register.jpg')}}" alt="logo register" class="logo"></a></li>
+                        <li class="link-screen"><a href="{{ url_for('login_page') }}">Connexion</a></li>
+                        <li class="phone-screen admin-link log-out-link"><a href="{{url_for('cards')}}">Cartes</a></li>
+                        <li class="phone-screen admin-link log-out-link"><a href="{{url_for('register_page')}}">Créer un compte</a></li>
+                        <li class="phone-screen admin-link log-out-link"><a href="{{url_for('login_page')}}">Connexion</a></li>  
+                    {% endif %}
+                </ul>
+            </nav>
+        </section>
+        </section>
+    </header>
+    <main>
+        <section class="flex justify-content-center wrap">
+            <div>
+                <a href="{{ url_for('cards') }}">
+                <div class="relative show">
+                    <img src="{{ url_for('static', filename='img/homepage/homepage_3.jpg') }}" alt="wallpaper cartes" class="resp skew-5 box-shadow-green">
+                    <h1 class="absolute text-card-down  ">CARTES</h1>
+                    <div class="filter absolute bg bg-green z-index-100 skew-5"></div>
+                </div>
+                </a>
+            </div>
+            
+            <div>
+                {% if username : %}
+                    <a href="{{ url_for('admin_card_list_page') if username=='admin' else url_for('buy_list_page', username=username) }}">
+                {% else : %}
+                    <a href="{{ url_for('login_page') }}">
+                {% endif %}
+                <div class="relative show">
+                    <img src="{{ url_for('static', filename='img/homepage/homepage_5.jpg') }}" alt="wallpaper achat" class="resp skew-5 box-shadow-red">
+                    <h1 class="absolute text-card-down  ">{{"CARTES DB" if username=="admin" else "ACHAT"}}</h1>
+                    <div class="filter absolute bg bg-red z-index-100 skew-5"></div>
+                </div>
+            </a>
+            </div>
+            
+            <div>
+                {% if username : %}
+                <a href="{{ url_for('admin_user_list_page') if username=='admin' else url_for('sell_list_page', username=username) }}">
+                {% else : %}
+                    <a href="{{ url_for('login_page') }}">
+                {% endif %}
+                <div class=" relative show">
+                    <img src="{{ url_for('static', filename='img/homepage/homepage_1.jpg') }}" alt="wallpaper vente" class="resp skew-5 box-shadow-black">
+                    <h1 class="absolute  text-card-down  ">{{"USERS DB" if username=="admin" else "VENTE"}}</h1>
+                    <div class="filter absolute bg bg-black z-index-100 skew-5"></div>
+                </div>
+            </a>
+            </div>
+            
+            <div>
+                {% if username : %}
+                <a href="{{ url_for('admin_api_list_page') if username=='admin' else url_for('deckbuilder_list_page', username=username) }}">
+                {% else : %}
+                    <a href="{{ url_for('login_page') }}">
+                {% endif %}
+                <div class=" relative show">
+                    <img src="{{ url_for('static', filename='img/homepage/homepage_6.jpg') }}" alt="wallpaper deckbuilder" class="resp skew-5 box-shadow-blue">
+                    <h1 class="absolute  text-card-down  ">{{'APIs list' if username=="admin" else "DECKBUILDER"}}</h1>
+                    <div class="filter absolute bg bg-blue z-index-100 skew-5"></div>
+                </div>
+            </a>
+            </div>
+
+            <div>
+                {% if username : %}
+                    <a href="{{ url_for('admin_message_page') if username=='admin' else url_for('message_page', username=username) }}">
+                {% else : %}
+                    <a href="{{ url_for('login_page') }}">
+                {% endif %}
+                <div class=" relative show">
+                    <img src="{{ url_for('static', filename='img/homepage/homepage_8.jpg') }}" alt="wallpaper messagerie" class="resp skew-5 box-shadow-white">
+                    <h1 class="absolute text-card-down  ">MESSAGERIE</h1>
+                    <div class="filter absolute bg bg-white z-index-100 skew-5"></div>
+                </div>
+            </a>
+            </div>
+        </section>
+    </main>
+
+</body>
+{% endblock %}
+</html>

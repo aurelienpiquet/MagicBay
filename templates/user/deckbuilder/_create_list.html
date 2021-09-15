@@ -1,0 +1,46 @@
+{% import "bootstrap/wtf.html" as wtf %}
+{% block content %}
+
+    <section class="container">
+
+            <div class="w-50 mt-5 m-auto row">
+                {% if id_deckbuilder == 1 %}
+                    <h2 class='text-center'>Créer une liste d'achats</h2>
+                {% elif id_deckbuilder == 2 %}
+                    <h2 class='text-center'>Créer une liste de vente</h2>
+                {% elif id_deckbuilder == 3 %}
+                    <h2 class='text-center'>Créer un deckbuilder</h2>
+                {% endif %}
+
+                <form class="row align-items-end w-80 justify-content-center form-wtf" role="form" method="post" action="{{ url_for('create_deckbuilder_list', id_type=id_deckbuilder) }}">
+                    <input type="text" name="id_deckbuilder" hidden value="{{id_deckbuilder}}">
+                    {{ wtf.quick_form(create_list_form, novalidate=True, button_map={"submit": "dark"}) }}
+                </form>
+            </div>
+
+            <div class="w-50 mt-5 m-auto">
+                <h2 id="add-cards" class="text-center">Ajoûter des cartes</h2>
+                <div class="mt-5">
+                    {% block turbo %}
+                        <turbo-frame id='select-list'>
+                            {% include 'user/deckbuilder/_research_select_list.html' %}
+                        </turbo-frame>
+                    {% endblock %}
+                </div>
+                <div class="mt-5 mb-5">
+                    {% if id_deckbuilder == 1 :%}
+                        <turbo-frame id='turbo-research'>
+                            {% include 'user/deckbuilder/_research_buy_form.html' %}
+                        </turbo-frame>
+                    {% elif id_deckbuilder == 2 : %}
+                        <turbo-frame id='turbo-research'>
+                            {% include 'user/deckbuilder/_research_sell_form.html' %}
+                        </turbo-frame>
+                    {% elif id_deckbuilder == 2 : %}
+                        {% include 'user/deckbuilder/_research_buy_form.html' %}
+                    {% endif %}
+                </div>  
+            </div>
+
+    </section>
+{% endblock %}

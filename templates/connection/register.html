@@ -1,0 +1,32 @@
+{% include 'header.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+<body>
+
+    <main class="m-5">
+    {% include 'includes/_flash_messages.html' %}
+
+    <h1 class="text-center mt-3">Créer un compte</h1>
+    <section class="container mt-5"> 
+        <form action="{{ url_for('register_page') }}" method='post'>      
+            {{ form.csrf_token }}
+            <div class="row justify-content-center mt-3">
+                {{ wtf.form_field(form.user) }}
+            </div>
+
+            <div class="row justify-content-center mt-3">
+                {{ wtf.form_field(form.email) }}
+            </div>
+            <div class="row justify-content-center mt-3 mb-3">
+                {{ wtf.form_field(form.password) }}
+            </div>
+            <div class="text-center w-auto m-auto mt-5">
+                {{ form.submit(class="btn btn-lg") }}
+            </div>
+        </form>
+    </section>
+</body>
+
+<div class="fixed-bottom m-3">
+{% include 'footer.html' %}
+</div>

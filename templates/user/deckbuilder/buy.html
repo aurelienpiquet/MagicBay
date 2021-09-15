@@ -1,0 +1,101 @@
+{% include 'header.html' %}
+<body>
+    
+<main class="container">
+    {% include 'includes/_flash_messages.html' %}
+
+    {% include 'includes/_side_nav.html' %}
+
+    <h1 id="list-buy" class="text-center m-3"> Faites votre liste d'achat </h1>
+    
+    <section>
+        {% with id_deckbuilder = 1 %}
+            {% include 'user/deckbuilder/_create_list.html' %}
+        {% endwith %}
+    </section> 
+
+    <hr>
+    
+    <section id="buy-list" class="container">
+        <div class="row">
+            <h2 class="text-center"> Vos listes de d'achat </h2>
+            <ul id="ul-list-update" class="text-center mt-3">
+                <turbo-frame id="research-buy-list">
+                    {% include 'user/deckbuilder/_research_buy_list.html' %}
+                </turbo-frame>
+            </ul>
+        </div>
+    </section>
+
+    <hr>
+
+    <section class="container">
+        <h2 class="text-center"> Résultat des recherches </h2>
+        <turbo-frame id="search-table-list">
+            {% include 'user/deckbuilder/_research_table.html' %}
+        </turbo-frame>
+    </section>
+</main>
+
+{% include 'footer.html' %}
+<script> autocomplete_card(document.getElementById("input-search-list"), cards);</script>
+<script type="text/javascript" src="{{url_for('static', filename='js/sell_buy_form.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='js/down_arrow.js')}}"></script>
+<script>
+//async function update_list_buy() { 
+//    await $('#ul-list-update').load(document.URL + ' #ul-list-update');
+//    await $('#search-list').load(document.URL + ' #search-list');
+//    await $('#buy-list').load(document.URL + ' #buy-list');
+//    await $('.select-list').load(document.URL + ' .select-list');
+//}
+//
+//async function update_search_list() {
+//    await $('#search-list').load(document.URL + ' #search-list');
+//}
+//
+//async function update_list() { 
+//    await $('#buy-list').load(document.URL + ' #buy-list');
+//    await $('.select-list').load(document.URL + ' .select-list');
+//}
+
+
+
+// Create buy list
+
+//const createSubmit = document.getElementById("create-submit");
+//const createList = document.getElementById("create-list");
+//const updateList = document.querySelector('#update-list');
+
+
+//createSubmit.addEventListener('click', () => {
+//    if (createList.value != "" && createList.value != null) {
+//        $.post( "/create_buy_list", { name : createList.value, id_type : 1}).then(update_list_buy);
+//    }
+//    else {
+//        return false;
+//    }
+//});
+//
+// Add to buy list
+
+//const addSubmit = document.getElementById("add-submit");
+//const quantity = document.getElementById("quantity");
+//const cardName = document.getElementById("search-list");
+//const optionList = document.querySelector('select');
+
+//addSubmit.addEventListener('click', () => {
+//    if (quantity.value > 0 && quantity.value < 5 && quantity != null && cardName.value != null && cardName.value != "" && 
+//    optionList.value != null) {
+//        
+//        $.post( '/add_to_buy_list', { name: cardName.value, quantity: quantity.value, id_type : 1 , id_deckbuilder : optionList.value })//.then(update_list_buy);
+//        //axios
+//    }
+//    else {
+//        return false;
+//    }
+//});
+</script>
+
+
+</body>
+

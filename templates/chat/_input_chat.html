@@ -1,0 +1,16 @@
+
+<!--
+<input class="col-8 me-3" type="text" id="message-content" name='message' value="" placeholder="Rédiger votre message ici..." autofocus>
+<input class="col-2" type="submit" placeholder="Envoyer">
+-->
+
+{% block message%}
+    <form id="form" method="post" action="{{url_for('chat_page', username=username, receiver=new_receiver, message_id=messages[0].post_id)}}" class="form-wtf row align-items-end w-80 justify-content-center">
+        {{ wtf.quick_form(chat_form, novalidate=True, button_map={"submit": "dark"}) }}
+    </form>
+
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+{% endblock %}
+
+
+

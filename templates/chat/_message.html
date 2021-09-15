@@ -1,0 +1,31 @@
+
+<turbo-frame id="message-{{ message.id }}" data-turbo-frame = "top">
+
+    <div class="list-group-item list-group-item-action relative active w-40  mt-3 mb-3 rounded {{'ms-auto me-5' if current_user.username == message.author else 'me-auto ms-5'}}" aria-current="true">
+        <div class="d-flex w-100 justify-content-between">
+          <h5 class="mb-1"> <b> {{  message.author }} </b></h5>
+          <small><em>
+              il y a
+              {% if( now - message.date).days > 0 : %}
+                {{ (now - message.date).days | string() }} jours
+              {% else : %}
+                {{ ((now - message.date) | string())[:-10] }} heures
+              {% endif %}
+          </em></small>
+        </div>
+          <p class="mb-1"> {{ message.content }} </p>
+          {% if current_user.username == message.author and message.id != message.post_id %}
+          <div class="row">
+              <small class="col-2 ms-auto d-flex"> 
+                <a href=""><img src="/static/img/save_img/notifications.png" alt="Repasser en non-lu" class="w-50"></a>
+                <a href="{{ url_for('chat_delete_page', post_id = message.id)}}"><img src="/static/img/save_img/delete.png" alt="Supprimer le message" class="" style="width:15px"
+                    onclick="return confirm(' Supprimer ce message?')"></a> 
+              </small>
+          </div>
+          {% endif %}
+      </div> 
+
+  </turbo-frame>
+
+
+  

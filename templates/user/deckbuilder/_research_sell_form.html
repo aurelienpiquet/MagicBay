@@ -1,0 +1,32 @@
+{% import "bootstrap/wtf.html" as wtf %}
+
+    <form id="form-add-card" action="{{ url_for('add_to_sell') }}" method='post'  autocomplete="off" class="row text-center align-items-center">
+        <label class="m-1 col-3" for="research">Vendre une carte</label>
+        <div class="autocomplete col-5">
+            <input autocomplete="off" class="form-control me-2" name="bar-research" id="input-search-list" type="search" value="" required placeholder="Rechercher une carte" aria-label="Search"/>
+        </div>
+        <input class="m-2 col-2" id="quantity" name="quantity" type="number" value="" placeholder="1" min="1" max="4" required>
+        <input hidden type="text" id="id_input_deckbuilder" name="id_input_deckbuilder" type="number" value="">  
+            {{ sell_list_form.csrf_token }}
+        <div class="row justify-content-center autocomplete" style="margin-left:10%;">
+            {{ wtf.form_field(sell_list_form.edition) }}
+        </div>
+        <div class="row justify-content-center">
+            {{ wtf.form_field(sell_list_form.creation_date) }}
+        </div>
+        <div class="row justify-content-center">
+            {{ wtf.form_field(sell_list_form.rarity) }}
+        </div>
+        <div class="row justify-content-center">
+            {{ wtf.form_field(sell_list_form.quality) }}
+        </div>
+        <div class="row justify-content-center">
+            {{ wtf.form_field(sell_list_form.price) }}
+        </div>
+        <div class="row justify-content-center">
+            {{ wtf.form_field(sell_list_form.language) }}
+        </div>
+        <div class="text-center w-50 m-auto mt-3">
+            {{ wtf.form_field(sell_list_form.submit, horizontal_columns=('lg', 2, 10)) }}
+        </div>
+    </form>

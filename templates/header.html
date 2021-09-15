@@ -1,0 +1,99 @@
+
+
+  {% include 'includes/_head.html' %}
+  <!-- NAVBAR A refaire sans bootstrap -->
+  <body>
+    <header>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top align-content-end ">
+      <div class="container">
+        <a class="logo-header me-2" href="{{ url_for('home')}}">
+          <img class="resp" src="{{url_for('static', filename='img/logo-rec.png')}}" alt="logo de MagicBay" title="MagicBay"></a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="bugger-nav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <h4 class="w-25 nav-title">MagicBay 
+        <span><br> Achat - Vente - DeckBuilder </span></h4>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+         
+        <span class="ms-auto" id="username"> {{ (username.capitalize() + ' - ') if username }} </span>
+  
+          <ul class="navbar-nav mb-2 mb-lg-0">
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('cards') }}">Cartes</a></li>
+            {% if username and username != 'admin': %}
+            <!-- FAIRE UN LINE HEIGH POUR TOUT ALIGNER CORRECTEMENT -->
+            <li class="nav-item dropdown mb-auto">
+                <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                  Mon Compte
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                  <li><a class="dropdown-item" href="{{ url_for('user_page', username=username) }}">Profil</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('buy_list_page', username=username) }}">Acheter</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('sell_list_page', username=username) }}">Vendre</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('deckbuilder_list_page', username=username) }}">DeckBuilder</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('message_page', username=username )}}">Messages</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('log_out_page', username=username) }}">Déconnexion</a></li>
+                </ul>
+            </li>
+
+            {% endif %} 
+            {% if username == "admin" : %}
+              <li class="nav-item dropdown mb-auto">
+                <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                  Mon Compte
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                  <li><a class="dropdown-item" href="{{ url_for('home') }}">Admin Home</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('admin_card_list_page') }}">Carte DB</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('admin_user_list_page') }}">User DB</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('admin_api_list_page') }}">Api Status</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('admin_message_page') }}">Messagerie</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('log_out_page') }}">Déconnection</a></li>
+                </ul>
+              </li>
+            {% endif %} 
+            {% if not username : %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('register_page')}}"
+                >Créer un compte</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('login_page') }}"
+                >Connexion</a
+              >
+            </li>
+            {% endif %}
+          </ul>
+          <form
+            autocomplete="off"
+            class="d-flex"
+            method="post"
+            action="{{ url_for('card_page_research') }} "
+          >
+            <div class="autocomplete">
+              <input
+                class="form-control me-2"
+                name="bar-research"
+                id="research"
+                type="search"
+                placeholder="Rechercher une carte"
+                aria-label="Search"
+              />
+            </div>
+            <button
+              class="btn btn-outline-dark"
+              type="submit"
+              style="color: white"
+            >
+              Rechercher
+            </button>
+          </form>
+        </div>
+      </div>
+    </nav>
+</header>
+
+</html>

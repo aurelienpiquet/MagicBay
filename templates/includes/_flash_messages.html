@@ -1,0 +1,11 @@
+{% block content %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="ul-flash list-group">
+                {% for category, message in messages %}
+                    <li class="li-flash-{{category}} list-group-item"><strong class="strong-flash">{{category.capitalize()}} :  {{ message }}</strong></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+{% endblock %}

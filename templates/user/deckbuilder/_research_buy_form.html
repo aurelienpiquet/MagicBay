@@ -1,0 +1,12 @@
+
+<form id="form-add-card" action="{{ url_for('add_to_buy') }}" method='post' autocomplete="off" class="row text-center align-items-center">
+    <label class="m-2 col-2" for="research">Rechercher</label>
+    <div class="autocomplete col-5" >
+        <input autocomplete="off" class="form-control me-2" name="bar-research" id="input-search-list" type="search" value="" required placeholder="Rechercher une carte..." aria-label="Search"/>
+    </div>
+    <input class="m-2 col-2" id="quantity" name="quantity" type="number" value="1" placeholder="1" min="1" max="4" required>
+    <input hidden type="text" id="id_input_deckbuilder" name="id_input_deckbuilder" type="number" value="">  
+    <input class="btn m-2 col-2" id="add-submit" name="add-submit" type="submit" value="Ajouter"> 
+</form>  
+
+

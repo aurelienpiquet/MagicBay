@@ -1,0 +1,32 @@
+<body>
+    {% include 'header.html' %}
+    <section>  
+        {% include 'includes/_flash_messages.html' %} 
+    </section>
+
+    <h1 class="text-center m-3"> Cartes database </h1>
+    
+    <section class="container">
+        <div class="row justify-content-center align-items-baseline text-center">
+            <div class="col-12 col-lg-6 m-auto">
+                {% with items = cards, path = 'admin_card_list_page'%}
+                    {% include 'includes/_paginate.html' %}
+                {% endwith %}
+            </div>
+            <div class="col-6 d-flex align-items-center">
+                <h3 class="d-none d-lg-block"> Ajouter une carte </h3>
+                <a href="{{ url_for('add_page') }}" type="button" class="button button-admin w-auto m-auto" title="Ajouter Carte"> Ajouter </a>
+            </div>
+        </div>
+    </section>
+    
+    <section class="container mb-5">
+        {% include 'admin/_card_page.html' %}
+    </section>
+
+    <div class="mt-3 mb-3">
+        {% include 'footer.html' %}
+    </div>
+</body>
+
+
